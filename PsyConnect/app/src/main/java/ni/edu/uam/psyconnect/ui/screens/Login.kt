@@ -5,28 +5,29 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import ni.edu.uam.psyconnect.R
+import kotlin.jvm.java
 
 class Login : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Conecta con el XML
+        // Conecta esta pantalla con el XML
         setContentView(R.layout.activity_login)
 
-        // Botón login
+        // Referencia al botón iniciar sesión
         val btnLogin = findViewById<Button>(R.id.btnLogin)
 
-        // Botón registro
+        // Referencia al botón crear cuenta
         val btnRegister = findViewById<Button>(R.id.btnGoRegister)
 
-        // Ir al Home
+        // Navegar al Home
         btnLogin.setOnClickListener {
             val intent = Intent(this, Home::class.java)
             startActivity(intent)
         }
 
-        // Ir a Register
+        // Navegar al Register
         btnRegister.setOnClickListener {
             val intent = Intent(this, Register::class.java)
             startActivity(intent)
