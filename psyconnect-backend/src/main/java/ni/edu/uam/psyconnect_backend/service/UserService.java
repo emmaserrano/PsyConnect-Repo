@@ -1,5 +1,7 @@
 package ni.edu.uam.psyconnect_backend.service;
 
+import ni.edu.uam.psyconnect_backend.dto.LoginRequest;
+import ni.edu.uam.psyconnect_backend.dto.LoginResponse;
 import ni.edu.uam.psyconnect_backend.model.User;
 import ni.edu.uam.psyconnect_backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,39 @@ public class UserService {
     }
 
     public User saveUser(User user) {
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("El correo ya está registrado");
+        }
+
         return userRepository.save(user);
+    }
+
+    public LoginResponse login(LoginRequest request) {
+
+        User user = userRepository
+                .findByEmail(request.getEmail())
+                .orElse(null);
+
+        if (user == null) {
+
+            return new LoginResponse(
+                    false,
+                    "Usuario no encontrado"
+            );
+        }
+
+        if (!user.getPassword().equals(request.getPassword())) {
+
+            return new LoginResponse(
+                    false,
+                    "Contraseña incorrecta"
+            );
+        }
+
+        return new LoginResponse(
+                true,
+                "Inicio de sesión exitoso"
+        );
     }
 }
