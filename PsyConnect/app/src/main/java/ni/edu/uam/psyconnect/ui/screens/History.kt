@@ -4,12 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ni.edu.uam.psyconnect.R
 
-class Register : AppCompatActivity() {
+class History : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Conecta con el XML de registro
-        setContentView(R.layout.activity_register)
+        setContentView(R.layout.activity_history)
     }
 }
