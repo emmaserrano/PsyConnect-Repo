@@ -17,6 +17,12 @@ class Profile : AppCompatActivity() {
 
         btnLogout.setOnClickListener {
 
+            val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
+
+            sharedPreferences.edit()
+                .clear()
+                .apply()
+
             val intent = Intent(this, Login::class.java)
 
             startActivity(intent)
