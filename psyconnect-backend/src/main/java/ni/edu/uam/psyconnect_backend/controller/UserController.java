@@ -7,6 +7,7 @@ import ni.edu.uam.psyconnect_backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/users")
@@ -60,5 +61,16 @@ public class UserController {
     ) {
 
         return userService.getUserByEmail(email);
+    }
+    @PutMapping("/{id}")
+    public User updateUser(
+            @PathVariable Long id,
+            @RequestBody User user
+    ) {
+
+        return userService.updateUser(
+                id,
+                user
+        );
     }
 }
