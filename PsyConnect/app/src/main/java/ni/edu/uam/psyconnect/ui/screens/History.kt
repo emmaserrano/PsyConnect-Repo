@@ -3,9 +3,12 @@ package ni.edu.uam.psyconnect.ui.screens
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.network.RetrofitClient
@@ -17,10 +20,14 @@ class History : AppCompatActivity() {
 
         setContentView(R.layout.activity_history)
 
-        val container =
-            findViewById<LinearLayout>(
-                R.id.containerHistory
-            )
+        val chart =
+            findViewById<LineChart>(R.id.lineChart)
+
+        val tvSummary =
+            findViewById<TextView>(R.id.tvSummary)
+
+        val layoutHistory =
+            findViewById<LinearLayout>(R.id.layoutHistory)
 
         val sharedPreferences =
             getSharedPreferences(
@@ -46,34 +53,66 @@ class History : AppCompatActivity() {
                 if (response.isSuccessful) {
 
                     val results =
-                        response.body()
+                        response.body() ?: emptyList()
 
-                    results?.forEach { result ->
+                    if (results.isNotEmpty()) {
 
-                        val textView =
-                            TextView(this@History)
+                        val average =
+                            results.map { it.percentage }
+                                .average()
 
-                        textView.text =
+                        tvSummary.text =
                             """
-                            Fecha: ${result.createdAt}
-                            Resultado: ${result.percentage}%
-                            Nivel: ${result.level}
-                            
+                            Total de tests: ${results.size}
+                            Promedio: ${average.toInt()}%
+                            Último resultado: ${results[0].percentage}%
                             """.trimIndent()
 
-                        textView.textSize = 18f
+                        val entries =
+                            mutableListOf<Entry>()
 
-                        container.addView(textView)
+                        results.reversed()
+                            .forEachIndexed { index, result ->
+
+                                entries.add(
+                                    Entry(
+                                        index.toFloat(),
+                                        result.percentage.toFloat()
+                                    )
+                                )
+                            }
+
+                        val dataSet =
+                            LineDataSet(
+                                entries,
+                                "Nivel emocional"
+                            )
+
+                        chart.data =
+                            LineData(dataSet)
+
+                        chart.invalidate()
+
+                        results.forEach {
+
+                            val tv =
+                                TextView(this@History)
+
+                            tv.text =
+                                """
+                                Fecha: ${it.createdAt}
+                                Resultado: ${it.percentage}%
+                                Nivel: ${it.level}
+                                """.trimIndent()
+
+                            tv.textSize = 16f
+
+                            layoutHistory.addView(tv)
+                        }
                     }
                 }
 
-            } catch (e: Exception) {
-
-                Toast.makeText(
-                    this@History,
-                    e.message,
-                    Toast.LENGTH_LONG
-                ).show()
+            } catch (_: Exception) {
             }
         }
     }
