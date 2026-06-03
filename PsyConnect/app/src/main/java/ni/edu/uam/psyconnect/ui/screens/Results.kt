@@ -7,6 +7,8 @@ import ni.edu.uam.psyconnect.R
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.network.RetrofitClient
+import android.content.Intent
+import android.widget.Button
 
 class Results : AppCompatActivity() {
 
@@ -14,6 +16,21 @@ class Results : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_results)
+
+        val btnProgress =
+            findViewById<Button>(
+                R.id.btnProgress
+            )
+
+        btnProgress.setOnClickListener {
+
+            startActivity(
+                Intent(
+                    this,
+                    History::class.java
+                )
+            )
+        }
 
         val percentageText = findViewById<TextView>(R.id.tvPercentage)
         val levelText = findViewById<TextView>(R.id.tvLevel)
