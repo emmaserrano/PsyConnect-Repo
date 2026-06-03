@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ni.edu.uam.psyconnect.R
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import ni.edu.uam.psyconnect.network.RetrofitClient
 
 class Results : AppCompatActivity() {
 
@@ -71,5 +74,37 @@ class Results : AppCompatActivity() {
         levelText.text = "Nivel: $level"
 
         recommendationsText.text = recommendations
+        val sharedPreferences =
+            getSharedPreferences(
+                "psyconnect",
+                MODE_PRIVATE
+            )
+
+        val userId =
+            sharedPreferences.getLong(
+                "userId",
+                -1
+            )
+
+        if (userId != -1L) {
+
+            lifecycleScope.launch {
+
+                try {
+
+                    RetrofitClient
+                        .apiService
+                        .saveResult(
+                            ni.edu.uam.psyconnect.data.model.TestResult(
+                                userId = userId,
+                                percentage = percentage,
+                                level = level
+                            )
+                        )
+
+                } catch (_: Exception) {
+                }
+            }
+        }
     }
 }
