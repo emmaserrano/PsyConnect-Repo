@@ -4,6 +4,8 @@ import ni.edu.uam.psyconnect_backend.dto.LoginRequest;
 import ni.edu.uam.psyconnect_backend.dto.LoginResponse;
 import ni.edu.uam.psyconnect_backend.model.User;
 import ni.edu.uam.psyconnect_backend.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,11 +20,22 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public User registerUser(
+    public ResponseEntity<?> registerUser(
             @RequestBody User user
     ) {
 
-        return userService.saveUser(user);
+        try {
+
+            User savedUser = userService.saveUser(user);
+
+            return ResponseEntity.ok(savedUser);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        }
     }
 
     @PostMapping("/login")
@@ -32,12 +45,20 @@ public class UserController {
 
         return userService.login(request);
     }
+
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
+    public User getUserById(
+            @PathVariable Long id
+    ) {
+
         return userService.getUserById(id);
     }
+
     @GetMapping("/email/{email}")
-    public User getUserByEmail(@PathVariable String email) {
+    public User getUserByEmail(
+            @PathVariable String email
+    ) {
+
         return userService.getUserByEmail(email);
     }
 }

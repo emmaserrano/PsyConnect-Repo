@@ -70,9 +70,11 @@ class Register : AppCompatActivity() {
 
                     } else {
 
+                        val errorMessage = response.errorBody()?.string()
+
                         Toast.makeText(
                             this@Register,
-                            "Error al registrar usuario",
+                            errorMessage ?: "Error al registrar usuario",
                             Toast.LENGTH_LONG
                         ).show()
                     }
