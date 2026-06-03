@@ -62,9 +62,10 @@
             android:layout_marginBottom="24dp">
 
             <TextView
+                android:id="@+id/tvAge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edad: 21"
+                android:text="Edad:"
                 android:textSize="18sp"
                 android:textColor="?android:textColorPrimary"
                 android:layout_marginBottom="12dp"/>
