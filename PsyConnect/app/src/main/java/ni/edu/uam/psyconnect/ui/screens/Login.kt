@@ -70,10 +70,9 @@ class Login : AppCompatActivity() {
                                 )
 
                             sharedPreferences.edit()
-                                .putLong(
-                                    "userId",
-                                    authResponse.userId ?: -1
-                                )
+                                .putLong("userId", authResponse.userId ?: -1)
+                                .putBoolean("isLogged", true)
+                                .putString("email", email)
                                 .apply()
 
                             Toast.makeText(
