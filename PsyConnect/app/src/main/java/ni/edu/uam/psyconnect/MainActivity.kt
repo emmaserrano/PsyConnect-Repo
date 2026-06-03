@@ -11,20 +11,26 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
+        val sharedPreferences =
+            getSharedPreferences(
+                "psyconnect",
+                MODE_PRIVATE
+            )
 
-        val isLogged = sharedPreferences.getBoolean("isLogged", false)
+        val userId =
+            sharedPreferences.getLong(
+                "userId",
+                -1
+            )
 
-        if (isLogged) {
+        val intent =
+            if (userId != -1L) {
+                Intent(this, Home::class.java)
+            } else {
+                Intent(this, Login::class.java)
+            }
 
-            val intent = Intent(this, Home::class.java)
-            startActivity(intent)
-
-        } else {
-
-            val intent = Intent(this, Login::class.java)
-            startActivity(intent)
-        }
+        startActivity(intent)
 
         finish()
     }
