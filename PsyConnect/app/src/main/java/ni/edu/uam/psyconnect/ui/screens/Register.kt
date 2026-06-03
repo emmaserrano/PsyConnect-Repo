@@ -9,98 +9,82 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.User
-import ni.edu.uam.psyconnect.data.repository.AuthRepository
+import ni.edu.uam.psyconnect.network.RetrofitClient
 
 class Register : AppCompatActivity() {
-
-    private lateinit var etName: EditText
-    private lateinit var etEmail: EditText
-    private lateinit var etPassword: EditText
-    private lateinit var etAge: EditText
-    private lateinit var btnRegister: Button
-
-    private val authRepository = AuthRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_register)
 
-        etName = findViewById(R.id.etName)
-        etEmail = findViewById(R.id.etEmail)
-        etPassword = findViewById(R.id.etPassword)
-        etAge = findViewById(R.id.etAge)
-        btnRegister = findViewById(R.id.btnRegister)
+        val etName = findViewById<EditText>(R.id.etName)
+        val etEmail = findViewById<EditText>(R.id.etEmail)
+        val etPassword = findViewById<EditText>(R.id.etPassword)
+        val etAge = findViewById<EditText>(R.id.etAge)
+
+        val btnRegister = findViewById<Button>(R.id.btnRegister)
 
         btnRegister.setOnClickListener {
 
-            registerUser()
-        }
-    }
+            val name = etName.text.toString()
+            val email = etEmail.text.toString()
+            val password = etPassword.text.toString()
+            val age = etAge.text.toString()
 
-    private fun registerUser() {
+            if (
+                name.isEmpty() ||
+                email.isEmpty() ||
+                password.isEmpty() ||
+                age.isEmpty()
+            ) {
+                Toast.makeText(
+                    this,
+                    "Complete todos los campos",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
 
-        val name = etName.text.toString()
-        val email = etEmail.text.toString()
-        val password = etPassword.text.toString()
-        val age = etAge.text.toString()
+            val user = User(
+                name = name,
+                email = email,
+                password = password,
+                age = age.toInt()
+            )
 
-        if (
-            name.isEmpty() ||
-            email.isEmpty() ||
-            password.isEmpty() ||
-            age.isEmpty()
-        ) {
+            lifecycleScope.launch {
 
-            Toast.makeText(
-                this,
-                "Complete todos los campos",
-                Toast.LENGTH_SHORT
-            ).show()
+                try {
 
-            return
-        }
+                    val response =
+                        RetrofitClient.apiService.registerUser(user)
 
-        val user = User(
-            name = name,
-            email = email,
-            password = password,
-            age = age.toInt()
-        )
+                    if (response.isSuccessful) {
 
-        lifecycleScope.launch {
+                        Toast.makeText(
+                            this@Register,
+                            "Usuario registrado correctamente",
+                            Toast.LENGTH_LONG
+                        ).show()
 
-            try {
+                    } else {
 
-                val response =
-                    authRepository.registerUser(user)
+                        Toast.makeText(
+                            this@Register,
+                            "Error al registrar usuario",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
 
-                if (response.isSuccessful) {
+                } catch (e: Exception) {
 
                     Toast.makeText(
                         this@Register,
-                        "Usuario registrado correctamente",
-                        Toast.LENGTH_LONG
-                    ).show()
-
-                    finish()
-
-                } else {
-
-                    Toast.makeText(
-                        this@Register,
-                        "No se pudo registrar",
+                        e.message,
                         Toast.LENGTH_LONG
                     ).show()
                 }
-
-            } catch (e: Exception) {
-
-                Toast.makeText(
-                    this@Register,
-                    e.message,
-                    Toast.LENGTH_LONG
-                ).show()
             }
         }
     }
