@@ -34,7 +34,8 @@ public class UserService {
 
             return new LoginResponse(
                     false,
-                    "Usuario no encontrado"
+                    "Usuario no encontrado",
+                    null
             );
         }
 
@@ -42,13 +43,15 @@ public class UserService {
 
             return new LoginResponse(
                     false,
-                    "Contraseña incorrecta"
+                    "Contraseña incorrecta",
+                    null
             );
         }
 
         return new LoginResponse(
                 true,
-                "Inicio de sesión exitoso"
+                "Inicio de sesión exitoso",
+                user.getId()
         );
     }
     public User getUserById(Long id) {
