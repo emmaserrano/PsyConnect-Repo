@@ -1,0 +1,133 @@
+package ni.edu.uam.psyconnect.ui.screens
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import ni.edu.uam.psyconnect.R
+import ni.edu.uam.psyconnect.data.model.User
+import ni.edu.uam.psyconnect.network.RetrofitClient
+
+class EditProfile : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_edit_profile)
+
+        val etName =
+            findViewById<EditText>(R.id.etName)
+
+        val etEmail =
+            findViewById<EditText>(R.id.etEmail)
+
+        val etAge =
+            findViewById<EditText>(R.id.etAge)
+
+        val btnSave =
+            findViewById<Button>(R.id.btnSave)
+
+        val sharedPreferences =
+            getSharedPreferences(
+                "psyconnect",
+                MODE_PRIVATE
+            )
+
+        val userId =
+            sharedPreferences.getLong(
+                "userId",
+                -1
+            )
+
+        if (userId != -1L) {
+
+            lifecycleScope.launch {
+
+                try {
+
+                    val response =
+                        RetrofitClient
+                            .apiService
+                            .getUserById(userId)
+
+                    if (response.isSuccessful) {
+
+                        val user =
+                            response.body()
+
+                        if (user != null) {
+
+                            etName.setText(user.name)
+                            etEmail.setText(user.email)
+                            etAge.setText(user.age.toString())
+                        }
+                    }
+
+                } catch (e: Exception) {
+
+                    Toast.makeText(
+                        this@EditProfile,
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+
+        btnSave.setOnClickListener {
+
+            lifecycleScope.launch {
+
+                try {
+
+                    val updatedUser =
+                        User(
+                            id = userId,
+                            name = etName.text.toString(),
+                            email = etEmail.text.toString(),
+                            password = "",
+                            age = etAge.text.toString().toInt()
+                        )
+
+                    val response =
+                        RetrofitClient
+                            .apiService
+                            .updateUser(
+                                userId,
+                                updatedUser
+                            )
+
+                    if (response.isSuccessful) {
+
+                        Toast.makeText(
+                            this@EditProfile,
+                            "Perfil actualizado",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        finish()
+
+                    } else {
+
+                        Toast.makeText(
+                            this@EditProfile,
+                            "No se pudo actualizar",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                } catch (e: Exception) {
+
+                    Toast.makeText(
+                        this@EditProfile,
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+}

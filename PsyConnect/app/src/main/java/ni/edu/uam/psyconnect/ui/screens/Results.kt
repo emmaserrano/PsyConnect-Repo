@@ -4,6 +4,11 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ni.edu.uam.psyconnect.R
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import ni.edu.uam.psyconnect.network.RetrofitClient
+import android.content.Intent
+import android.widget.Button
 
 class Results : AppCompatActivity() {
 
@@ -11,6 +16,21 @@ class Results : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_results)
+
+        val btnProgress =
+            findViewById<Button>(
+                R.id.btnProgress
+            )
+
+        btnProgress.setOnClickListener {
+
+            startActivity(
+                Intent(
+                    this,
+                    History::class.java
+                )
+            )
+        }
 
         val percentageText = findViewById<TextView>(R.id.tvPercentage)
         val levelText = findViewById<TextView>(R.id.tvLevel)
@@ -71,5 +91,37 @@ class Results : AppCompatActivity() {
         levelText.text = "Nivel: $level"
 
         recommendationsText.text = recommendations
+        val sharedPreferences =
+            getSharedPreferences(
+                "psyconnect",
+                MODE_PRIVATE
+            )
+
+        val userId =
+            sharedPreferences.getLong(
+                "userId",
+                -1
+            )
+
+        if (userId != -1L) {
+
+            lifecycleScope.launch {
+
+                try {
+
+                    RetrofitClient
+                        .apiService
+                        .saveResult(
+                            ni.edu.uam.psyconnect.data.model.TestResult(
+                                userId = userId,
+                                percentage = percentage,
+                                level = level
+                            )
+                        )
+
+                } catch (_: Exception) {
+                }
+            }
+        }
     }
 }
