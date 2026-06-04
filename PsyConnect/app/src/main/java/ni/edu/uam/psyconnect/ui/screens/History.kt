@@ -1,5 +1,6 @@
 package ni.edu.uam.psyconnect.ui.screens
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -12,6 +13,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.network.RetrofitClient
@@ -35,6 +37,56 @@ class History : AppCompatActivity() {
 
         val layoutHistory =
             findViewById<LinearLayout>(R.id.layoutHistory)
+
+        val bottomNav =
+            findViewById<BottomNavigationView>(R.id.bottomNavigation)
+
+        /*
+         * MENÚ INFERIOR
+         */
+        bottomNav.selectedItemId =
+            R.id.nav_history
+
+        bottomNav.setOnItemSelectedListener {
+
+            when (it.itemId) {
+
+                R.id.nav_test -> {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            Test::class.java
+                        )
+                    )
+
+                    finish()
+
+                    true
+                }
+
+                R.id.nav_history -> {
+
+                    true
+                }
+
+                R.id.nav_profile -> {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            Profile::class.java
+                        )
+                    )
+
+                    finish()
+
+                    true
+                }
+
+                else -> false
+            }
+        }
 
         val sharedPreferences =
             getSharedPreferences(
@@ -158,8 +210,13 @@ class History : AppCompatActivity() {
                                 "Resultados"
                             )
 
-                        chart.data =
+                        val data =
                             BarData(dataSet)
+
+                        data.barWidth = 0.6f
+
+                        chart.data =
+                            data
 
                         chart.description.isEnabled = false
 
@@ -169,7 +226,7 @@ class History : AppCompatActivity() {
 
                         chart.setFitBars(true)
 
-                        chart.extraBottomOffset = 30f
+                        chart.extraBottomOffset = 40f
 
                         chart.animateY(1000)
 
@@ -214,7 +271,6 @@ class History : AppCompatActivity() {
 
                                 val partes =
                                     createdAt.split("T")
-
                                 if (partes.size == 2) {
 
                                     val fechaOriginal =
@@ -266,7 +322,8 @@ class History : AppCompatActivity() {
 
                             params.bottomMargin = 24
 
-                            card.layoutParams = params
+                            card.layoutParams =
+                                params
 
                             card.radius = 20f
 
