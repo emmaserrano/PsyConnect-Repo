@@ -48,12 +48,12 @@ class Profile : AppCompatActivity() {
 
             when (it.itemId) {
 
-                R.id.nav_test -> {
+                R.id.nav_home -> {
 
                     startActivity(
                         Intent(
                             this,
-                            Test::class.java
+                            Home::class.java
                         )
                     )
 
