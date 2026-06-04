@@ -7,10 +7,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.network.RetrofitClient
-import kotlin.jvm.java
 
 class Profile : AppCompatActivity() {
 
@@ -21,6 +21,7 @@ class Profile : AppCompatActivity() {
     private var userId: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_profile)
@@ -29,8 +30,60 @@ class Profile : AppCompatActivity() {
         tvEmail = findViewById(R.id.tvEmail)
         tvAge = findViewById(R.id.tvAge)
 
-        val btnEdit = findViewById<Button>(R.id.btnEdit)
-        val btnLogout = findViewById<Button>(R.id.btnLogout)
+        val btnEdit =
+            findViewById<Button>(R.id.btnEdit)
+
+        val btnLogout =
+            findViewById<Button>(R.id.btnLogout)
+
+        val bottomNav =
+            findViewById<BottomNavigationView>(
+                R.id.bottomNavigation
+            )
+
+        bottomNav.selectedItemId =
+            R.id.nav_profile
+
+        bottomNav.setOnItemSelectedListener {
+
+            when (it.itemId) {
+
+                R.id.nav_home -> {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            Home::class.java
+                        )
+                    )
+
+                    finish()
+
+                    true
+                }
+
+                R.id.nav_history -> {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            History::class.java
+                        )
+                    )
+
+                    finish()
+
+                    true
+                }
+
+                R.id.nav_profile -> {
+
+                    true
+                }
+
+                else -> false
+            }
+        }
 
         val sharedPreferences =
             getSharedPreferences(
@@ -46,13 +99,12 @@ class Profile : AppCompatActivity() {
 
         btnEdit.setOnClickListener {
 
-            val intent =
+            startActivity(
                 Intent(
                     this,
                     EditProfile::class.java
                 )
-
-            startActivity(intent)
+            )
         }
 
         btnLogout.setOnClickListener {
@@ -61,19 +113,19 @@ class Profile : AppCompatActivity() {
                 .remove("userId")
                 .apply()
 
-            val intent =
+            startActivity(
                 Intent(
                     this,
                     Login::class.java
                 )
-
-            startActivity(intent)
+            )
 
             finish()
         }
     }
 
     override fun onResume() {
+
         super.onResume()
 
         loadProfile()
@@ -96,13 +148,19 @@ class Profile : AppCompatActivity() {
 
                 if (response.isSuccessful) {
 
-                    val user = response.body()
+                    val user =
+                        response.body()
 
                     if (user != null) {
 
-                        tvName.text = user.name
-                        tvEmail.text = user.email
-                        tvAge.text = "Edad: ${user.age}"
+                        tvName.text =
+                            user.name
+
+                        tvEmail.text =
+                            user.email
+
+                        tvAge.text =
+                            "Edad: ${user.age}"
                     }
 
                 } else {
@@ -115,7 +173,6 @@ class Profile : AppCompatActivity() {
                 }
 
             } catch (e: Exception) {
-
                 Toast.makeText(
                     this@Profile,
                     e.message,

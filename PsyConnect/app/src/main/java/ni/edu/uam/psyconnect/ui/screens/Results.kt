@@ -11,6 +11,7 @@ import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.TestResult
 import ni.edu.uam.psyconnect.network.RetrofitClient
 import kotlin.math.abs
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class Results : AppCompatActivity() {
 
@@ -18,6 +19,64 @@ class Results : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_results)
+
+        val bottomNav =
+            findViewById<BottomNavigationView>(
+                R.id.bottomNavigation
+            )
+
+        bottomNav.selectedItemId =
+            R.id.nav_home
+
+        bottomNav.setOnItemSelectedListener {
+
+            when (it.itemId) {
+
+                R.id.nav_home -> {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            Home::class.java
+                        )
+                    )
+
+                    finish()
+
+                    true
+                }
+
+                R.id.nav_history -> {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            History::class.java
+                        )
+                    )
+
+                    finish()
+
+                    true
+                }
+
+                R.id.nav_profile -> {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            Profile::class.java
+                        )
+                    )
+
+                    finish()
+
+                    true
+                }
+
+                else -> false
+            }
+        }
 
         val btnProgress =
             findViewById<Button>(
