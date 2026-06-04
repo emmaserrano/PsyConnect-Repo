@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="18dp">
+
+        <!-- TITULO -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Resultados del Test"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="?android:textColorPrimary"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- CARD PRINCIPAL -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            card_view:cardCornerRadius="18dp"
+            card_view:cardElevation="4dp"
+            card_view:cardBackgroundColor="?android:colorBackgroundFloating">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="22dp">
+
+                <!-- PORCENTAJE -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Puntaje"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="?android:textColorPrimary"/>
+
+                <TextView
+                    android:id="@+id/tvPercentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="65%"
+                    android:textSize="48sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary"
+                    android:layout_marginBottom="20dp"/>
+
+                <!-- NIVEL -->
+                <TextView
+                    android:id="@+id/tvLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nivel: Ansiedad Moderada"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="?android:textColorPrimary"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- MENSAJE DE PROGRESO -->
+                <TextView
+                    android:id="@+id/tvProgressMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tu progreso aparecerá aquí"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary"
+                    android:layout_marginBottom="24dp"/>
+
+                <!-- RECOMENDACIONES -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recomendaciones"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="?android:textColorPrimary"
+                    android:layout_marginBottom="18dp"/>
+
+                <TextView
+                    android:id="@+id/tvRecommendations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:lineSpacingExtra="8dp"
+                    android:textColor="?android:textColorPrimary"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- BOTON -->
+        <Button
+            android:id="@+id/btnProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ver Mi Progreso"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="?attr/colorPrimary"
+            android:textColor="?android:textColorPrimaryInverse"/>
+
+    </LinearLayout>
+
+</ScrollView>
