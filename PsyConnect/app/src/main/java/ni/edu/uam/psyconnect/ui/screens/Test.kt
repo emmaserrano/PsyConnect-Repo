@@ -7,6 +7,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ni.edu.uam.psyconnect.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class Test : AppCompatActivity() {
 
@@ -14,6 +15,64 @@ class Test : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_test)
+
+        val bottomNav =
+            findViewById<BottomNavigationView>(
+                R.id.bottomNavigation
+            )
+
+        bottomNav.selectedItemId =
+            R.id.nav_home
+
+        bottomNav.setOnItemSelectedListener {
+
+            when (it.itemId) {
+
+                R.id.nav_home -> {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            Home::class.java
+                        )
+                    )
+
+                    finish()
+
+                    true
+                }
+
+                R.id.nav_history -> {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            History::class.java
+                        )
+                    )
+
+                    finish()
+
+                    true
+                }
+
+                R.id.nav_profile -> {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            Profile::class.java
+                        )
+                    )
+
+                    finish()
+
+                    true
+                }
+
+                else -> false
+            }
+        }
 
         // Botón resultados
         val btnResults = findViewById<Button>(R.id.btnResults)

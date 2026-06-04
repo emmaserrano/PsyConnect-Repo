@@ -48,6 +48,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
     implementation("com.github.PhilJay:MPAndroidChart:3.1.0")
     implementation("com.google.android.material:material:1.12.0")
+    implementation(libs.google.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
