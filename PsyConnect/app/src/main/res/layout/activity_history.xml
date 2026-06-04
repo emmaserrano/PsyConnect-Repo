@@ -47,6 +47,14 @@
                     android:textSize="16sp"
                     android:layout_marginTop="8dp"/>
 
+                <TextView
+                    android:id="@+id/tvTrend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="12dp"/>
+
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
@@ -67,25 +75,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tendencia"
+                    android:text="Evolución de Resultados"
                     android:textStyle="bold"
                     android:textSize="20sp"/>
 
-                <TextView
-                    android:id="@+id/tvTrend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:layout_marginTop="8dp"/>
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="380dp"
+                    android:layout_marginTop="12dp"/>
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
-
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barChart"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -93,7 +95,7 @@
             android:text="Historial"
             android:textStyle="bold"
             android:textSize="24sp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"/>
 
         <LinearLayout
