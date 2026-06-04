@@ -3,9 +3,15 @@ package ni.edu.uam.psyconnect.ui.screens
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.lifecycleScope
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.network.RetrofitClient
@@ -13,14 +19,22 @@ import ni.edu.uam.psyconnect.network.RetrofitClient
 class History : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_history)
 
-        val container =
-            findViewById<LinearLayout>(
-                R.id.containerHistory
-            )
+        val chart =
+            findViewById<BarChart>(R.id.barChart)
+
+        val tvSummary =
+            findViewById<TextView>(R.id.tvSummary)
+
+        val tvTrend =
+            findViewById<TextView>(R.id.tvTrend)
+
+        val layoutHistory =
+            findViewById<LinearLayout>(R.id.layoutHistory)
 
         val sharedPreferences =
             getSharedPreferences(
@@ -46,34 +60,253 @@ class History : AppCompatActivity() {
                 if (response.isSuccessful) {
 
                     val results =
-                        response.body()
+                        response.body() ?: emptyList()
 
-                    results?.forEach { result ->
+                    if (results.isNotEmpty()) {
 
-                        val textView =
-                            TextView(this@History)
+                        /*
+                         * RESUMEN
+                         */
+                        val average =
+                            results.map {
+                                it.percentage
+                            }.average()
 
-                        textView.text =
+                        tvSummary.text =
                             """
-                            Fecha: ${result.createdAt}
-                            Resultado: ${result.percentage}%
-                            Nivel: ${result.level}
-                            
+                            Total de tests: ${results.size}
+                            Promedio general: ${average.toInt()}%
+                            Último resultado: ${results.first().percentage}%
                             """.trimIndent()
 
-                        textView.textSize = 18f
+                        /*
+                         * TENDENCIA
+                         */
+                        if (results.size > 1) {
 
-                        container.addView(textView)
+                            val ultimo =
+                                results.first().percentage
+
+                            val primero =
+                                results.last().percentage
+
+                            tvTrend.text =
+                                when {
+
+                                    ultimo < primero ->
+                                        "📉 Tu nivel de ansiedad ha disminuido."
+
+                                    ultimo > primero ->
+                                        "📈 Tu nivel de ansiedad ha aumentado."
+
+                                    else ->
+                                        "➡️ Tu nivel se mantiene estable."
+                                }
+
+                        } else {
+
+                            tvTrend.text =
+                                "Realiza más tests para analizar tu tendencia."
+                        }
+
+                        /*
+                         * GRÁFICO
+                         */
+                        val entries =
+                            mutableListOf<BarEntry>()
+
+                        val labels =
+                            mutableListOf<String>()
+
+                        results
+                            .reversed()
+                            .forEachIndexed { index, result ->
+
+                                entries.add(
+                                    BarEntry(
+                                        index.toFloat(),
+                                        result.percentage.toFloat()
+                                    )
+                                )
+
+                                try {
+
+                                    val fecha =
+                                        result.createdAt
+                                            ?.split("T")
+                                            ?.get(0)
+                                            ?: ""
+
+                                    val partes =
+                                        fecha.split("-")
+
+                                    labels.add(
+                                        "${partes[2]}/${partes[1]}"
+                                    )
+
+                                } catch (_: Exception) {
+
+                                    labels.add(
+                                        "T${index + 1}"
+                                    )
+                                }
+                            }
+
+                        val dataSet =
+                            BarDataSet(
+                                entries,
+                                "Resultados"
+                            )
+
+                        chart.data =
+                            BarData(dataSet)
+
+                        chart.description.isEnabled = false
+
+                        chart.legend.isEnabled = false
+
+                        chart.axisRight.isEnabled = false
+
+                        chart.setFitBars(true)
+
+                        chart.extraBottomOffset = 30f
+
+                        chart.animateY(1000)
+
+                        chart.xAxis.position =
+                            XAxis.XAxisPosition.BOTTOM
+
+                        chart.xAxis.granularity = 1f
+
+                        chart.xAxis.labelCount =
+                            labels.size
+
+                        chart.xAxis.setDrawGridLines(false)
+
+                        chart.xAxis.labelRotationAngle = -30f
+
+                        chart.xAxis.textSize = 10f
+
+                        chart.xAxis.yOffset = 10f
+
+                        chart.xAxis.valueFormatter =
+                            IndexAxisValueFormatter(labels)
+
+                        chart.invalidate()
+
+                        /*
+                         * HISTORIAL
+                         */
+                        layoutHistory.removeAllViews()
+
+                        results.forEachIndexed { index, result ->
+
+                            var fecha =
+                                "No disponible"
+
+                            var hora =
+                                "No disponible"
+
+                            try {
+
+                                val createdAt =
+                                    result.createdAt ?: ""
+
+                                val partes =
+                                    createdAt.split("T")
+
+                                if (partes.size == 2) {
+
+                                    val fechaOriginal =
+                                        partes[0]
+
+                                    val fechaPartes =
+                                        fechaOriginal.split("-")
+
+                                    fecha =
+                                        "${fechaPartes[2]}/${fechaPartes[1]}/${fechaPartes[0]}"
+
+                                    val hora24 =
+                                        partes[1].substring(0, 5)
+
+                                    val h =
+                                        hora24.substring(0, 2).toInt()
+
+                                    val minutos =
+                                        hora24.substring(3, 5)
+
+                                    hora =
+                                        when {
+
+                                            h == 0 ->
+                                                "12:$minutos AM"
+
+                                            h < 12 ->
+                                                "$h:$minutos AM"
+
+                                            h == 12 ->
+                                                "12:$minutos PM"
+
+                                            else ->
+                                                "${h - 12}:$minutos PM"
+                                        }
+                                }
+
+                            } catch (_: Exception) {
+                            }
+
+                            val card =
+                                CardView(this@History)
+
+                            val params =
+                                LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                                )
+
+                            params.bottomMargin = 24
+
+                            card.layoutParams = params
+
+                            card.radius = 20f
+
+                            card.cardElevation = 8f
+
+                            val content =
+                                TextView(this@History)
+
+                            content.setPadding(
+                                32,
+                                32,
+                                32,
+                                32
+                            )
+
+                            content.text =
+                                """
+                                Test #${results.size - index}
+
+                                📅 Fecha: $fecha
+                                🕒 Hora: $hora
+
+                                📊 Resultado: ${result.percentage}%
+
+                                🧠 Nivel: ${result.level}
+                                """.trimIndent()
+
+                            content.textSize = 16f
+
+                            card.addView(content)
+
+                            layoutHistory.addView(card)
+                        }
                     }
                 }
 
-            } catch (e: Exception) {
+            } catch (_: Exception) {
 
-                Toast.makeText(
-                    this@History,
-                    e.message,
-                    Toast.LENGTH_LONG
-                ).show()
+                tvSummary.text =
+                    "Error al cargar historial"
             }
         }
     }
