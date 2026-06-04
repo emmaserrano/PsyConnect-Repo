@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.lifecycleScope
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.network.RetrofitClient
@@ -16,12 +17,13 @@ import ni.edu.uam.psyconnect.network.RetrofitClient
 class History : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_history)
 
         val chart =
-            findViewById<LineChart>(R.id.lineChart)
+            findViewById<BarChart>(R.id.barChart)
 
         val tvSummary =
             findViewById<TextView>(R.id.tvSummary)
@@ -58,61 +60,105 @@ class History : AppCompatActivity() {
                     if (results.isNotEmpty()) {
 
                         val average =
-                            results.map { it.percentage }
-                                .average()
+                            results.map {
+                                it.percentage
+                            }.average()
 
                         tvSummary.text =
                             """
                             Total de tests: ${results.size}
-                            Promedio: ${average.toInt()}%
+                            Promedio general: ${average.toInt()}%
                             Último resultado: ${results[0].percentage}%
                             """.trimIndent()
 
                         val entries =
-                            mutableListOf<Entry>()
+                            mutableListOf<BarEntry>()
 
-                        results.reversed()
+                        results
+                            .reversed()
                             .forEachIndexed { index, result ->
 
                                 entries.add(
-                                    Entry(
-                                        index.toFloat(),
+                                    BarEntry(
+                                        (index + 1).toFloat(),
                                         result.percentage.toFloat()
                                     )
                                 )
                             }
 
                         val dataSet =
-                            LineDataSet(
+                            BarDataSet(
                                 entries,
-                                "Nivel emocional"
+                                "Resultados"
                             )
 
                         chart.data =
-                            LineData(dataSet)
+                            BarData(dataSet)
+
+                        chart.description.isEnabled = false
+
+                        chart.animateY(1000)
 
                         chart.invalidate()
 
-                        results.forEach {
+                        layoutHistory.removeAllViews()
 
-                            val tv =
+                        results.forEachIndexed { index, result ->
+
+                            val card =
+                                CardView(this@History)
+
+                            val params =
+                                LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                                )
+
+                            params.bottomMargin = 24
+
+                            card.layoutParams = params
+
+                            card.radius = 20f
+
+                            card.cardElevation = 8f
+
+                            val content =
                                 TextView(this@History)
 
-                            tv.text =
+                            content.setPadding(
+                                32,
+                                32,
+                                32,
+                                32
+                            )
+
+                            content.text =
                                 """
-                                Fecha: ${it.createdAt}
-                                Resultado: ${it.percentage}%
-                                Nivel: ${it.level}
+                                Test #${results.size - index}
+
+                                Fecha:
+                                ${result.createdAt ?: "No disponible"}
+
+                                Resultado:
+                                ${result.percentage}%
+
+                                Nivel:
+                                ${result.level}
                                 """.trimIndent()
 
-                            tv.textSize = 16f
+                            content.textSize = 16f
 
-                            layoutHistory.addView(tv)
+                            card.addView(content)
+
+                            layoutHistory.addView(card)
                         }
                     }
                 }
 
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+
+                tvSummary.text =
+                    "Error al cargar historial"
             }
         }
     }
