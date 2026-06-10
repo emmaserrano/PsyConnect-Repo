@@ -16,6 +16,7 @@
     <string name="register_title">Crear Cuenta</string>
     <string name="register_subtitle">Únete a PsyConnect</string>
     <string name="hint_name">Nombre completo</string>
+    <string name="hint_username">Nombre de usuario</string>
     <string name="hint_age">Edad</string>
     <string name="btn_register_account">Crear cuenta</string>
     <string name="already_account">¿Ya tienes cuenta?</string>

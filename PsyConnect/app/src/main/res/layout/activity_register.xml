@@ -52,6 +52,15 @@
             android:layout_marginBottom="14dp"/>
 
         <EditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="@string/hint_username"
+            android:padding="16dp"
+            android:backgroundTint="@color/turquesa_principal"
+            android:layout_marginBottom="14dp"/>
+
+        <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="60dp"

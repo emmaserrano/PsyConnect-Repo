@@ -19,6 +19,7 @@ class Register : AppCompatActivity() {
         setContentView(R.layout.activity_register)
 
         val etName = findViewById<EditText>(R.id.etName)
+        val etUsername = findViewById<EditText>(R.id.etUsername)
         val etEmail = findViewById<EditText>(R.id.etEmail)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val etAge = findViewById<EditText>(R.id.etAge)
@@ -33,12 +34,14 @@ class Register : AppCompatActivity() {
         btnRegister.setOnClickListener {
 
             val name = etName.text.toString()
+            val username = etUsername.text.toString()
             val email = etEmail.text.toString()
             val password = etPassword.text.toString()
             val age = etAge.text.toString()
 
             if (
                 name.isEmpty()||
+                username.isEmpty() ||
                 email.isEmpty() ||
                 password.isEmpty() ||
                 age.isEmpty()
@@ -55,6 +58,7 @@ class Register : AppCompatActivity() {
 
             val user = User(
                 name = name,
+                username = username,
                 email = email,
                 password = password,
                 age = age.toInt()
