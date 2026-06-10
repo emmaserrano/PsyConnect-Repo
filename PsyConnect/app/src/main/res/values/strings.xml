@@ -6,7 +6,8 @@
 
     <!-- Login -->
     <string name="slogan">Tu bienestar mental, nuestra conexión</string>
-    <string name="hint_email">Correo electrónico</string>
+    <string name="hint_email">Correo o nombre de usuario+
+    </string>
     <string name="hint_password">Contraseña</string>
     <string name="btn_login">Iniciar sesión</string>
     <string name="no_account">¿No tienes cuenta?</string>

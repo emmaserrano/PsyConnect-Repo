@@ -34,9 +34,17 @@ public class UserService {
 
     public LoginResponse login(LoginRequest request) {
 
-        User user = userRepository
-                .findByEmail(request.getEmail())
-                .orElse(null);
+        String loginValue =
+                request.getEmail();
+
+        User user =
+                userRepository
+                        .findByEmail(loginValue)
+                        .orElse(
+                                userRepository
+                                        .findByUsername(loginValue)
+                                        .orElse(null)
+                        );
 
         if (user == null) {
 
