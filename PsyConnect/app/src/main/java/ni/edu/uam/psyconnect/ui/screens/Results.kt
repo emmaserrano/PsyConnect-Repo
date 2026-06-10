@@ -1,14 +1,17 @@
 package ni.edu.uam.psyconnect.ui.screens
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import ni.edu.uam.psyconnect.R
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import ni.edu.uam.psyconnect.R
+import ni.edu.uam.psyconnect.data.model.TestResult
 import ni.edu.uam.psyconnect.network.RetrofitClient
-import android.content.Intent
-import android.widget.Button
+import kotlin.math.abs
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class Results : AppCompatActivity() {
 
@@ -16,6 +19,64 @@ class Results : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_results)
+
+        val bottomNav =
+            findViewById<BottomNavigationView>(
+                R.id.bottomNavigation
+            )
+
+        bottomNav.selectedItemId =
+            R.id.nav_home
+
+        bottomNav.setOnItemSelectedListener {
+
+            when (it.itemId) {
+
+                R.id.nav_home -> {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            Home::class.java
+                        )
+                    )
+
+                    finish()
+
+                    true
+                }
+
+                R.id.nav_history -> {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            History::class.java
+                        )
+                    )
+
+                    finish()
+
+                    true
+                }
+
+                R.id.nav_profile -> {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            Profile::class.java
+                        )
+                    )
+
+                    finish()
+
+                    true
+                }
+
+                else -> false
+            }
+        }
 
         val btnProgress =
             findViewById<Button>(
@@ -32,17 +93,36 @@ class Results : AppCompatActivity() {
             )
         }
 
-        val percentageText = findViewById<TextView>(R.id.tvPercentage)
-        val levelText = findViewById<TextView>(R.id.tvLevel)
-        val recommendationsText = findViewById<TextView>(R.id.tvRecommendations)
+        val percentageText =
+            findViewById<TextView>(
+                R.id.tvPercentage
+            )
+
+        val levelText =
+            findViewById<TextView>(
+                R.id.tvLevel
+            )
+
+        val recommendationsText =
+            findViewById<TextView>(
+                R.id.tvRecommendations
+            )
+
+        val progressMessage =
+            findViewById<TextView>(
+                R.id.tvProgressMessage
+            )
 
         // Obtener porcentaje enviado desde Test
-        val percentage = intent.getIntExtra("percentage", 0)
+        val percentage =
+            intent.getIntExtra(
+                "percentage",
+                0
+            )
 
         // Mostrar porcentaje
         percentageText.text = "$percentage%"
 
-        // Determinar nivel
         val level: String
         val recommendations: String
 
@@ -87,10 +167,10 @@ class Results : AppCompatActivity() {
             }
         }
 
-        // Mostrar resultados
         levelText.text = "Nivel: $level"
 
         recommendationsText.text = recommendations
+
         val sharedPreferences =
             getSharedPreferences(
                 "psyconnect",
@@ -109,10 +189,50 @@ class Results : AppCompatActivity() {
 
                 try {
 
+                    val historyResponse =
+                        RetrofitClient
+                            .apiService
+                            .getHistory(userId)
+
+                    if (historyResponse.isSuccessful) {
+
+                        val history =
+                            historyResponse.body()
+                                ?: emptyList()
+
+                        if (history.isNotEmpty()) {
+
+                            val previous =
+                                history.first()
+
+                            val difference =
+                                percentage -
+                                        previous.percentage
+
+                            progressMessage.text =
+                                when {
+
+                                    difference < 0 ->
+                                        "Excelente. Tu ansiedad disminuyó ${abs(difference)}% respecto al test anterior."
+
+                                    difference > 0 ->
+                                        "Tu ansiedad aumentó $difference% respecto al test anterior."
+
+                                    else ->
+                                        "Tu resultado es igual al test anterior."
+                                }
+
+                        } else {
+
+                            progressMessage.text =
+                                "Este es tu primer test registrado."
+                        }
+                    }
+
                     RetrofitClient
                         .apiService
                         .saveResult(
-                            ni.edu.uam.psyconnect.data.model.TestResult(
+                            TestResult(
                                 userId = userId,
                                 percentage = percentage,
                                 level = level
