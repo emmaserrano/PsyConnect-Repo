@@ -25,6 +25,11 @@ class Register : AppCompatActivity() {
 
         val btnRegister = findViewById<Button>(R.id.btnRegister)
 
+        val btnBackLogin =
+            findViewById<Button>(
+                R.id.btnBackLogin
+            )
+
         btnRegister.setOnClickListener {
 
             val name = etName.text.toString()
@@ -33,16 +38,18 @@ class Register : AppCompatActivity() {
             val age = etAge.text.toString()
 
             if (
-                name.isEmpty() ||
+                name.isEmpty()||
                 email.isEmpty() ||
                 password.isEmpty() ||
                 age.isEmpty()
             ) {
+
                 Toast.makeText(
                     this,
                     "Complete todos los campos",
                     Toast.LENGTH_SHORT
                 ).show()
+
                 return@setOnClickListener
             }
 
@@ -68,13 +75,17 @@ class Register : AppCompatActivity() {
                             Toast.LENGTH_LONG
                         ).show()
 
+                        finish()
+
                     } else {
 
-                        val errorMessage = response.errorBody()?.string()
+                        val errorMessage =
+                            response.errorBody()?.string()
 
                         Toast.makeText(
                             this@Register,
-                            errorMessage ?: "Error al registrar usuario",
+                            errorMessage
+                                ?: "Error al registrar usuario",
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -88,6 +99,11 @@ class Register : AppCompatActivity() {
                     ).show()
                 }
             }
+        }
+
+        btnBackLogin.setOnClickListener {
+
+            finish()
         }
     }
 }

@@ -1,10 +1,24 @@
 <resources>
+
+    <!-- App -->
     <string name="app_name">PsyConnect</string>
+    <string name="desc_logo">Logo de PsyConnect</string>
+
+    <!-- Login -->
     <string name="slogan">Tu bienestar mental, nuestra conexión</string>
     <string name="hint_email">Correo electrónico</string>
     <string name="hint_password">Contraseña</string>
     <string name="btn_login">Iniciar sesión</string>
     <string name="no_account">¿No tienes cuenta?</string>
     <string name="btn_register">Crear cuenta</string>
-    <string name="desc_logo">Logo de PsyConnect</string>
+
+    <!-- Registro -->
+    <string name="register_title">Crear Cuenta</string>
+    <string name="register_subtitle">Únete a PsyConnect</string>
+    <string name="hint_name">Nombre completo</string>
+    <string name="hint_age">Edad</string>
+    <string name="btn_register_account">Crear cuenta</string>
+    <string name="already_account">¿Ya tienes cuenta?</string>
+    <string name="login_here">Iniciar sesión</string>
+
 </resources>
