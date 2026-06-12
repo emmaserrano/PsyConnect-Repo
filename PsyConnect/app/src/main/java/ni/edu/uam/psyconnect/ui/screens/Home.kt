@@ -2,8 +2,8 @@ package ni.edu.uam.psyconnect.ui.screens
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import ni.edu.uam.psyconnect.R
 
@@ -15,9 +15,9 @@ class Home : AppCompatActivity() {
 
         setContentView(R.layout.activity_home)
 
-        val btnTest =
-            findViewById<Button>(
-                R.id.btnTest
+        val cardTest =
+            findViewById<CardView>(
+                R.id.cardTest
             )
 
         val bottomNav =
@@ -69,7 +69,7 @@ class Home : AppCompatActivity() {
             }
         }
 
-        btnTest.setOnClickListener {
+        cardTest.setOnClickListener {
 
             startActivity(
                 Intent(
