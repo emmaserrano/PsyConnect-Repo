@@ -19,35 +19,46 @@ class Register : AppCompatActivity() {
         setContentView(R.layout.activity_register)
 
         val etName = findViewById<EditText>(R.id.etName)
+        val etUsername = findViewById<EditText>(R.id.etUsername)
         val etEmail = findViewById<EditText>(R.id.etEmail)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val etAge = findViewById<EditText>(R.id.etAge)
 
         val btnRegister = findViewById<Button>(R.id.btnRegister)
 
+        val btnBackLogin =
+            findViewById<Button>(
+                R.id.btnBackLogin
+            )
+
         btnRegister.setOnClickListener {
 
             val name = etName.text.toString()
+            val username = etUsername.text.toString()
             val email = etEmail.text.toString()
             val password = etPassword.text.toString()
             val age = etAge.text.toString()
 
             if (
-                name.isEmpty() ||
+                name.isEmpty()||
+                username.isEmpty() ||
                 email.isEmpty() ||
                 password.isEmpty() ||
                 age.isEmpty()
             ) {
+
                 Toast.makeText(
                     this,
                     "Complete todos los campos",
                     Toast.LENGTH_SHORT
                 ).show()
+
                 return@setOnClickListener
             }
 
             val user = User(
                 name = name,
+                username = username,
                 email = email,
                 password = password,
                 age = age.toInt()
@@ -68,13 +79,17 @@ class Register : AppCompatActivity() {
                             Toast.LENGTH_LONG
                         ).show()
 
+                        finish()
+
                     } else {
 
-                        val errorMessage = response.errorBody()?.string()
+                        val errorMessage =
+                            response.errorBody()?.string()
 
                         Toast.makeText(
                             this@Register,
-                            errorMessage ?: "Error al registrar usuario",
+                            errorMessage
+                                ?: "Error al registrar usuario",
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -88,6 +103,11 @@ class Register : AppCompatActivity() {
                     ).show()
                 }
             }
+        }
+
+        btnBackLogin.setOnClickListener {
+
+            finish()
         }
     }
 }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.LoginRequest
 import ni.edu.uam.psyconnect.network.RetrofitClient
+import ni.edu.uam.psyconnect.ui.components.CustomMessage
 
 class Login : AppCompatActivity() {
 
@@ -75,11 +76,10 @@ class Login : AppCompatActivity() {
                                 .putString("email", email)
                                 .apply()
 
-                            Toast.makeText(
-                                this@Login,
-                                authResponse.message,
-                                Toast.LENGTH_LONG
-                            ).show()
+                            CustomMessage.success(
+                                findViewById(android.R.id.content),
+                                authResponse.message
+                            )
 
                             val intent =
                                 Intent(
@@ -93,12 +93,11 @@ class Login : AppCompatActivity() {
 
                         } else {
 
-                            Toast.makeText(
-                                this@Login,
+                            CustomMessage.error(
+                                findViewById(android.R.id.content),
                                 authResponse?.message
-                                    ?: "Error al iniciar sesión",
-                                Toast.LENGTH_LONG
-                            ).show()
+                                    ?: "Error al iniciar sesión"
+                            )
                         }
 
                     } else {
