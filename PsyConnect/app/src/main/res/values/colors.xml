@@ -11,4 +11,14 @@
 
     <color name="blanco">#FFFFFF</color>
 
+    <color name="turquesa_claro">#E6F8F6</color>
+
+    <color name="turquesa_texto">#0F766E</color>
+
+    <color name="gris_claro">#F8FAFA</color>
+
+    <color name="status_bar_color">#134E4A</color>
+
+    <color name="navigation_bar_color">#F5FFFE</color>
+
 </resources>
