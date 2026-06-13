@@ -1,4 +1,4 @@
-package ni.edu.uam.psyconnect.adapter
+package ni.edu.uam.psyconnect.ui.adapter
 
 import android.content.Intent
 import android.net.Uri

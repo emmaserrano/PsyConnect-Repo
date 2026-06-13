@@ -53,4 +53,8 @@ interface ApiService {
     @GET("psychologists")
     suspend fun getPsychologists():
             Response<List<Psychologist>>
+    
+    @GET("api/psychologists/featured")
+    suspend fun getFeaturedPsychologists():
+            Response<List<Psychologist>>
 }
