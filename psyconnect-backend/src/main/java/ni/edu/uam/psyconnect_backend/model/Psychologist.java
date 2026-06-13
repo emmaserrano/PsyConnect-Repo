@@ -67,9 +67,7 @@ public class Psychologist {
         return name;
     }
 
-    public void setName(
-            String name
-    ) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -77,9 +75,7 @@ public class Psychologist {
         return specialty;
     }
 
-    public void setSpecialty(
-            String specialty
-    ) {
+    public void setSpecialty(String specialty) {
         this.specialty = specialty;
     }
 
@@ -87,9 +83,7 @@ public class Psychologist {
         return phone;
     }
 
-    public void setPhone(
-            String phone
-    ) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -97,9 +91,7 @@ public class Psychologist {
         return city;
     }
 
-    public void setCity(
-            String city
-    ) {
+    public void setCity(String city) {
         this.city = city;
     }
 
@@ -107,9 +99,7 @@ public class Psychologist {
         return email;
     }
 
-    public void setEmail(
-            String email
-    ) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -117,9 +107,7 @@ public class Psychologist {
         return description;
     }
 
-    public void setDescription(
-            String description
-    ) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -127,9 +115,7 @@ public class Psychologist {
         return photoUrl;
     }
 
-    public void setPhotoUrl(
-            String photoUrl
-    ) {
+    public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
 
@@ -137,9 +123,7 @@ public class Psychologist {
         return virtualAttention;
     }
 
-    public void setVirtualAttention(
-            Boolean virtualAttention
-    ) {
+    public void setVirtualAttention(Boolean virtualAttention) {
         this.virtualAttention = virtualAttention;
     }
 
@@ -147,9 +131,7 @@ public class Psychologist {
         return rating;
     }
 
-    public void setRating(
-            Double rating
-    ) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
@@ -157,9 +139,7 @@ public class Psychologist {
         return featured;
     }
 
-    public void setFeatured(
-            Boolean featured
-    ) {
+    public void setFeatured(Boolean featured) {
         this.featured = featured;
     }
 }
