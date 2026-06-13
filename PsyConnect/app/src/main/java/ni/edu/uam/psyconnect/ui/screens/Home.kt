@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import ni.edu.uam.psyconnect.R
 
@@ -20,6 +22,18 @@ class Home : AppCompatActivity() {
                 R.id.cardTest
             )
 
+        val recyclerPsychologists =
+            findViewById<RecyclerView>(
+                R.id.recyclerPsychologists
+            )
+
+        recyclerPsychologists.layoutManager =
+            LinearLayoutManager(
+                this,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+
         val bottomNav =
             findViewById<BottomNavigationView>(
                 R.id.bottomNavigation
@@ -32,10 +46,7 @@ class Home : AppCompatActivity() {
 
             when (it.itemId) {
 
-                R.id.nav_home -> {
-
-                    true
-                }
+                R.id.nav_home -> true
 
                 R.id.nav_history -> {
 
