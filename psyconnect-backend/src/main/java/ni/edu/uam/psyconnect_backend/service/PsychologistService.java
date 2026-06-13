@@ -1,0 +1,37 @@
+package ni.edu.uam.psyconnect_backend.service;
+
+import ni.edu.uam.psyconnect_backend.model.Psychologist;
+import ni.edu.uam.psyconnect_backend.repository.PsychologistRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class PsychologistService {
+
+    private final PsychologistRepository repository;
+
+    public PsychologistService(
+            PsychologistRepository repository
+    ) {
+        this.repository = repository;
+    }
+
+    public List<Psychologist> getAll() {
+
+        return repository.findAll();
+    }
+
+    public List<Psychologist> getFeatured() {
+
+        return repository.findByFeaturedTrue();
+    }
+
+    public Psychologist save(
+            Psychologist psychologist
+    ) {
+
+        return repository.save(psychologist);
+    }
+
+}
