@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PsyConnect Admin</title>
+</head>
+
+<body>
+
+<h1>Agregar Psicólogo</h1>
+
+<form action="/admin/save" method="post">
+
+    <p>
+        Nombre:
+        <input type="text" name="name">
+    </p>
+
+    <p>
+        Especialidad:
+        <input type="text" name="specialty">
+    </p>
+
+    <p>
+        WhatsApp:
+        <input type="text" name="phone">
+    </p>
+
+    <p>
+        Ciudad:
+        <input type="text" name="city">
+    </p>
+
+    <p>
+        Correo:
+        <input type="text" name="email">
+    </p>
+
+    <p>
+        Atención virtual:
+        <input type="checkbox" name="virtualAttention">
+    </p>
+
+    <p>
+        Calificación:
+        <input type="number"
+               step="0.1"
+               min="1"
+               max="5"
+               name="rating">
+    </p>
+
+    <p>
+        Destacado:
+        <input type="checkbox"
+               name="featured">
+    </p>
+
+    <p>
+        URL foto:
+        <input type="text"
+               name="photoUrl">
+    </p>
+
+    <p>
+        Descripción:
+    </p>
+
+    <textarea
+            rows="6"
+            cols="40"
+            name="description"></textarea>
+
+    <br><br>
+
+    <button type="submit">
+        Guardar
+    </button>
+
+</form>
+
+</body>
+</html>
