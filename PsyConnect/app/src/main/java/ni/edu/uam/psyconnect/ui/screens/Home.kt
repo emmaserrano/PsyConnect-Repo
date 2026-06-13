@@ -4,10 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
+import ni.edu.uam.psyconnect.network.RetrofitClient
+import ni.edu.uam.psyconnect.ui.adapter.PsychologistAdapter
 
 class Home : AppCompatActivity() {
 
@@ -33,6 +37,35 @@ class Home : AppCompatActivity() {
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
+
+        /*
+         * CARGAR PSICÓLOGOS DESTACADOS
+         */
+        lifecycleScope.launch {
+
+            try {
+
+                val response =
+                    RetrofitClient
+                        .apiService
+                        .getFeaturedPsychologists()
+
+                if (response.isSuccessful) {
+
+                    val psychologists =
+                        response.body() ?: emptyList()
+
+                    recyclerPsychologists.adapter =
+                        PsychologistAdapter(
+                            psychologists
+                        )
+                }
+
+            } catch (e: Exception) {
+
+                e.printStackTrace()
+            }
+        }
 
         val bottomNav =
             findViewById<BottomNavigationView>(
