@@ -40,4 +40,6 @@ public class PsychologistController {
         return service.save(psychologist);
     }
 
+
+
 }
