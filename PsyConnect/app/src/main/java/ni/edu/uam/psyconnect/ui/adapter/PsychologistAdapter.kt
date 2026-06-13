@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.Psychologist
 
@@ -89,6 +90,15 @@ class PsychologistAdapter(
                 "💻 Atención virtual"
             else
                 "🏥 Presencial"
+
+
+        Glide.with(holder.itemView.context)
+            .load(psychologist.photoUrl)
+            .placeholder(R.mipmap.ic_launcher_round)
+            .error(R.mipmap.ic_launcher_round)
+            .circleCrop()
+            .into(holder.ivPhoto)
+
 
         holder.btnWhatsapp.setOnClickListener {
 
