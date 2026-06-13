@@ -2,6 +2,7 @@ package ni.edu.uam.psyconnect.network
 
 import ni.edu.uam.psyconnect.data.model.AuthResponse
 import ni.edu.uam.psyconnect.data.model.LoginRequest
+import ni.edu.uam.psyconnect.data.model.Psychologist
 import ni.edu.uam.psyconnect.data.model.User
 import ni.edu.uam.psyconnect.data.model.TestResult
 
@@ -45,4 +46,11 @@ interface ApiService {
         @Path("id") id: Long,
         @Body user: User
     ): Response<User>
+
+    @GET("users")
+    suspend fun getUsers(): Response<List<User>>
+
+    @GET("psychologists")
+    suspend fun getPsychologists():
+            Response<List<Psychologist>>
 }
