@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.time.LocalDateTime;
+
 @Entity
 public class VerificationCode {
 
@@ -17,6 +19,8 @@ public class VerificationCode {
     private String email;
 
     private String code;
+
+    private LocalDateTime expirationDate;
 
     public VerificationCode() {
     }
@@ -49,5 +53,15 @@ public class VerificationCode {
             String code
     ) {
         this.code = code;
+    }
+
+    public LocalDateTime getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(
+            LocalDateTime expirationDate
+    ) {
+        this.expirationDate = expirationDate;
     }
 }

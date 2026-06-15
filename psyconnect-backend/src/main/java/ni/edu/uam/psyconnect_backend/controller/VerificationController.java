@@ -2,6 +2,7 @@ package ni.edu.uam.psyconnect_backend.controller;
 
 import ni.edu.uam.psyconnect_backend.dto.VerifyCodeRequest;
 import ni.edu.uam.psyconnect_backend.service.VerificationService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,27 +14,33 @@ public class VerificationController {
     public VerificationController(
             VerificationService verificationService
     ) {
-        this.verificationService = verificationService;
+        this.verificationService =
+                verificationService;
     }
 
     @PostMapping("/send")
-    public String sendCode(
+    public ResponseEntity<String> sendCode(
             @RequestParam String email
     ) {
 
         verificationService.sendCode(email);
 
-        return "Código enviado";
+        return ResponseEntity.ok(
+                "Código enviado"
+        );
     }
 
     @PostMapping("/validate")
-    public boolean validateCode(
+    public ResponseEntity<Boolean> validateCode(
             @RequestBody VerifyCodeRequest request
     ) {
 
-        return verificationService.validateCode(
-                request.getEmail(),
-                request.getCode()
-        );
+        boolean valid =
+                verificationService.validateCode(
+                        request.getEmail(),
+                        request.getCode()
+                );
+
+        return ResponseEntity.ok(valid);
     }
 }

@@ -3,13 +3,12 @@ package ni.edu.uam.psyconnect_backend.repository;
 import ni.edu.uam.psyconnect_backend.model.VerificationCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface VerificationCodeRepository
-        extends JpaRepository<
-        VerificationCode,
-        Long
-        > {
+import java.util.Optional;
 
-    VerificationCode findByEmail(
+public interface VerificationCodeRepository
+        extends JpaRepository<VerificationCode, Long> {
+
+    Optional<VerificationCode> findByEmail(
             String email
     );
 }
