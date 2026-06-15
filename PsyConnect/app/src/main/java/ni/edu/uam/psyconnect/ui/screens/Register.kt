@@ -58,7 +58,7 @@ class Register : AppCompatActivity() {
         btnSendCode.setOnClickListener {
 
             val email =
-                etEmail.text.toString().trim()
+                etEmail.text.toString()
 
             if (email.isEmpty()) {
 
@@ -114,10 +114,10 @@ class Register : AppCompatActivity() {
         btnVerifyCode.setOnClickListener {
 
             val email =
-                etEmail.text.toString().trim()
+                etEmail.text.toString()
 
             val code =
-                etVerificationCode.text.toString().trim()
+                etVerificationCode.text.toString()
 
             if (
                 email.isEmpty() ||
