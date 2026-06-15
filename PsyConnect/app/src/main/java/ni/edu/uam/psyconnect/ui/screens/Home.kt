@@ -39,7 +39,7 @@ class Home : AppCompatActivity() {
             )
 
         /*
-         * CARGAR PSICÓLOGOS DESTACADOS
+         * CARGAR PSICÓLOGOS
          */
         lifecycleScope.launch {
 
@@ -48,7 +48,7 @@ class Home : AppCompatActivity() {
                 val response =
                     RetrofitClient
                         .apiService
-                        .getFeaturedPsychologists()
+                        .getPsychologists()
 
                 if (response.isSuccessful) {
 
