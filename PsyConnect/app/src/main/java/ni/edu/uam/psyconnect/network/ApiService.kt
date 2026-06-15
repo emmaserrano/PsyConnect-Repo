@@ -5,6 +5,7 @@ import ni.edu.uam.psyconnect.data.model.LoginRequest
 import ni.edu.uam.psyconnect.data.model.Psychologist
 import ni.edu.uam.psyconnect.data.model.TestResult
 import ni.edu.uam.psyconnect.data.model.User
+import ni.edu.uam.psyconnect.data.model.VerifyCodeRequest
 import retrofit2.http.Query
 import retrofit2.Response
 import retrofit2.http.*

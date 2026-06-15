@@ -3,11 +3,7 @@ package ni.edu.uam.psyconnect_backend.dto;
 public class VerifyCodeRequest {
 
     private String email;
-
     private String code;
-
-    public VerifyCodeRequest() {
-    }
 
     public String getEmail() {
         return email;
