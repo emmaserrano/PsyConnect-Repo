@@ -2,16 +2,11 @@ package ni.edu.uam.psyconnect.network
 
 import ni.edu.uam.psyconnect.data.model.AuthResponse
 import ni.edu.uam.psyconnect.data.model.LoginRequest
-import ni.edu.uam.psyconnect.data.model.User
+import ni.edu.uam.psyconnect.data.model.Psychologist
 import ni.edu.uam.psyconnect.data.model.TestResult
-
+import ni.edu.uam.psyconnect.data.model.User
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
-
+import retrofit2.http.*
 
 interface ApiService {
 
@@ -30,6 +25,16 @@ interface ApiService {
         @Path("id") id: Long
     ): Response<User>
 
+    @PUT("api/users/{id}")
+    suspend fun updateUser(
+        @Path("id") id: Long,
+        @Body user: User
+    ): Response<User>
+
+    @GET("users")
+    suspend fun getUsers():
+            Response<List<User>>
+
     @POST("api/results")
     suspend fun saveResult(
         @Body result: TestResult
@@ -40,9 +45,7 @@ interface ApiService {
         @Path("userId") userId: Long
     ): Response<List<TestResult>>
 
-    @PUT("api/users/{id}")
-    suspend fun updateUser(
-        @Path("id") id: Long,
-        @Body user: User
-    ): Response<User>
+    @GET("api/psychologists")
+    suspend fun getPsychologists():
+            Response<List<Psychologist>>
 }
