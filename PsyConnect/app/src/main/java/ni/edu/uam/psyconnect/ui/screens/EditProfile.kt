@@ -87,6 +87,7 @@ class EditProfile : AppCompatActivity() {
                         User(
                             id = userId,
                             name = etName.text.toString(),
+                            username = "",
                             email = etEmail.text.toString(),
                             password = "",
                             age = etAge.text.toString().toInt()

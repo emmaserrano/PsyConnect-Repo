@@ -18,7 +18,15 @@ public class UserService {
     public User saveUser(User user) {
 
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("El correo ya está registrado");
+            throw new RuntimeException(
+                    "El correo ya está registrado"
+            );
+        }
+
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new RuntimeException(
+                    "El nombre de usuario ya está en uso"
+            );
         }
 
         return userRepository.save(user);
@@ -26,9 +34,17 @@ public class UserService {
 
     public LoginResponse login(LoginRequest request) {
 
-        User user = userRepository
-                .findByEmail(request.getEmail())
-                .orElse(null);
+        String loginValue =
+                request.getEmail();
+
+        User user =
+                userRepository
+                        .findByEmail(loginValue)
+                        .orElse(
+                                userRepository
+                                        .findByUsername(loginValue)
+                                        .orElse(null)
+                        );
 
         if (user == null) {
 
@@ -62,12 +78,25 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
+    public User getUserByUsername(
+            String username
+    ) {
+
+        return userRepository
+                .findByUsername(username)
+                .orElseThrow(
+                        () -> new RuntimeException(
+                                "Usuario no encontrado"
+                        )
+                );
+    }
     public User updateUser(Long id, User updatedUser) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         user.setName(updatedUser.getName());
+        user.setUsername(updatedUser.getUsername());
         user.setEmail(updatedUser.getEmail());
         user.setAge(updatedUser.getAge());
 
