@@ -15,8 +15,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- FOTO -->
-
         <ImageView
             android:id="@+id/ivPhoto"
             android:layout_width="match_parent"
@@ -24,14 +22,11 @@
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_launcher_round"/>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
-
-            <!-- NOMBRE -->
 
             <TextView
                 android:id="@+id/tvName"
@@ -41,9 +36,6 @@
                 android:textStyle="bold"
                 android:textColor="@color/turquesa_oscuro"/>
 
-
-            <!-- ESPECIALIDAD -->
-
             <TextView
                 android:id="@+id/tvSpecialty"
                 android:layout_width="wrap_content"
@@ -51,50 +43,12 @@
                 android:textSize="15sp"
                 android:layout_marginTop="8dp"/>
 
-
-            <!-- CIUDAD -->
-
             <TextView
                 android:id="@+id/tvCity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:layout_marginTop="4dp"/>
-
-
-            <!-- CALIFICACIÓN -->
-
-            <TextView
-                android:id="@+id/tvRating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:layout_marginTop="4dp"/>
-
-
-            <!-- VIRTUAL -->
-
-            <TextView
-                android:id="@+id/tvVirtual"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:layout_marginTop="4dp"/>
-
-
-            <!-- DESTACADO -->
-
-            <TextView
-                android:id="@+id/tvFeatured"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="⭐ Especialista destacado"
-                android:textStyle="bold"
-                android:textColor="@color/turquesa_oscuro"
-                android:layout_marginTop="10dp"/>
-
-
-            <!-- BOTÓN -->
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnWhatsapp"

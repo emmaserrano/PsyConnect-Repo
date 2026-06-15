@@ -33,12 +33,6 @@ class PsychologistAdapter(
         val tvCity =
             itemView.findViewById<TextView>(R.id.tvCity)
 
-        val tvRating =
-            itemView.findViewById<TextView>(R.id.tvRating)
-
-        val tvVirtual =
-            itemView.findViewById<TextView>(R.id.tvVirtual)
-
         val btnWhatsapp =
             itemView.findViewById<Button>(R.id.btnWhatsapp)
     }
@@ -82,23 +76,15 @@ class PsychologistAdapter(
         holder.tvCity.text =
             "📍 ${psychologist.city}"
 
-        holder.tvRating.text =
-            "⭐ ${psychologist.rating}"
-
-        holder.tvVirtual.text =
-            if (psychologist.virtualAttention)
-                "💻 Atención virtual"
-            else
-                "🏥 Presencial"
-
-
         Glide.with(holder.itemView.context)
-            .load(psychologist.photoUrl)
+            .load(
+                "http://10.0.2.2:8080/uploads/" +
+                        psychologist.photo
+            )
             .placeholder(R.mipmap.ic_launcher_round)
             .error(R.mipmap.ic_launcher_round)
             .circleCrop()
             .into(holder.ivPhoto)
-
 
         holder.btnWhatsapp.setOnClickListener {
 

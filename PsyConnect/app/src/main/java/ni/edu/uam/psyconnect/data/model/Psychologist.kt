@@ -16,11 +16,5 @@ data class Psychologist(
 
     val description: String,
 
-    val photoUrl: String,
-
-    val virtualAttention: Boolean,
-
-    val rating: Double,
-
-    val featured: Boolean
+    val photo: String
 )
