@@ -34,6 +34,7 @@
         <activity android:name=".ui.screens.History" />
         <activity android:name=".ui.screens.Profile" />
         <activity android:name=".ui.screens.EditProfile" />
+        <activity android:name=".ui.screens.DetailPsychologist"/>
 
     </application>
 
