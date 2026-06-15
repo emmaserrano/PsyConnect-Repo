@@ -1,5 +1,6 @@
 package ni.edu.uam.psyconnect_backend.controller;
 
+import ni.edu.uam.psyconnect_backend.dto.VerifyCodeRequest;
 import ni.edu.uam.psyconnect_backend.model.VerificationCode;
 import ni.edu.uam.psyconnect_backend.repository.VerificationCodeRepository;
 import ni.edu.uam.psyconnect_backend.service.EmailService;
@@ -57,5 +58,27 @@ public class VerificationController {
         );
 
         return "Código enviado";
+    }
+    @PostMapping("/validate")
+    public Boolean validateCode(
+            @RequestBody
+            VerifyCodeRequest request
+    ) {
+
+        VerificationCode verificationCode =
+                repository.findByEmail(
+                        request.getEmail()
+                );
+
+        if (verificationCode == null) {
+
+            return false;
+        }
+
+        return verificationCode
+                .getCode()
+                .equals(
+                        request.getCode()
+                );
     }
 }
