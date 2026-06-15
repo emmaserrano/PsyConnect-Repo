@@ -92,6 +92,11 @@ class Home : AppCompatActivity() {
                             )
 
                             intent.putExtra(
+                                "phone",
+                                psychologist.phone
+                            )
+
+                            intent.putExtra(
                                 "photo",
                                 psychologist.photo
                             )
