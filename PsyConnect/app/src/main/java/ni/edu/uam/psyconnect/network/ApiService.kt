@@ -5,6 +5,7 @@ import ni.edu.uam.psyconnect.data.model.LoginRequest
 import ni.edu.uam.psyconnect.data.model.Psychologist
 import ni.edu.uam.psyconnect.data.model.TestResult
 import ni.edu.uam.psyconnect.data.model.User
+import retrofit2.http.Query
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -48,4 +49,15 @@ interface ApiService {
     @GET("api/psychologists")
     suspend fun getPsychologists():
             Response<List<Psychologist>>
+
+    @POST("api/verification/send")
+    suspend fun sendVerificationCode(
+        @Query("email") email: String
+    ): Response<String>
+
+    @POST("api/verification/validate")
+    suspend fun validateCode(
+        @Body request: VerifyCodeRequest
+    ): Response<Boolean>
+
 }
