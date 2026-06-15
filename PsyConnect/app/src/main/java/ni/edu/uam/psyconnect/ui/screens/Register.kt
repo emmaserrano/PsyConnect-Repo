@@ -58,7 +58,7 @@ class Register : AppCompatActivity() {
         btnSendCode.setOnClickListener {
 
             val email =
-                etEmail.text.toString()
+                etEmail.text.toString().trim()
 
             if (email.isEmpty()) {
 
@@ -114,10 +114,10 @@ class Register : AppCompatActivity() {
         btnVerifyCode.setOnClickListener {
 
             val email =
-                etEmail.text.toString()
+                etEmail.text.toString().trim()
 
             val code =
-                etVerificationCode.text.toString()
+                etVerificationCode.text.toString().trim()
 
             if (
                 email.isEmpty() ||
@@ -146,9 +146,12 @@ class Register : AppCompatActivity() {
                     val response =
                         RetrofitClient
                             .apiService
-                            .verifyCode(request)
+                            .validateCode(request)
 
-                    if (response.isSuccessful) {
+                    if (
+                        response.isSuccessful &&
+                        response.body() == true
+                    ) {
 
                         emailVerificado = true
 
@@ -164,7 +167,7 @@ class Register : AppCompatActivity() {
 
                         Toast.makeText(
                             this@Register,
-                            "Código incorrecto",
+                            "Código incorrecto o vencido",
                             Toast.LENGTH_LONG
                         ).show()
                     }
