@@ -14,7 +14,8 @@ import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.Psychologist
 
 class PsychologistAdapter(
-    private val psychologists: List<Psychologist>
+    private val psychologists: List<Psychologist>,
+    private val onClick: (Psychologist) -> Unit
 ) : RecyclerView.Adapter<PsychologistAdapter.ViewHolder>() {
 
     class ViewHolder(
@@ -86,6 +87,13 @@ class PsychologistAdapter(
             .circleCrop()
             .into(holder.ivPhoto)
 
+        // CLICK EN LA TARJETA
+        holder.itemView.setOnClickListener {
+
+            onClick(psychologist)
+        }
+
+        // BOTÓN WHATSAPP
         holder.btnWhatsapp.setOnClickListener {
 
             val intent =

@@ -58,7 +58,46 @@ class Home : AppCompatActivity() {
                     recyclerPsychologists.adapter =
                         PsychologistAdapter(
                             psychologists
-                        )
+                        ) { psychologist ->
+
+                            val intent =
+                                Intent(
+                                    this@Home,
+                                    DetailPsychologist::class.java
+                                )
+
+                            intent.putExtra(
+                                "name",
+                                psychologist.name
+                            )
+
+                            intent.putExtra(
+                                "specialty",
+                                psychologist.specialty
+                            )
+
+                            intent.putExtra(
+                                "city",
+                                psychologist.city
+                            )
+
+                            intent.putExtra(
+                                "email",
+                                psychologist.email
+                            )
+
+                            intent.putExtra(
+                                "description",
+                                psychologist.description
+                            )
+
+                            intent.putExtra(
+                                "photo",
+                                psychologist.photo
+                            )
+
+                            startActivity(intent)
+                        }
                 }
 
             } catch (e: Exception) {
