@@ -18,20 +18,12 @@ public class PsychologistService {
     }
 
     public List<Psychologist> getAll() {
-
         return repository.findAll();
-    }
-
-    public List<Psychologist> getFeatured() {
-
-        return repository.findByFeaturedTrue();
     }
 
     public Psychologist save(
             Psychologist psychologist
     ) {
-
         return repository.save(psychologist);
     }
-
 }

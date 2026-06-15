@@ -20,15 +20,10 @@ public class Psychologist {
 
     private String email;
 
+    @Column(length = 2000)
     private String description;
 
-    private String photoUrl;
-
-    private Boolean virtualAttention;
-
-    private Double rating;
-
-    private Boolean featured;
+    private String photo;
 
     public Psychologist() {
     }
@@ -41,10 +36,7 @@ public class Psychologist {
             String city,
             String email,
             String description,
-            String photoUrl,
-            Boolean virtualAttention,
-            Double rating,
-            Boolean featured
+            String photo
     ) {
         this.id = id;
         this.name = name;
@@ -53,10 +45,7 @@ public class Psychologist {
         this.city = city;
         this.email = email;
         this.description = description;
-        this.photoUrl = photoUrl;
-        this.virtualAttention = virtualAttention;
-        this.rating = rating;
-        this.featured = featured;
+        this.photo = photo;
     }
 
     public Long getId() {
@@ -111,35 +100,11 @@ public class Psychologist {
         this.description = description;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getPhoto() {
+        return photo;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
-    }
-
-    public Boolean getVirtualAttention() {
-        return virtualAttention;
-    }
-
-    public void setVirtualAttention(Boolean virtualAttention) {
-        this.virtualAttention = virtualAttention;
-    }
-
-    public Double getRating() {
-        return rating;
-    }
-
-    public void setRating(Double rating) {
-        this.rating = rating;
-    }
-
-    public Boolean getFeatured() {
-        return featured;
-    }
-
-    public void setFeatured(Boolean featured) {
-        this.featured = featured;
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 }

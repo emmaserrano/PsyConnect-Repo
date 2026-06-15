@@ -3,7 +3,9 @@ package ni.edu.uam.psyconnect_backend.controller;
 import ni.edu.uam.psyconnect_backend.model.Psychologist;
 import ni.edu.uam.psyconnect_backend.service.PsychologistService;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -16,7 +18,6 @@ public class PsychologistController {
     public PsychologistController(
             PsychologistService service
     ) {
-
         this.service = service;
     }
 
@@ -25,21 +26,4 @@ public class PsychologistController {
 
         return service.getAll();
     }
-
-    @GetMapping("/featured")
-    public List<Psychologist> getFeatured() {
-
-        return service.getFeatured();
-    }
-
-    @PostMapping
-    public Psychologist save(
-            @RequestBody Psychologist psychologist
-    ) {
-
-        return service.save(psychologist);
-    }
-
-
-
 }
