@@ -70,6 +70,30 @@
             android:backgroundTint="@color/turquesa_principal"
             android:layout_marginBottom="14dp"/>
 
+        <Button
+            android:id="@+id/btnSendCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enviar código"
+            android:layout_marginBottom="12dp"/>
+
+        <EditText
+            android:id="@+id/etVerificationCode"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:hint="Código de verificación"
+            android:inputType="number"
+            android:padding="16dp"
+            android:backgroundTint="@color/turquesa_principal"
+            android:layout_marginBottom="12dp"/>
+
+        <Button
+            android:id="@+id/btnVerifyCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Verificar código"
+            android:layout_marginBottom="14dp"/>
+
         <EditText
             android:id="@+id/etAge"
             android:layout_width="match_parent"
