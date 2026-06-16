@@ -1,8 +1,11 @@
 package ni.edu.uam.psyconnect.ui.screens
 
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +18,10 @@ import ni.edu.uam.psyconnect.network.RetrofitClient
 class Register : AppCompatActivity() {
 
     private var emailVerificado = false
+    private var tiempoRestante = 120000L
+    private var temporizador: CountDownTimer? = null
+
+    private var countDownTimer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -34,17 +41,20 @@ class Register : AppCompatActivity() {
         val etVerificationCode =
             findViewById<EditText>(R.id.etVerificationCode)
 
+        val etPassword =
+            findViewById<EditText>(R.id.etPassword)
+
+        val etAge =
+            findViewById<EditText>(R.id.etAge)
+
         val btnSendCode =
             findViewById<Button>(R.id.btnSendCode)
 
         val btnVerifyCode =
             findViewById<Button>(R.id.btnVerifyCode)
 
-        val etPassword =
-            findViewById<EditText>(R.id.etPassword)
-
-        val etAge =
-            findViewById<EditText>(R.id.etAge)
+        val btnResendCode =
+            findViewById<Button>(R.id.btnResendCode)
 
         val btnRegister =
             findViewById<Button>(R.id.btnRegister)
@@ -52,13 +62,13 @@ class Register : AppCompatActivity() {
         val btnBackLogin =
             findViewById<Button>(R.id.btnBackLogin)
 
-        /*
-         * ENVIAR CÓDIGO
-         */
+        val tvCountdown =
+            findViewById<TextView>(R.id.tvCountdown)
+
         btnSendCode.setOnClickListener {
 
             val email =
-                etEmail.text.toString()
+                etEmail.text.toString().trim()
 
             if (email.isEmpty()) {
 
@@ -82,11 +92,18 @@ class Register : AppCompatActivity() {
 
                     if (response.isSuccessful) {
 
+                        iniciarTemporizador(
+                            tvCountdown,
+                            btnSendCode,
+                            btnResendCode
+                        )
                         Toast.makeText(
                             this@Register,
-                            "Código enviado al correo",
+                            "Código enviado correctamente",
                             Toast.LENGTH_LONG
                         ).show()
+
+                      
 
                     } else {
 
@@ -108,16 +125,18 @@ class Register : AppCompatActivity() {
             }
         }
 
-        /*
-         * VERIFICAR CÓDIGO
-         */
+        btnResendCode.setOnClickListener {
+
+            btnSendCode.performClick()
+        }
+
         btnVerifyCode.setOnClickListener {
 
             val email =
-                etEmail.text.toString()
+                etEmail.text.toString().trim()
 
             val code =
-                etVerificationCode.text.toString()
+                etVerificationCode.text.toString().trim()
 
             if (
                 email.isEmpty() ||
@@ -126,7 +145,7 @@ class Register : AppCompatActivity() {
 
                 Toast.makeText(
                     this,
-                    "Complete correo y código",
+                    "Ingrese correo y código",
                     Toast.LENGTH_SHORT
                 ).show()
 
@@ -183,19 +202,16 @@ class Register : AppCompatActivity() {
             }
         }
 
-        /*
-         * REGISTRAR USUARIO
-         */
         btnRegister.setOnClickListener {
 
             val name =
-                etName.text.toString()
+                etName.text.toString().trim()
 
             val username =
-                etUsername.text.toString()
+                etUsername.text.toString().trim()
 
             val email =
-                etEmail.text.toString()
+                etEmail.text.toString().trim()
 
             val password =
                 etPassword.text.toString()
@@ -225,6 +241,23 @@ class Register : AppCompatActivity() {
                 Toast.makeText(
                     this,
                     "Debe verificar su correo antes de registrarse",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                return@setOnClickListener
+            }
+
+            if (!validarPassword(password)) {
+
+                Toast.makeText(
+                    this,
+                    """
+                    La contraseña debe tener:
+                    • 8 caracteres mínimo
+                    • 1 mayúscula
+                    • 1 minúscula
+                    • 1 número
+                    """.trimIndent(),
                     Toast.LENGTH_LONG
                 ).show()
 
@@ -261,12 +294,9 @@ class Register : AppCompatActivity() {
 
                     } else {
 
-                        val errorMessage =
-                            response.errorBody()?.string()
-
                         Toast.makeText(
                             this@Register,
-                            errorMessage
+                            response.errorBody()?.string()
                                 ?: "Error al registrar usuario",
                             Toast.LENGTH_LONG
                         ).show()
@@ -287,5 +317,117 @@ class Register : AppCompatActivity() {
 
             finish()
         }
+    }
+
+    private fun iniciarTemporizador(
+        btnSendCode: Button,
+        btnResendCode: Button,
+        tvCountdown: TextView
+    ) {
+
+        btnSendCode.isEnabled = false
+        btnResendCode.visibility = View.GONE
+
+        temporizador?.cancel()
+
+        temporizador =
+            object : CountDownTimer(
+                tiempoRestante,
+                1000
+            ) {
+
+                override fun onTick(
+                    millisUntilFinished: Long
+                ) {
+
+                    val segundos =
+                        millisUntilFinished / 1000
+
+                    tvCountdown.text =
+                        "Código válido durante ${segundos}s"
+                }
+
+                override fun onFinish() {
+
+                    tvCountdown.text =
+                        "El código expiró"
+
+                    btnSendCode.isEnabled = true
+
+                    btnResendCode.visibility =
+                        View.VISIBLE
+                }
+            }
+
+        temporizador?.start()
+    }
+
+    private fun validarPassword(
+        password: String
+    ): Boolean {
+
+        val regex =
+            Regex(
+                "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$"
+            )
+
+        return regex.matches(password)
+    }
+
+    private fun iniciarTemporizador(
+        tvCountdown: TextView,
+        btnSendCode: Button,
+        btnResendCode: Button
+    ) {
+
+        btnSendCode.isEnabled = false
+        btnResendCode.visibility = Button.GONE
+
+        countDownTimer?.cancel()
+
+        countDownTimer =
+            object : CountDownTimer(
+                120000,
+                1000
+            ) {
+
+                override fun onTick(
+                    millisUntilFinished: Long
+                ) {
+
+                    val minutos =
+                        millisUntilFinished / 60000
+
+                    val segundos =
+                        (millisUntilFinished % 60000) / 1000
+
+                    tvCountdown.text =
+                        String.format(
+                            "Código válido por %02d:%02d",
+                            minutos,
+                            segundos
+                        )
+                }
+
+                override fun onFinish() {
+
+                    tvCountdown.text =
+                        "Código expirado"
+
+                    btnSendCode.isEnabled = true
+
+                    btnResendCode.visibility =
+                        Button.VISIBLE
+                }
+            }
+
+        countDownTimer?.start()
+    }
+
+    override fun onDestroy() {
+
+        super.onDestroy()
+
+        countDownTimer?.cancel()
     }
 }

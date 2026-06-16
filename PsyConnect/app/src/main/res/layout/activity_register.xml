@@ -77,6 +77,23 @@
             android:text="Enviar código"
             android:layout_marginBottom="12dp"/>
 
+        <TextView
+            android:id="@+id/tvCountdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="02:00"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/gris_texto"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/btnResendCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reenviar código"
+            android:visibility="gone"/>
+
         <EditText
             android:id="@+id/etVerificationCode"
             android:layout_width="match_parent"
@@ -116,6 +133,22 @@
                 android:layout_height="60dp"
                 android:hint="@string/hint_password"
                 android:inputType="textPassword"/>
+            <TextView
+                android:id="@+id/tvPasswordRequirements"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="La contraseña debe contener:\n• Mínimo 8 caracteres\n• Una letra mayúscula\n• Una letra minúscula\n• Un número"
+                android:textSize="12sp"
+                android:textColor="@color/gris_texto"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvPasswordStrength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
