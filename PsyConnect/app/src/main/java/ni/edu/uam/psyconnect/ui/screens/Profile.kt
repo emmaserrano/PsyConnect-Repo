@@ -15,6 +15,7 @@ import ni.edu.uam.psyconnect.network.RetrofitClient
 class Profile : AppCompatActivity() {
 
     private lateinit var tvName: TextView
+    private lateinit var tvWelcome: TextView
     private lateinit var tvEmail: TextView
     private lateinit var tvAge: TextView
 
@@ -28,6 +29,7 @@ class Profile : AppCompatActivity() {
 
         tvName = findViewById(R.id.tvName)
         tvEmail = findViewById(R.id.tvEmail)
+        tvWelcome = findViewById(R.id.tvWelcome)
         tvAge = findViewById(R.id.tvAge)
 
         val btnEdit =
@@ -158,6 +160,9 @@ class Profile : AppCompatActivity() {
 
                         tvEmail.text =
                             user.email
+
+                        tvWelcome.text =
+                            "Hola ${user.name}, gracias por cuidar de tu bienestar hoy."
 
                         tvAge.text =
                             "Edad: ${user.age}"
