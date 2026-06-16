@@ -172,7 +172,7 @@ class Profile : AppCompatActivity() {
 
                     Toast.makeText(
                         this@Profile,
-                        "No se pudo cargar el perfil",
+                        "\"No pudimos cargar tu información en este momento. Intenta nuevamente en unos instantes.\"",
                         Toast.LENGTH_LONG
                     ).show()
                 }
