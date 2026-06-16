@@ -44,6 +44,15 @@ class ForgotPassword : AppCompatActivity() {
                 R.id.btnVerifyRecovery
             )
 
+        val btnBackLogin =
+            findViewById<Button>(
+                R.id.btnBackLogin
+            )
+
+        btnBackLogin.setOnClickListener {
+            finish()
+        }
+
         btnSend.setOnClickListener {
 
             val email =

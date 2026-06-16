@@ -63,6 +63,7 @@ interface ApiService {
         @Body request: VerifyCodeRequest
     ): Response<Boolean>
 
+
     @POST("api/users/reset-password")
     suspend fun resetPassword(
         @Body request: ResetPasswordRequest
@@ -73,4 +74,8 @@ interface ApiService {
         @Body request: RecoveryCodeRequest
     ): Response<Boolean>
 
+    @POST("api/password/recovery")
+    suspend fun sendRecoveryCode(
+        @Query("email") email: String
+    ): Response<String>
 }

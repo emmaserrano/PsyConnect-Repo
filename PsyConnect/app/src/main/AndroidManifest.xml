@@ -36,7 +36,7 @@
         <activity android:name=".ui.screens.EditProfile" />
         <activity android:name=".ui.screens.DetailPsychologist"/>
         <activity android:name=".ui.screens.ResetPassword" />
-
+        <activity android:name=".ui.screens.ForgotPassword" />
     </application>
 
 </manifest>
