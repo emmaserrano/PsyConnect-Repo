@@ -23,6 +23,7 @@ class Register : AppCompatActivity() {
 
     private var countDownTimer: CountDownTimer? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -103,7 +104,7 @@ class Register : AppCompatActivity() {
                             Toast.LENGTH_LONG
                         ).show()
 
-                      
+
 
                     } else {
 
@@ -219,6 +220,17 @@ class Register : AppCompatActivity() {
             val age =
                 etAge.text.toString()
 
+            if (!passwordValida(password)) {
+
+                Toast.makeText(
+                    this,
+                    "La contraseña no cumple los requisitos de seguridad",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                return@setOnClickListener
+            }
+
             if (
                 name.isEmpty() ||
                 username.isEmpty() ||
@@ -317,6 +329,17 @@ class Register : AppCompatActivity() {
 
             finish()
         }
+    }
+    private fun passwordValida(
+        password: String
+    ): Boolean {
+
+        val regex =
+            Regex(
+                "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$"
+            )
+
+        return regex.matches(password)
     }
 
     private fun iniciarTemporizador(
