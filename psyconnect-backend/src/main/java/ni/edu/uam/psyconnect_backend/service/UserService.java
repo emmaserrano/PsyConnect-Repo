@@ -103,4 +103,22 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public void resetPassword(
+            String email,
+            String newPassword
+    ) {
+
+        User user =
+                userRepository.findByEmail(email)
+                        .orElseThrow(
+                                () -> new RuntimeException(
+                                        "Usuario no encontrado"
+                                )
+                        );
+
+        user.setPassword(newPassword);
+
+        userRepository.save(user);
+    }
+
 }

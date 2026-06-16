@@ -3,6 +3,7 @@ package ni.edu.uam.psyconnect.network
 import ni.edu.uam.psyconnect.data.model.AuthResponse
 import ni.edu.uam.psyconnect.data.model.LoginRequest
 import ni.edu.uam.psyconnect.data.model.Psychologist
+import ni.edu.uam.psyconnect.data.model.ResetPasswordRequest
 import ni.edu.uam.psyconnect.data.model.TestResult
 import ni.edu.uam.psyconnect.data.model.User
 import ni.edu.uam.psyconnect.data.model.VerifyCodeRequest
@@ -60,5 +61,10 @@ interface ApiService {
     suspend fun validateCode(
         @Body request: VerifyCodeRequest
     ): Response<Boolean>
+
+    @POST("api/users/reset-password")
+    suspend fun resetPassword(
+        @Body request: ResetPasswordRequest
+    ): Response<String>
 
 }
