@@ -151,6 +151,13 @@
                 android:layout_marginBottom="16dp"/>
 
         </com.google.android.material.textfield.TextInputLayout>
+        <CheckBox
+            android:id="@+id/cbTerms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Acepto los términos de uso y entiendo que PsyConnect no sustituye la atención profesional de un psicólogo o psiquiatra."
+            android:textColor="@color/gris_texto"
+            android:layout_marginBottom="16dp"/>
 
         <Button
             android:id="@+id/btnRegister"

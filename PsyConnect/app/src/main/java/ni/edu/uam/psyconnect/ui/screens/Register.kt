@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -56,6 +57,9 @@ class Register : AppCompatActivity() {
 
         val btnResendCode =
             findViewById<Button>(R.id.btnResendCode)
+
+        val cbTerms =
+            findViewById<CheckBox>(R.id.cbTerms)
 
         val btnRegister =
             findViewById<Button>(R.id.btnRegister)
@@ -270,6 +274,17 @@ class Register : AppCompatActivity() {
                     • 1 minúscula
                     • 1 número
                     """.trimIndent(),
+                    Toast.LENGTH_LONG
+                ).show()
+
+                return@setOnClickListener
+            }
+
+            if (!cbTerms.isChecked) {
+
+                Toast.makeText(
+                    this,
+                    "Debe aceptar los términos y condiciones",
                     Toast.LENGTH_LONG
                 ).show()
 
