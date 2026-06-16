@@ -78,7 +78,7 @@ class OnboardingFragment : Fragment() {
                 R.id.lottieAnimation
             )
 
-        when(animation){
+        when (animation) {
 
             "welcome" ->
                 lottie.setAnimation(
@@ -95,6 +95,11 @@ class OnboardingFragment : Fragment() {
                     R.raw.progress
                 )
         }
+
+        lottie.playAnimation()
+
+        lottie.repeatCount =
+            com.airbnb.lottie.LottieDrawable.INFINITE
 
         return view
     }

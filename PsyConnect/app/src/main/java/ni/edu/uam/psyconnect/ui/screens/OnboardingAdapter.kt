@@ -25,15 +25,15 @@ class OnboardingAdapter(
 
             1 ->
                 OnboardingFragment.newInstance(
-                    "Tus datos están protegidos",
-                    "Toda tu información se almacena de forma segura.",
+                    "Privacidad Garantizada",
+                    "Tus datos y evaluaciones se almacenan de forma segura y confidencial.",
                     "security"
                 )
 
             else ->
                 OnboardingFragment.newInstance(
-                    "Conoce tu progreso",
-                    "Realiza evaluaciones y monitorea tu bienestar.",
+                    "Conoce Tu Progreso",
+                    "Realiza evaluaciones y monitorea tu bienestar emocional a lo largo del tiempo.",
                     "progress"
                 )
         }
