@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Button
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
@@ -20,8 +22,6 @@ class Register : AppCompatActivity() {
 
     private var emailVerificado = false
     private var tiempoRestante = 120000L
-    private var temporizador: CountDownTimer? = null
-
     private var countDownTimer: CountDownTimer? = null
 
 
@@ -70,6 +70,16 @@ class Register : AppCompatActivity() {
         val tvCountdown =
             findViewById<TextView>(R.id.tvCountdown)
 
+        val progressPassword =
+            findViewById<android.widget.ProgressBar>(R.id.progressPassword)
+
+        val tvPasswordStrength =
+            findViewById<TextView>(R.id.tvPasswordStrength)
+
+        val tvPasswordRequirements =
+            findViewById<TextView>(R.id.tvPasswordRequirements)
+
+
         btnSendCode.setOnClickListener {
 
             val email =
@@ -96,18 +106,20 @@ class Register : AppCompatActivity() {
                             .sendVerificationCode(email)
 
                     if (response.isSuccessful) {
+                        tvCountdown.visibility = View.VISIBLE
+                        tiempoRestante = 120000
 
                         iniciarTemporizador(
                             tvCountdown,
                             btnSendCode,
                             btnResendCode
                         )
+
                         Toast.makeText(
                             this@Register,
                             "Código enviado correctamente",
                             Toast.LENGTH_LONG
                         ).show()
-
 
 
                     } else {
@@ -214,6 +226,103 @@ class Register : AppCompatActivity() {
             }
         }
 
+        etPassword.addTextChangedListener(
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {}
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+
+                    val password =
+                        s.toString()
+
+                    var score = 0
+
+                    val tieneLongitud =
+                        password.length >= 8
+
+                    val tieneMayuscula =
+                        password.any { it.isUpperCase() }
+
+                    val tieneMinuscula =
+                        password.any { it.isLowerCase() }
+
+                    val tieneNumero =
+                        password.any { it.isDigit() }
+
+                    val tieneEspecial =
+                        password.any {
+                            !it.isLetterOrDigit()
+                        }
+
+                    if (tieneLongitud) score += 20
+                    if (tieneMayuscula) score += 20
+                    if (tieneMinuscula) score += 20
+                    if (tieneNumero) score += 20
+                    if (tieneEspecial) score += 20
+
+                    progressPassword.progress =
+                        score
+
+                    when {
+
+                        score <= 20 -> {
+
+                            tvPasswordStrength.text =
+                                "🔴 Muy débil"
+                        }
+
+                        score <= 40 -> {
+
+                            tvPasswordStrength.text =
+                                "🟠 Débil"
+                        }
+
+                        score <= 60 -> {
+
+                            tvPasswordStrength.text =
+                                "🟡 Aceptable"
+                        }
+
+                        score <= 80 -> {
+
+                            tvPasswordStrength.text =
+                                "🟢 Fuerte"
+                        }
+
+                        else -> {
+
+                            tvPasswordStrength.text =
+                                "✅ Muy fuerte"
+                        }
+                    }
+
+                    tvPasswordRequirements.text =
+                        """
+                ${if (tieneLongitud) "✔" else "✖"} Mínimo 8 caracteres
+                ${if (tieneMayuscula) "✔" else "✖"} Una mayúscula
+                ${if (tieneMinuscula) "✔" else "✖"} Una minúscula
+                ${if (tieneNumero) "✔" else "✖"} Un número
+                ${if (tieneEspecial) "✔" else "✖"} Un carácter especial
+                """.trimIndent()
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {}
+            }
+        )
+
         btnRegister.setOnClickListener {
 
             val name =
@@ -231,7 +340,7 @@ class Register : AppCompatActivity() {
             val age =
                 etAge.text.toString()
 
-            if (!passwordValida(password)) {
+            if (!validarPassword(password)) {
 
                 Toast.makeText(
                     this,
@@ -352,60 +461,6 @@ class Register : AppCompatActivity() {
             finish()
         }
     }
-    private fun passwordValida(
-        password: String
-    ): Boolean {
-
-        val regex =
-            Regex(
-                "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$"
-            )
-
-        return regex.matches(password)
-    }
-
-    private fun iniciarTemporizador(
-        btnSendCode: Button,
-        btnResendCode: Button,
-        tvCountdown: TextView
-    ) {
-
-        btnSendCode.isEnabled = false
-        btnResendCode.visibility = View.GONE
-
-        temporizador?.cancel()
-
-        temporizador =
-            object : CountDownTimer(
-                tiempoRestante,
-                1000
-            ) {
-
-                override fun onTick(
-                    millisUntilFinished: Long
-                ) {
-
-                    val segundos =
-                        millisUntilFinished / 1000
-
-                    tvCountdown.text =
-                        "Código válido durante ${segundos}s"
-                }
-
-                override fun onFinish() {
-
-                    tvCountdown.text =
-                        "El código expiró"
-
-                    btnSendCode.isEnabled = true
-
-                    btnResendCode.visibility =
-                        View.VISIBLE
-                }
-            }
-
-        temporizador?.start()
-    }
 
     private fun validarPassword(
         password: String
@@ -413,7 +468,7 @@ class Register : AppCompatActivity() {
 
         val regex =
             Regex(
-                "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$"
+                "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$"
             )
 
         return regex.matches(password)
@@ -426,7 +481,7 @@ class Register : AppCompatActivity() {
     ) {
 
         btnSendCode.isEnabled = false
-        btnResendCode.visibility = Button.GONE
+        btnResendCode.visibility = View.GONE
 
         countDownTimer?.cancel()
 
@@ -462,17 +517,10 @@ class Register : AppCompatActivity() {
                     btnSendCode.isEnabled = true
 
                     btnResendCode.visibility =
-                        Button.VISIBLE
+                        View.VISIBLE
                 }
             }
 
         countDownTimer?.start()
-    }
-
-    override fun onDestroy() {
-
-        super.onDestroy()
-
-        countDownTimer?.cancel()
     }
 }

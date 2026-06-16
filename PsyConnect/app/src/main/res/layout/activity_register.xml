@@ -133,32 +133,43 @@
                 android:layout_height="60dp"
                 android:hint="@string/hint_password"
                 android:inputType="textPassword"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
             <TextView
                 android:id="@+id/tvPasswordRequirements"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="La contraseña debe tener:\n• 8 caracteres mínimo\n• Una mayúscula\n• Una minúscula\n• Un número"
-                android:textSize="12sp"
-                android:textColor="@color/gris_texto"
-                android:layout_marginBottom="12dp"/>
+                android:textSize="16sp"
+                android:textColor="@color/turquesa_principal"
+                android:text="Requisitos de seguridad: Mínimo 8 caracteres, una mayúscula, una minúscula, un número, un carácter especial"
+                />
+
+            <ProgressBar
+                android:id="@+id/progressPassword"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:max="100"
+                android:layout_marginTop="8dp"
+                />
 
             <TextView
                 android:id="@+id/tvPasswordStrength"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="Seguridad: Muy débil"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginTop="8dp"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
         <CheckBox
             android:id="@+id/cbTerms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Acepto los términos de uso y entiendo que PsyConnect no sustituye la atención profesional de un psicólogo o psiquiatra."
-            android:textColor="@color/gris_texto"
+            android:text="He leído y acepto los Términos y Condiciones. Entiendo que PsyConnect es una herramienta de apoyo al bienestar emocional y no sustituye la evaluación, diagnóstico o tratamiento realizado por un profesional de la salud mental."
+            android:textSize="15sp"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="16dp"/>
-
         <Button
             android:id="@+id/btnRegister"
             android:layout_width="match_parent"
