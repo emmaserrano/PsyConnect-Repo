@@ -44,7 +44,7 @@ class ForgotPassword : AppCompatActivity() {
                     val response =
                         RetrofitClient
                             .apiService
-                            .sendRecoveryCode(email)
+                            .sendVerificationCode(email)
 
                     if (response.isSuccessful) {
 
