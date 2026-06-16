@@ -172,12 +172,19 @@ class Register : AppCompatActivity() {
                             .apiService
                             .validateCode(request)
 
-                    if (
-                        response.isSuccessful &&
-                        response.body() == true
-                    ) {
+                    if (response.body() == true) {
 
                         emailVerificado = true
+
+                        etEmail.isEnabled = false
+
+                        etVerificationCode.isEnabled = false
+
+                        btnVerifyCode.visibility = View.GONE
+
+                        btnSendCode.visibility = View.GONE
+
+                        btnResendCode.visibility = View.GONE
 
                         Toast.makeText(
                             this@Register,
@@ -191,7 +198,7 @@ class Register : AppCompatActivity() {
 
                         Toast.makeText(
                             this@Register,
-                            "Código incorrecto o vencido",
+                            "Código incorrecto",
                             Toast.LENGTH_LONG
                         ).show()
                     }
