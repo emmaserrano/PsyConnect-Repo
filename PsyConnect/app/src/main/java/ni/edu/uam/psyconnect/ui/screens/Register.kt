@@ -494,6 +494,7 @@ class Register : AppCompatActivity() {
                 override fun onTick(
                     millisUntilFinished: Long
                 ) {
+                    println("TEMPORIZADOR: $millisUntilFinished")
 
                     val minutos =
                         millisUntilFinished / 60000
