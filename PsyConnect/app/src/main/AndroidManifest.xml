@@ -32,7 +32,8 @@
         <activity android:name=".ui.screens.Login" />
         <activity android:name=".ui.screens.Register" />
         <activity android:name=".ui.screens.Home" />
-        <activity android:name=".ui.screens.Test" />
+        <activity android:name=".ui.screens.TestCategoryActivity" />
+        <activity android:name=".ui.screens.DynamicTestActivity" />
         <activity android:name=".ui.screens.Results" />
         <activity android:name=".ui.screens.History" />
         <activity android:name=".ui.screens.Profile" />
