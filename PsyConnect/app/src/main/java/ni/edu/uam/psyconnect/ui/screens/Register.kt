@@ -4,10 +4,13 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.Editable
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.Button
-import android.text.Editable
-import android.text.TextWatcher
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
@@ -47,6 +50,10 @@ class Register : AppCompatActivity() {
         val progressPassword = findViewById<android.widget.ProgressBar>(R.id.progressPassword)
         val tvPasswordStrength = findViewById<TextView>(R.id.tvPasswordStrength)
         val tvPasswordRequirements = findViewById<TextView>(R.id.tvPasswordRequirements)
+
+        // Limpieza inicial
+        tvPasswordStrength.text = ""
+        tvPasswordRequirements.text = ""
 
         btnSendCode.setOnClickListener {
             val email = etEmail.text.toString().trim()
@@ -111,13 +118,21 @@ class Register : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val password = s.toString()
-                var score = 0
+
+                if (password.isEmpty()) {
+                    progressPassword.progress = 0
+                    tvPasswordStrength.text = ""
+                    tvPasswordRequirements.text = ""
+                    return
+                }
+
                 val tieneLongitud = password.length >= 8
                 val tieneMayuscula = password.any { it.isUpperCase() }
                 val tieneMinuscula = password.any { it.isLowerCase() }
                 val tieneNumero = password.any { it.isDigit() }
                 val tieneEspecial = password.any { !it.isLetterOrDigit() }
 
+                var score = 0
                 if (tieneLongitud) score += 20
                 if (tieneMayuscula) score += 20
                 if (tieneMinuscula) score += 20
@@ -133,31 +148,32 @@ class Register : AppCompatActivity() {
                     }
                     score <= 40 -> {
                         tvPasswordStrength.text = "🟠 Débil"
-                        Color.parseColor("#FF8C00") // Naranja
+                        Color.parseColor("#FF9800")
                     }
                     score <= 60 -> {
                         tvPasswordStrength.text = "🟡 Aceptable"
-                        Color.YELLOW
+                        Color.parseColor("#FBC02D")
                     }
                     score <= 80 -> {
                         tvPasswordStrength.text = "🟢 Fuerte"
-                        Color.parseColor("#14B8A6") // Verde Turquesa
+                        Color.parseColor("#4CAF50")
                     }
                     else -> {
                         tvPasswordStrength.text = "✅ Muy fuerte"
-                        Color.parseColor("#0F766E") // Verde Oscuro
+                        Color.parseColor("#2E7D32")
                     }
                 }
                 
                 progressPassword.progressTintList = ColorStateList.valueOf(color)
 
-                tvPasswordRequirements.text = """
-                    ${if (tieneLongitud) "✔" else "✖"} Mínimo 8 caracteres
-                    ${if (tieneMayuscula) "✔" else "✖"} Una mayúscula
-                    ${if (tieneMinuscula) "✔" else "✖"} Una minúscula
-                    ${if (tieneNumero) "✔" else "✖"} Un número
-                    ${if (tieneEspecial) "✔" else "✖"} Un carácter especial
-                """.trimIndent()
+                actualizarRequisitos(
+                    tvPasswordRequirements,
+                    tieneLongitud,
+                    tieneMayuscula,
+                    tieneMinuscula,
+                    tieneNumero,
+                    tieneEspecial
+                )
             }
             override fun afterTextChanged(s: Editable?) {}
         })
@@ -180,7 +196,7 @@ class Register : AppCompatActivity() {
             }
 
             if (!validarPassword(password)) {
-                mostrarAlerta("Contraseña débil", "La contraseña no cumple con los requisitos mínimos de seguridad.")
+                mostrarAlerta("Contraseña insegura", "La contraseña debe cumplir con todos los requisitos de seguridad mostrados en verde.")
                 return@setOnClickListener
             }
 
@@ -221,6 +237,36 @@ class Register : AppCompatActivity() {
     private fun validarPassword(password: String): Boolean {
         val regex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$")
         return regex.matches(password)
+    }
+
+    private fun actualizarRequisitos(
+        tv: TextView,
+        tieneLongitud: Boolean,
+        tieneMayuscula: Boolean,
+        tieneMinuscula: Boolean,
+        tieneNumero: Boolean,
+        tieneEspecial: Boolean
+    ) {
+        val builder = SpannableStringBuilder()
+
+        fun agregarLinea(cumplido: Boolean, texto: String) {
+            val inicio = builder.length
+            builder.append("${if (cumplido) "✔" else "✖"} $texto\n")
+            builder.setSpan(
+                ForegroundColorSpan(if (cumplido) Color.parseColor("#2E7D32") else Color.parseColor("#D32F2F")),
+                inicio,
+                builder.length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
+        agregarLinea(tieneLongitud, "Mínimo 8 caracteres")
+        agregarLinea(tieneMayuscula, "Una mayúscula")
+        agregarLinea(tieneMinuscula, "Una minúscula")
+        agregarLinea(tieneNumero, "Un número")
+        agregarLinea(tieneEspecial, "Un carácter especial")
+
+        tv.text = builder
     }
 
     private fun iniciarTemporizador(tvCountdown: TextView, btnSendCode: Button, btnResendCode: Button) {

@@ -121,4 +121,24 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void sendRecoveryCode(
+            String email
+    ) {
+
+        if (!userRepository.existsByEmail(email)) {
+
+            throw new RuntimeException(
+                    "No existe una cuenta asociada a este correo"
+            );
+        }
+    }
+
+    public boolean existsByEmail(
+            String email
+    ) {
+
+        return userRepository
+                .existsByEmail(email);
+    }
+
 }

@@ -52,4 +52,9 @@ interface ApiService {
     // Mantenemos estos por si el backend los soporta, pero preferimos los de arriba
     @POST("api/verification/validate-recovery")
     suspend fun validateRecoveryCode(@Body request: RecoveryCodeRequest): Response<Boolean>
+
+    @GET("api/users/exists-email/{email}")
+    suspend fun existsEmail(
+        @Path("email") email: String
+    ): Response<Boolean>
 }

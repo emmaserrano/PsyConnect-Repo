@@ -38,34 +38,72 @@ class ForgotPassword : AppCompatActivity() {
         }
 
         btnSend.setOnClickListener {
-            val email = etEmail.text.toString().trim()
 
-            if (email.isEmpty()) {
-                mostrarAlerta("Campo requerido", "Por favor, ingresa tu correo electrónico.")
+            val email =
+                etEmail.text.toString().trim()
+
+            if(email.isEmpty()){
+
+                Toast.makeText(
+                    this,
+                    "Ingrese un correo",
+                    Toast.LENGTH_LONG
+                ).show()
+
                 return@setOnClickListener
             }
 
             lifecycleScope.launch {
+
                 try {
-                    // Cambiado a sendVerificationCode porque el endpoint de recovery dio 404
-                    val response = RetrofitClient.apiService.sendVerificationCode(email)
+
+                    val existsResponse =
+                        RetrofitClient
+                            .apiService
+                            .existsEmail(email)
+
+                    if (
+                        existsResponse.body() != true
+                    ) {
+
+                        Toast.makeText(
+                            this@ForgotPassword,
+                            "No existe ninguna cuenta asociada a este correo",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        return@launch
+                    }
+
+                    val response =
+                        RetrofitClient
+                            .apiService
+                            .sendVerificationCode(email)
 
                     if (response.isSuccessful) {
-                        btnSend.isEnabled = false
-                        tvRecoveryMessage.visibility = View.VISIBLE
-                        tvRecoveryMessage.text = "Código enviado a:\n$email"
-                        
-                        tvRecoveryCountdown.visibility = View.VISIBLE
-                        iniciarTemporizador(tvRecoveryCountdown, btnSend)
 
-                        Toast.makeText(this@ForgotPassword, "¡Código enviado con éxito!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@ForgotPassword,
+                            "Código enviado correctamente",
+                            Toast.LENGTH_LONG
+                        ).show()
+
                     } else {
-                        val errorDetail = response.errorBody()?.string() ?: "Error desconocido"
-                        mostrarAlerta("Error del servidor", "No se pudo enviar el código.\n\nServidor: $errorDetail")
+
+                        Toast.makeText(
+                            this@ForgotPassword,
+                            "No se pudo enviar el código",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
 
                 } catch (e: Exception) {
-                    mostrarAlerta("Error de Conexión", "No se pudo conectar con el servidor. Verifica tu internet.")
+
+                    Toast.makeText(
+                        this@ForgotPassword,
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }

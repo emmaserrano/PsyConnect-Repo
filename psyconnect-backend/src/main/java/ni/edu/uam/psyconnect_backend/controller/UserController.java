@@ -98,4 +98,14 @@ public class UserController {
                 "Contraseña actualizada correctamente"
         );
     }
+
+    @GetMapping("/exists-email/{email}")
+    public ResponseEntity<Boolean> existsEmail(
+            @PathVariable String email
+    ) {
+
+        return ResponseEntity.ok(
+                userService.existsByEmail(email)
+        );
+    }
 }
