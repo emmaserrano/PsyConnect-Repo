@@ -91,7 +91,7 @@ class Home : AppCompatActivity() {
                 startActivity(
                     Intent(
                         this,
-                        Test::class.java
+                        WellnessCenter::class.java
                     )
                 )
             }
