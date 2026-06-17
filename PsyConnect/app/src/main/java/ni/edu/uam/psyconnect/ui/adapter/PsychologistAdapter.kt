@@ -23,19 +23,34 @@ class PsychologistAdapter(
     ) : RecyclerView.ViewHolder(itemView) {
 
         val ivPhoto =
-            itemView.findViewById<ImageView>(R.id.ivPhoto)
+            itemView.findViewById<ImageView>(
+                R.id.ivPhoto
+            )
 
         val tvName =
-            itemView.findViewById<TextView>(R.id.tvName)
+            itemView.findViewById<TextView>(
+                R.id.tvName
+            )
 
         val tvSpecialty =
-            itemView.findViewById<TextView>(R.id.tvSpecialty)
+            itemView.findViewById<TextView>(
+                R.id.tvSpecialty
+            )
 
         val tvCity =
-            itemView.findViewById<TextView>(R.id.tvCity)
+            itemView.findViewById<TextView>(
+                R.id.tvCity
+            )
+
+        val tvStatus =
+            itemView.findViewById<TextView>(
+                R.id.tvStatus
+            )
 
         val btnWhatsapp =
-            itemView.findViewById<Button>(R.id.btnWhatsapp)
+            itemView.findViewById<Button>(
+                R.id.btnWhatsapp
+            )
     }
 
     override fun onCreateViewHolder(
@@ -68,15 +83,23 @@ class PsychologistAdapter(
         val psychologist =
             psychologists[position]
 
+        // Nombre
         holder.tvName.text =
             psychologist.name
 
+        // Especialidad
         holder.tvSpecialty.text =
-            "🧠 ${psychologist.specialty}"
+            psychologist.specialty
 
+        // Ciudad
         holder.tvCity.text =
             "📍 ${psychologist.city}"
 
+        // Estado
+        holder.tvStatus.text =
+            "● Disponible"
+
+        // Foto
         Glide.with(holder.itemView.context)
             .load(
                 "http://10.0.2.2:8080/uploads/" +
@@ -84,16 +107,16 @@ class PsychologistAdapter(
             )
             .placeholder(R.mipmap.ic_launcher_round)
             .error(R.mipmap.ic_launcher_round)
-            .circleCrop()
+            .centerCrop()
             .into(holder.ivPhoto)
 
-        // CLICK EN LA TARJETA
+        // Abrir detalle del especialista
         holder.itemView.setOnClickListener {
 
             onClick(psychologist)
         }
 
-        // BOTÓN WHATSAPP
+        // Abrir WhatsApp
         holder.btnWhatsapp.setOnClickListener {
 
             val intent =
@@ -104,7 +127,16 @@ class PsychologistAdapter(
                     )
                 )
 
-            holder.itemView.context.startActivity(intent)
+            holder.itemView.context
+                .startActivity(intent)
         }
+
+        // Animación suave
+        holder.itemView.alpha = 0f
+
+        holder.itemView.animate()
+            .alpha(1f)
+            .setDuration(500)
+            .start()
     }
 }
