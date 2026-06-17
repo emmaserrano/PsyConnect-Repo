@@ -81,6 +81,10 @@ class WellnessAdapter(
             item.animation
         )
 
+        holder.animation.repeatCount = -1
+
+        holder.animation.playAnimation()
+
         holder.btnStart.setOnClickListener {
 
             onClick(item)

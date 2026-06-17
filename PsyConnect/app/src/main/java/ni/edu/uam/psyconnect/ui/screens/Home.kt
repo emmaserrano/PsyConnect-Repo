@@ -54,6 +54,11 @@ class Home : AppCompatActivity() {
         recyclerWellness.layoutManager =
             LinearLayoutManager(this)
 
+        recyclerWellness.setHasFixedSize(false)
+
+        recyclerWellness.isNestedScrollingEnabled =
+            false
+
         val evaluations =
             listOf(
 
@@ -74,7 +79,7 @@ class Home : AppCompatActivity() {
                 WellnessItem(
                     "☀ Estado de ánimo",
                     "Descubre cómo te has sentido últimamente.",
-                    R.raw.mood,
+                    R.raw.happy,
                     "MOOD"
                 ),
 

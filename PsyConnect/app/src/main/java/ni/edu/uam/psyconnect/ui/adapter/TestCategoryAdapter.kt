@@ -11,6 +11,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.button.MaterialButton
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.TestCategory
+import ni.edu.uam.psyconnect.ui.screens.Test
 
 class TestCategoryAdapter(
 
@@ -85,7 +86,7 @@ class TestCategoryAdapter(
 
             TestCategory.MOOD ->
                 holder.lottie.setAnimation(
-                    R.raw.mood
+                    R.raw.happy
                 )
 
             TestCategory.SLEEP ->
@@ -100,7 +101,7 @@ class TestCategoryAdapter(
 
             TestCategory.SELF_ESTEEM ->
                 holder.lottie.setAnimation(
-                    R.raw.self_esteem
+                    R.raw.growth
                 )
         }
 
