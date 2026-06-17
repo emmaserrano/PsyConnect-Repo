@@ -41,8 +41,6 @@
         <activity android:name=".ui.screens.DetailPsychologist"/>
         <activity android:name=".ui.screens.ResetPassword" />
         <activity android:name=".ui.screens.ForgotPassword" />
-        <activity android:name=".ui.screens.WellnessCenter"/>
-        <activity android:name=".ui.screens.TestCategoryActivity"/>
     </application>
 
 </manifest>
