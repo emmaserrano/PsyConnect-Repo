@@ -2,16 +2,18 @@ package ni.edu.uam.psyconnect.ui.screens
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
+import ni.edu.uam.psyconnect.data.model.WellnessItem
 import ni.edu.uam.psyconnect.network.RetrofitClient
 import ni.edu.uam.psyconnect.ui.adapter.PsychologistAdapter
+import ni.edu.uam.psyconnect.ui.adapter.WellnessAdapter
 
 class Home : AppCompatActivity() {
 
@@ -21,10 +23,78 @@ class Home : AppCompatActivity() {
 
         setContentView(R.layout.activity_home)
 
-        val cardTest =
-            findViewById<CardView>(
-                R.id.cardTest
+        val tvGreeting =
+            findViewById<TextView>(R.id.tvGreeting)
+
+        val sharedPreferences =
+            getSharedPreferences(
+                "psyconnect",
+                MODE_PRIVATE
             )
+
+        val username =
+            sharedPreferences.getString(
+                "username",
+                "Usuario"
+            )
+
+        tvGreeting.text =
+            "Hola, $username 👋"
+
+        val recyclerWellness =
+            findViewById<RecyclerView>(
+                R.id.recyclerWellness
+            )
+
+        recyclerWellness.layoutManager =
+            LinearLayoutManager(this)
+
+        val evaluations =
+            listOf(
+
+                WellnessItem(
+                    "🌿 Bienestar emocional",
+                    "Evalúa tu equilibrio emocional general.",
+                    R.raw.wellbeing
+                ),
+
+                WellnessItem(
+                    "🌊 Estrés",
+                    "Conoce tu nivel actual de estrés.",
+                    R.raw.stress
+                ),
+
+                WellnessItem(
+                    "☀ Estado de ánimo",
+                    "Descubre cómo te has sentido últimamente.",
+                    R.raw.mood
+                ),
+
+                WellnessItem(
+                    "🌙 Sueño y descanso",
+                    "Analiza la calidad de tu descanso.",
+                    R.raw.sleep
+                ),
+
+                WellnessItem(
+                    "🤝 Relaciones sociales",
+                    "Reflexiona sobre tu interacción con otras personas.",
+                    R.raw.social
+                )
+            )
+
+        recyclerWellness.adapter =
+            WellnessAdapter(
+                evaluations
+            ) {
+
+                startActivity(
+                    Intent(
+                        this,
+                        Test::class.java
+                    )
+                )
+            }
 
         val recyclerPsychologists =
             findViewById<RecyclerView>(
@@ -38,9 +108,6 @@ class Home : AppCompatActivity() {
                 false
             )
 
-        /*
-         * CARGAR PSICÓLOGOS
-         */
         lifecycleScope.launch {
 
             try {
@@ -105,9 +172,7 @@ class Home : AppCompatActivity() {
                         }
                 }
 
-            } catch (e: Exception) {
-
-                e.printStackTrace()
+            } catch (_: Exception) {
             }
         }
 
@@ -155,16 +220,6 @@ class Home : AppCompatActivity() {
 
                 else -> false
             }
-        }
-
-        cardTest.setOnClickListener {
-
-            startActivity(
-                Intent(
-                    this,
-                    Test::class.java
-                )
-            )
         }
     }
 }
