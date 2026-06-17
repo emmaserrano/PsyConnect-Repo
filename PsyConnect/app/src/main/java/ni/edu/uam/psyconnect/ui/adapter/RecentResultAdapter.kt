@@ -1,43 +1,28 @@
 package ni.edu.uam.psyconnect.ui.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ni.edu.uam.psyconnect.R
-import ni.edu.uam.psyconnect.data.model.RecentResult
 
-class RecentResultAdapter(
-    private val results: List<RecentResult>
-) : RecyclerView.Adapter<RecentResultAdapter.ViewHolder>() {
+class RecentResultAdapter :
+    RecyclerView.Adapter<RecentResultViewHolder>() {
 
-    class ViewHolder(
-        itemView: View
-    ) : RecyclerView.ViewHolder(itemView) {
-
-        val tvTitle =
-            itemView.findViewById<TextView>(
-                R.id.tvTitle
-            )
-
-        val tvScore =
-            itemView.findViewById<TextView>(
-                R.id.tvScore
-            )
-
-        val tvDate =
-            itemView.findViewById<TextView>(
-                R.id.tvDate
-            )
-    }
+    private val results =
+        listOf(
+            "Bienestar emocional • 84 %",
+            "Estrés • 78 %",
+            "Sueño y descanso • 81 %",
+            "Estado de ánimo • 86 %"
+        )
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ViewHolder {
+    ): RecentResultViewHolder {
 
-        val view =
+        return RecentResultViewHolder(
+
             LayoutInflater
                 .from(parent.context)
                 .inflate(
@@ -45,30 +30,19 @@ class RecentResultAdapter(
                     parent,
                     false
                 )
-
-        return ViewHolder(view)
+        )
     }
 
-    override fun getItemCount(): Int {
-
-        return results.size
-    }
+    override fun getItemCount() =
+        results.size
 
     override fun onBindViewHolder(
-        holder: ViewHolder,
+        holder: RecentResultViewHolder,
         position: Int
     ) {
 
-        val result =
+        holder.bind(
             results[position]
-
-        holder.tvTitle.text =
-            result.title
-
-        holder.tvScore.text =
-            "Puntaje: ${result.score}"
-
-        holder.tvDate.text =
-            result.date
+        )
     }
 }
