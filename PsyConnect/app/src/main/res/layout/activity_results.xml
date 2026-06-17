@@ -1,134 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="?android:colorBackground">
+    android:background="#F7FAFC">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="24dp"
         android:orientation="vertical"
-        android:padding="18dp">
+        android:gravity="center_horizontal">
 
-        <!-- TITULO -->
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieResult"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"/>
+
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Resultados del Test"
             android:textSize="28sp"
             android:textStyle="bold"
+            android:textColor="@color/turquesa_oscuro"
             android:gravity="center"
-            android:textColor="?android:textColorPrimary"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginTop="12dp"/>
 
-        <!-- CARD PRINCIPAL -->
+        <TextView
+            android:id="@+id/tvScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_marginTop="20dp"/>
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            card_view:cardCornerRadius="18dp"
-            card_view:cardElevation="4dp"
-            card_view:cardBackgroundColor="?android:colorBackgroundFloating">
+            android:layout_marginTop="24dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="22dp">
+                android:padding="20dp"
+                android:orientation="vertical">
 
-                <!-- PORCENTAJE -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Puntaje"
+                    android:text="🌿 Recomendaciones"
+                    android:textStyle="bold"
                     android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:textColor="?android:textColorPrimary"/>
-
-                <TextView
-                    android:id="@+id/tvPercentage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="65%"
-                    android:textSize="48sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorPrimary"
-                    android:layout_marginBottom="20dp"/>
-
-                <!-- NIVEL -->
-                <TextView
-                    android:id="@+id/tvLevel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nivel: Ansiedad Moderada"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:textColor="?android:textColorPrimary"
-                    android:layout_marginBottom="12dp"/>
-
-                <!-- MENSAJE DE PROGRESO -->
-                <TextView
-                    android:id="@+id/tvProgressMessage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Tu progreso aparecerá aquí"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorPrimary"
-                    android:layout_marginBottom="24dp"/>
-
-                <!-- RECOMENDACIONES -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Recomendaciones"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="?android:textColorPrimary"
-                    android:layout_marginBottom="18dp"/>
+                    android:textColor="@color/turquesa_oscuro"/>
 
                 <TextView
                     android:id="@+id/tvRecommendations"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:lineSpacingExtra="8dp"
-                    android:textColor="?android:textColorPrimary"/>
+                    android:textSize="17sp"
+                    android:layout_marginTop="16dp"/>
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <!-- BOTON -->
-        <Button
-            android:id="@+id/btnProgress"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ver Mi Progreso"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:padding="16dp"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="?attr/colorPrimary"
-            android:textColor="?android:textColorPrimaryInverse"/>
+            android:text="📊 Ver historial"
+            android:layout_marginTop="30dp"
+            app:cornerRadius="20dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🏠 Volver al inicio"
+            android:layout_marginTop="16dp"
+            app:cornerRadius="20dp"/>
 
     </LinearLayout>
 
 </ScrollView>
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:menu="@menu/bottom_nav_menu"/>
-
-</LinearLayout>
