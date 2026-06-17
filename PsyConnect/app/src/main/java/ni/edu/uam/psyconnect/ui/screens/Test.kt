@@ -2,143 +2,157 @@ package ni.edu.uam.psyconnect.ui.screens
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.SeekBar
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
 import ni.edu.uam.psyconnect.R
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import ni.edu.uam.psyconnect.data.repository.TestRepository
 
 class Test : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
+
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_test)
+        setContentView(
+            R.layout.activity_test
+        )
 
-        val bottomNav =
-            findViewById<BottomNavigationView>(
-                R.id.bottomNavigation
+        val category =
+            intent.getStringExtra(
+                "category"
+            ) ?: "WELLNESS"
+
+        val tvCategoryTitle =
+            findViewById<TextView>(
+                R.id.tvCategoryTitle
             )
 
-        bottomNav.selectedItemId =
-            R.id.nav_home
+        val questionsContainer =
+            findViewById<LinearLayout>(
+                R.id.questionsContainer
+            )
 
-        bottomNav.setOnItemSelectedListener {
+        val btnFinish =
+            findViewById<MaterialButton>(
+                R.id.btnFinish
+            )
 
-            when (it.itemId) {
+        tvCategoryTitle.text =
+            when(category){
 
-                R.id.nav_home -> {
+                "WELLNESS" ->
+                    "🌿 Bienestar emocional"
 
-                    startActivity(
-                        Intent(
-                            this,
-                            Home::class.java
-                        )
-                    )
+                "STRESS" ->
+                    "🌊 Estrés"
 
-                    finish()
+                "MOOD" ->
+                    "☀ Estado de ánimo"
 
-                    true
-                }
+                "SLEEP" ->
+                    "🌙 Sueño y descanso"
 
-                R.id.nav_history -> {
-
-                    startActivity(
-                        Intent(
-                            this,
-                            History::class.java
-                        )
-                    )
-
-                    finish()
-
-                    true
-                }
-
-                R.id.nav_profile -> {
-
-                    startActivity(
-                        Intent(
-                            this,
-                            Profile::class.java
-                        )
-                    )
-
-                    finish()
-
-                    true
-                }
-
-                else -> false
+                else ->
+                    "🤝 Relaciones sociales"
             }
+
+        val questions =
+            TestRepository.getQuestions(
+                category
+            )
+
+        val groups =
+            mutableListOf<RadioGroup>()
+
+        questions.forEach { question ->
+
+            val title =
+                TextView(this)
+
+            title.text =
+                question.text
+
+            title.textSize = 18f
+
+            title.setPadding(
+                0,
+                24,
+                0,
+                12
+            )
+
+            questionsContainer.addView(
+                title
+            )
+
+            val radioGroup =
+                RadioGroup(this)
+
+            question.options.forEachIndexed { index, option ->
+
+                val radioButton =
+                    RadioButton(this)
+
+                radioButton.text =
+                    option
+
+                radioButton.id =
+                    index + 1
+
+                radioGroup.addView(
+                    radioButton
+                )
+            }
+
+            groups.add(
+                radioGroup
+            )
+
+            questionsContainer.addView(
+                radioGroup
+            )
         }
 
-        // Botón resultados
-        val btnResults = findViewById<Button>(R.id.btnResults)
+        btnFinish.setOnClickListener {
 
-        // SeekBars
-        val seek1 = findViewById<SeekBar>(R.id.seekQuestion1)
-        val seek2 = findViewById<SeekBar>(R.id.seekQuestion2)
-        val seek3 = findViewById<SeekBar>(R.id.seekQuestion3)
-        val seek4 = findViewById<SeekBar>(R.id.seekQuestion4)
+            var score = 0
 
-        // TextViews de valores
-        val value1 = findViewById<TextView>(R.id.tvValue1)
-        val value2 = findViewById<TextView>(R.id.tvValue2)
-        val value3 = findViewById<TextView>(R.id.tvValue3)
-        val value4 = findViewById<TextView>(R.id.tvValue4)
+            groups.forEach { group ->
 
-        // Función para actualizar valores
-        fun setupSeekBar(seekBar: SeekBar, textView: TextView) {
-
-            seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-
-                override fun onProgressChanged(
-                    seekBar: SeekBar?,
-                    progress: Int,
-                    fromUser: Boolean
+                if (
+                    group.checkedRadioButtonId != -1
                 ) {
 
-                    // +1 porque SeekBar inicia en 0
-                    val value = progress + 1
-
-                    textView.text = "Valor: $value"
+                    score +=
+                        group.checkedRadioButtonId
                 }
+            }
 
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            val intent =
+                Intent(
+                    this,
+                    Results::class.java
+                )
 
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-            })
-        }
+            intent.putExtra(
+                "score",
+                score
+            )
 
-        // Activar listeners
-        setupSeekBar(seek1, value1)
-        setupSeekBar(seek2, value2)
-        setupSeekBar(seek3, value3)
-        setupSeekBar(seek4, value4)
+            intent.putExtra(
+                "category",
+                category
+            )
 
-        // Navegar a resultados
-        btnResults.setOnClickListener {
-
-            // Obtener valores de los sliders
-            val score1 = seek1.progress + 1
-            val score2 = seek2.progress + 1
-            val score3 = seek3.progress + 1
-            val score4 = seek4.progress + 1
-
-            // Suma total
-            val total = score1 + score2 + score3 + score4
-
-            // Máximo posible = 20
-            val percentage = (total * 100) / 20
-
-            // Enviar datos a Results
-            val intent = Intent(this, Results::class.java)
-
-            intent.putExtra("percentage", percentage)
-
-            startActivity(intent)
+            startActivity(
+                intent
+            )
         }
     }
 }
