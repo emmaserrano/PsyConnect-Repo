@@ -141,4 +141,39 @@ public class UserService {
                 .existsByEmail(email);
     }
 
+    public void changePassword(
+            Long userId,
+            String currentPassword,
+            String newPassword
+    ) {
+
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(
+                                () ->
+                                        new RuntimeException(
+                                                "Usuario no encontrado"
+                                        )
+                        );
+
+        if(
+                !user.getPassword()
+                        .equals(currentPassword)
+        ) {
+
+            throw new RuntimeException(
+                    "Contraseña actual incorrecta"
+            );
+        }
+
+        user.setPassword(
+                newPassword
+        );
+
+        userRepository.save(
+                user
+        );
+    }
+
 }

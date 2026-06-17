@@ -104,8 +104,8 @@
         <Button
             android:id="@+id/btnChangePassword"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:text="Cambiar Contraseña"
+            android:layout_height="wrap_content"
+            android:text="Cambiar contraseña"
             android:layout_marginTop="12dp"/>
 
     </LinearLayout>
