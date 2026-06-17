@@ -1,6 +1,7 @@
 package ni.edu.uam.psyconnect.network
 
 import ni.edu.uam.psyconnect.data.model.AuthResponse
+import ni.edu.uam.psyconnect.data.model.ChangePasswordRequest
 import ni.edu.uam.psyconnect.data.model.LoginRequest
 import ni.edu.uam.psyconnect.data.model.Psychologist
 import ni.edu.uam.psyconnect.data.model.RecoveryCodeRequest
@@ -52,4 +53,14 @@ interface ApiService {
     // Mantenemos estos por si el backend los soporta, pero preferimos los de arriba
     @POST("api/verification/validate-recovery")
     suspend fun validateRecoveryCode(@Body request: RecoveryCodeRequest): Response<Boolean>
+
+    @GET("api/users/exists-email/{email}")
+    suspend fun existsEmail(
+        @Path("email") email: String
+    ): Response<Boolean>
+
+    @POST("api/users/change-password")
+    suspend fun changePassword(
+        @Body request: ChangePasswordRequest
+    ): Response<ResponseBody>
 }

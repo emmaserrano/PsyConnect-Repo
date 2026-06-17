@@ -37,6 +37,7 @@
         <activity android:name=".ui.screens.History" />
         <activity android:name=".ui.screens.Profile" />
         <activity android:name=".ui.screens.EditProfile" />
+        <activity android:name=".ui.screens.ChangePassword" />
         <activity android:name=".ui.screens.DetailPsychologist"/>
         <activity android:name=".ui.screens.ResetPassword" />
         <activity android:name=".ui.screens.ForgotPassword" />

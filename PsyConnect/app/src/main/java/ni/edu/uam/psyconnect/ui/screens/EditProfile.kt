@@ -1,5 +1,6 @@
 package ni.edu.uam.psyconnect.ui.screens
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -12,6 +13,8 @@ import ni.edu.uam.psyconnect.data.model.User
 import ni.edu.uam.psyconnect.network.RetrofitClient
 
 class EditProfile : AppCompatActivity() {
+
+    private var hasChanges = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +32,8 @@ class EditProfile : AppCompatActivity() {
 
         val btnSave =
             findViewById<Button>(R.id.btnSave)
+        val btnChangePassword =
+            findViewById<Button>(R.id.btnChangePassword)
 
         val sharedPreferences =
             getSharedPreferences(
@@ -129,6 +134,17 @@ class EditProfile : AppCompatActivity() {
                     ).show()
                 }
             }
+        }
+
+        btnChangePassword.setOnClickListener {
+
+            startActivity(
+
+                Intent(
+                    this,
+                    ChangePassword::class.java
+                )
+            )
         }
     }
 }

@@ -1,5 +1,6 @@
 package ni.edu.uam.psyconnect_backend.controller;
 
+import ni.edu.uam.psyconnect_backend.dto.ChangePasswordRequest;
 import ni.edu.uam.psyconnect_backend.dto.LoginRequest;
 import ni.edu.uam.psyconnect_backend.dto.LoginResponse;
 import ni.edu.uam.psyconnect_backend.model.User;
@@ -96,6 +97,40 @@ public class UserController {
 
         return ResponseEntity.ok(
                 "Contraseña actualizada correctamente"
+        );
+    }
+
+    @GetMapping("/exists-email/{email}")
+    public ResponseEntity<Boolean> existsEmail(
+            @PathVariable String email
+    ) {
+
+        return ResponseEntity.ok(
+                userService.existsByEmail(email)
+        );
+    }
+
+    @PostMapping(
+            "/change-password"
+    )
+    public ResponseEntity<String>
+    changePassword(
+
+            @RequestBody
+            ChangePasswordRequest request
+    ) {
+
+        userService.changePassword(
+
+                request.getUserId(),
+
+                request.getCurrentPassword(),
+
+                request.getNewPassword()
+        );
+
+        return ResponseEntity.ok(
+                "Contraseña actualizada"
         );
     }
 }
