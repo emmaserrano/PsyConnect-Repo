@@ -24,7 +24,9 @@ class Home : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         val tvGreeting =
-            findViewById<TextView>(R.id.tvGreeting)
+            findViewById<TextView>(
+                R.id.tvGreeting
+            )
 
         val sharedPreferences =
             getSharedPreferences(
@@ -41,6 +43,9 @@ class Home : AppCompatActivity() {
         tvGreeting.text =
             "Hola, $username 👋"
 
+        /*
+         * EVALUACIONES
+         */
         val recyclerWellness =
             findViewById<RecyclerView>(
                 R.id.recyclerWellness
@@ -55,47 +60,61 @@ class Home : AppCompatActivity() {
                 WellnessItem(
                     "🌿 Bienestar emocional",
                     "Evalúa tu equilibrio emocional general.",
-                    R.raw.wellbeing
+                    R.raw.wellbeing,
+                    "WELLNESS"
                 ),
 
                 WellnessItem(
                     "🌊 Estrés",
                     "Conoce tu nivel actual de estrés.",
-                    R.raw.stress
+                    R.raw.stress,
+                    "STRESS"
                 ),
 
                 WellnessItem(
                     "☀ Estado de ánimo",
                     "Descubre cómo te has sentido últimamente.",
-                    R.raw.mood
+                    R.raw.mood,
+                    "MOOD"
                 ),
 
                 WellnessItem(
                     "🌙 Sueño y descanso",
                     "Analiza la calidad de tu descanso.",
-                    R.raw.sleep
+                    R.raw.sleep,
+                    "SLEEP"
                 ),
 
                 WellnessItem(
                     "🤝 Relaciones sociales",
                     "Reflexiona sobre tu interacción con otras personas.",
-                    R.raw.social
+                    R.raw.social,
+                    "SOCIAL"
                 )
             )
 
         recyclerWellness.adapter =
             WellnessAdapter(
                 evaluations
-            ) {
+            ) { item ->
 
-                startActivity(
+                val intent =
                     Intent(
                         this,
-                        WellnessCenter::class.java
+                        Test::class.java
                     )
+
+                intent.putExtra(
+                    "category",
+                    item.category
                 )
+
+                startActivity(intent)
             }
 
+        /*
+         * PSICÓLOGOS
+         */
         val recyclerPsychologists =
             findViewById<RecyclerView>(
                 R.id.recyclerPsychologists
@@ -176,6 +195,9 @@ class Home : AppCompatActivity() {
             }
         }
 
+        /*
+         * BOTTOM NAVIGATION
+         */
         val bottomNav =
             findViewById<BottomNavigationView>(
                 R.id.bottomNavigation

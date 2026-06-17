@@ -6,5 +6,7 @@ data class WellnessItem(
 
     val description: String,
 
-    val animation: Int
+    val animation: Int,
+
+    val category: String
 )
