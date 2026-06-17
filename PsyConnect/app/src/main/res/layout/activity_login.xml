@@ -65,6 +65,7 @@
                 android:hint="@string/hint_password"
                 android:inputType="textPassword"/>
 
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -75,6 +76,17 @@
             android:textStyle="bold"
             android:textSize="18sp"
             android:backgroundTint="@color/turquesa_principal"/>
+
+        <TextView
+            android:id="@+id/tvForgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Olvidaste tu contraseña?"
+            android:textColor="@color/turquesa_principal"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_gravity="end"
+            android:padding="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"

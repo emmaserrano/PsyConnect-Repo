@@ -1,11 +1,13 @@
 package ni.edu.uam.psyconnect_backend.controller;
 
+import ni.edu.uam.psyconnect_backend.dto.ChangePasswordRequest;
 import ni.edu.uam.psyconnect_backend.dto.LoginRequest;
 import ni.edu.uam.psyconnect_backend.dto.LoginResponse;
 import ni.edu.uam.psyconnect_backend.model.User;
 import ni.edu.uam.psyconnect_backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import ni.edu.uam.psyconnect_backend.dto.ResetPasswordRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -80,6 +82,55 @@ public class UserController {
         return userService.updateUser(
                 id,
                 user
+        );
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(
+            @RequestBody ResetPasswordRequest request
+    ) {
+
+        userService.resetPassword(
+                request.getEmail(),
+                request.getNewPassword()
+        );
+
+        return ResponseEntity.ok(
+                "Contraseña actualizada correctamente"
+        );
+    }
+
+    @GetMapping("/exists-email/{email}")
+    public ResponseEntity<Boolean> existsEmail(
+            @PathVariable String email
+    ) {
+
+        return ResponseEntity.ok(
+                userService.existsByEmail(email)
+        );
+    }
+
+    @PostMapping(
+            "/change-password"
+    )
+    public ResponseEntity<String>
+    changePassword(
+
+            @RequestBody
+            ChangePasswordRequest request
+    ) {
+
+        userService.changePassword(
+
+                request.getUserId(),
+
+                request.getCurrentPassword(),
+
+                request.getNewPassword()
+        );
+
+        return ResponseEntity.ok(
+                "Contraseña actualizada"
         );
     }
 }

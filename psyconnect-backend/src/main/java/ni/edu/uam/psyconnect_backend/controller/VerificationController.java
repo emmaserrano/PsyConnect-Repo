@@ -1,5 +1,6 @@
 package ni.edu.uam.psyconnect_backend.controller;
 
+import ni.edu.uam.psyconnect_backend.dto.RecoveryCodeRequest;
 import ni.edu.uam.psyconnect_backend.dto.VerifyCodeRequest;
 import ni.edu.uam.psyconnect_backend.service.VerificationService;
 import org.springframework.http.ResponseEntity;
@@ -43,4 +44,18 @@ public class VerificationController {
 
         return ResponseEntity.ok(valid);
     }
+    @PostMapping("/validate-recovery")
+    public ResponseEntity<Boolean> validateRecoveryCode(
+            @RequestBody RecoveryCodeRequest request
+    ) {
+
+        boolean valid =
+                verificationService.validateCode(
+                        request.getEmail(),
+                        request.getCode()
+                );
+
+        return ResponseEntity.ok(valid);
+    }
+
 }

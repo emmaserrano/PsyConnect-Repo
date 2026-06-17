@@ -103,4 +103,77 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public void resetPassword(
+            String email,
+            String newPassword
+    ) {
+
+        User user =
+                userRepository.findByEmail(email)
+                        .orElseThrow(
+                                () -> new RuntimeException(
+                                        "Usuario no encontrado"
+                                )
+                        );
+
+        user.setPassword(newPassword);
+
+        userRepository.save(user);
+    }
+
+    public void sendRecoveryCode(
+            String email
+    ) {
+
+        if (!userRepository.existsByEmail(email)) {
+
+            throw new RuntimeException(
+                    "No existe una cuenta asociada a este correo"
+            );
+        }
+    }
+
+    public boolean existsByEmail(
+            String email
+    ) {
+
+        return userRepository
+                .existsByEmail(email);
+    }
+
+    public void changePassword(
+            Long userId,
+            String currentPassword,
+            String newPassword
+    ) {
+
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(
+                                () ->
+                                        new RuntimeException(
+                                                "Usuario no encontrado"
+                                        )
+                        );
+
+        if(
+                !user.getPassword()
+                        .equals(currentPassword)
+        ) {
+
+            throw new RuntimeException(
+                    "Contraseña actual incorrecta"
+            );
+        }
+
+        user.setPassword(
+                newPassword
+        );
+
+        userRepository.save(
+                user
+        );
+    }
+
 }

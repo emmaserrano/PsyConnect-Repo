@@ -17,13 +17,16 @@
 
         <activity
             android:name=".MainActivity"
+            android:exported="true"/>
+
+        <activity
+            android:name=".ui.screens.OnboardingActivity"
             android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <activity android:name=".ui.screens.Login" />
@@ -34,8 +37,10 @@
         <activity android:name=".ui.screens.History" />
         <activity android:name=".ui.screens.Profile" />
         <activity android:name=".ui.screens.EditProfile" />
+        <activity android:name=".ui.screens.ChangePassword" />
         <activity android:name=".ui.screens.DetailPsychologist"/>
-
+        <activity android:name=".ui.screens.ResetPassword" />
+        <activity android:name=".ui.screens.ForgotPassword" />
     </application>
 
 </manifest>

@@ -77,6 +77,23 @@
             android:text="Enviar código"
             android:layout_marginBottom="12dp"/>
 
+        <TextView
+            android:id="@+id/tvCountdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="02:00"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/gris_texto"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/btnResendCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reenviar código"
+            android:visibility="gone"/>
+
         <EditText
             android:id="@+id/etVerificationCode"
             android:layout_width="match_parent"
@@ -118,7 +135,41 @@
                 android:inputType="textPassword"/>
 
         </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/tvPasswordRequirements"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/turquesa_principal"
+                android:text="Requisitos de seguridad: Mínimo 8 caracteres, una mayúscula, una minúscula, un número, un carácter especial"
+                />
 
+            <ProgressBar
+                android:id="@+id/progressPassword"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:max="100"
+                android:layout_marginTop="8dp"
+                />
+
+            <TextView
+                android:id="@+id/tvPasswordStrength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seguridad: Muy débil"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp"/>
+
+        <CheckBox
+            android:id="@+id/cbTerms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="He leído y acepto los Términos y Condiciones. Entiendo que PsyConnect es una herramienta de apoyo al bienestar emocional y no sustituye la evaluación, diagnóstico o tratamiento realizado por un profesional de la salud mental."
+            android:textSize="15sp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="16dp"/>
         <Button
             android:id="@+id/btnRegister"
             android:layout_width="match_parent"

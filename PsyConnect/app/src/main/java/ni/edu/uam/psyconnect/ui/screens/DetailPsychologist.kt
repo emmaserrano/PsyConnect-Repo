@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import ni.edu.uam.psyconnect.R
@@ -55,6 +56,11 @@ class DetailPsychologist : AppCompatActivity() {
 
         val email =
             intent.getStringExtra("email") ?: ""
+        Toast.makeText(
+            this,
+            "Email recibido: $email",
+            Toast.LENGTH_LONG
+        ).show()
 
         val phone =
             intent.getStringExtra("phone") ?: ""

@@ -6,8 +6,7 @@
 
     <!-- Login -->
     <string name="slogan">Tu bienestar mental, nuestra conexión</string>
-    <string name="hint_email">Correo o nombre de usuario+
-    </string>
+    <string name="hint_email">Ingrese su correo electrónico</string>
     <string name="hint_password">Contraseña</string>
     <string name="btn_login">Iniciar sesión</string>
     <string name="no_account">¿No tienes cuenta?</string>
@@ -22,5 +21,17 @@
     <string name="btn_register_account">Crear cuenta</string>
     <string name="already_account">¿Ya tienes cuenta?</string>
     <string name="login_here">Iniciar sesión</string>
+
+    <!-- Recuperación y Restablecimiento -->
+    <string name="reset_password_title">Restablecer contraseña</string>
+    <string name="reset_password_subtitle">Crea una nueva contraseña segura para tu cuenta de PsyConnect.</string>
+    <string name="hint_new_password">Nueva contraseña</string>
+    <string name="hint_confirm_password">Confirmar contraseña</string>
+    <string name="password_requirements_title">La contraseña debe tener:</string>
+    <string name="password_requirements_list">• Al menos 8 caracteres\n• Una letra mayúscula\n• Un número\n• Un carácter especial</string>
+    <string name="btn_update_password">Actualizar contraseña</string>
+    <string name="error_password_mismatch">Las contraseñas no coinciden</string>
+    <string name="error_password_weak">La contraseña no cumple con los requisitos de seguridad</string>
+    <string name="success_password_updated">Contraseña actualizada correctamente</string>
 
 </resources>

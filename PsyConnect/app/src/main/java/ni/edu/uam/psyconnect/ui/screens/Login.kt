@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +23,7 @@ class Login : AppCompatActivity() {
 
         val etEmail = findViewById<EditText>(R.id.etEmail)
         val etPassword = findViewById<EditText>(R.id.etPassword)
+        val tvForgotPassword = findViewById<TextView>(R.id.tvForgotPassword)
 
         val btnLogin = findViewById<Button>(R.id.btnLogin)
         val btnRegister = findViewById<Button>(R.id.btnGoRegister)
@@ -129,6 +131,15 @@ class Login : AppCompatActivity() {
                 )
 
             startActivity(intent)
+        }
+        tvForgotPassword.setOnClickListener {
+
+            startActivity(
+                Intent(
+                    this,
+                    ForgotPassword::class.java
+                )
+            )
         }
     }
 }

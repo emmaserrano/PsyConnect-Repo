@@ -1,9 +1,21 @@
 package ni.edu.uam.psyconnect.ui.screens
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.text.Editable
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
+import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -11,281 +23,274 @@ import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.User
 import ni.edu.uam.psyconnect.data.model.VerifyCodeRequest
 import ni.edu.uam.psyconnect.network.RetrofitClient
+import java.util.Locale
 
 class Register : AppCompatActivity() {
 
     private var emailVerificado = false
+    private var countDownTimer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_register)
 
-        val etName =
-            findViewById<EditText>(R.id.etName)
+        val etName = findViewById<EditText>(R.id.etName)
+        val etUsername = findViewById<EditText>(R.id.etUsername)
+        val etEmail = findViewById<EditText>(R.id.etEmail)
+        val etVerificationCode = findViewById<EditText>(R.id.etVerificationCode)
+        val etPassword = findViewById<EditText>(R.id.etPassword)
+        val etAge = findViewById<EditText>(R.id.etAge)
+        val btnSendCode = findViewById<Button>(R.id.btnSendCode)
+        val btnVerifyCode = findViewById<Button>(R.id.btnVerifyCode)
+        val btnResendCode = findViewById<Button>(R.id.btnResendCode)
+        val cbTerms = findViewById<CheckBox>(R.id.cbTerms)
+        val btnRegister = findViewById<Button>(R.id.btnRegister)
+        val btnBackLogin = findViewById<Button>(R.id.btnBackLogin)
+        val tvCountdown = findViewById<TextView>(R.id.tvCountdown)
+        val progressPassword = findViewById<android.widget.ProgressBar>(R.id.progressPassword)
+        val tvPasswordStrength = findViewById<TextView>(R.id.tvPasswordStrength)
+        val tvPasswordRequirements = findViewById<TextView>(R.id.tvPasswordRequirements)
 
-        val etUsername =
-            findViewById<EditText>(R.id.etUsername)
+        // Limpieza inicial
+        tvPasswordStrength.text = ""
+        tvPasswordRequirements.text = ""
 
-        val etEmail =
-            findViewById<EditText>(R.id.etEmail)
-
-        val etVerificationCode =
-            findViewById<EditText>(R.id.etVerificationCode)
-
-        val btnSendCode =
-            findViewById<Button>(R.id.btnSendCode)
-
-        val btnVerifyCode =
-            findViewById<Button>(R.id.btnVerifyCode)
-
-        val etPassword =
-            findViewById<EditText>(R.id.etPassword)
-
-        val etAge =
-            findViewById<EditText>(R.id.etAge)
-
-        val btnRegister =
-            findViewById<Button>(R.id.btnRegister)
-
-        val btnBackLogin =
-            findViewById<Button>(R.id.btnBackLogin)
-
-        /*
-         * ENVIAR CÓDIGO
-         */
         btnSendCode.setOnClickListener {
-
-            val email =
-                etEmail.text.toString()
-
+            val email = etEmail.text.toString().trim()
             if (email.isEmpty()) {
-
-                Toast.makeText(
-                    this,
-                    "Ingrese un correo",
-                    Toast.LENGTH_SHORT
-                ).show()
-
+                mostrarAlerta("Campo requerido", "Por favor, ingresa un correo electrónico.")
                 return@setOnClickListener
             }
 
             lifecycleScope.launch {
-
                 try {
-
-                    val response =
-                        RetrofitClient
-                            .apiService
-                            .sendVerificationCode(email)
-
+                    val response = RetrofitClient.apiService.sendVerificationCode(email)
                     if (response.isSuccessful) {
-
-                        Toast.makeText(
-                            this@Register,
-                            "Código enviado al correo",
-                            Toast.LENGTH_LONG
-                        ).show()
-
+                        tvCountdown.visibility = View.VISIBLE
+                        iniciarTemporizador(tvCountdown, btnSendCode, btnResendCode)
+                        Toast.makeText(this@Register, "Código enviado correctamente", Toast.LENGTH_LONG).show()
                     } else {
-
-                        Toast.makeText(
-                            this@Register,
-                            "No se pudo enviar el código",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        val errorDetail = response.errorBody()?.string() ?: "Error desconocido"
+                        mostrarAlerta("Error de Envío", "No se pudo enviar el código.\n\nServidor: $errorDetail")
                     }
-
                 } catch (e: Exception) {
-
-                    Toast.makeText(
-                        this@Register,
-                        e.message,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    mostrarAlerta("Error de Conexión", "No se pudo conectar con el servidor.\n\n${e.message}")
                 }
             }
         }
 
-        /*
-         * VERIFICAR CÓDIGO
-         */
+        btnResendCode.setOnClickListener {
+            btnSendCode.performClick()
+        }
+
         btnVerifyCode.setOnClickListener {
+            val email = etEmail.text.toString().trim()
+            val code = etVerificationCode.text.toString().trim()
 
-            val email =
-                etEmail.text.toString()
-
-            val code =
-                etVerificationCode.text.toString()
-
-            if (
-                email.isEmpty() ||
-                code.isEmpty()
-            ) {
-
-                Toast.makeText(
-                    this,
-                    "Complete correo y código",
-                    Toast.LENGTH_SHORT
-                ).show()
-
+            if (email.isEmpty() || code.isEmpty()) {
+                mostrarAlerta("Datos incompletos", "Ingrese correo y código.")
                 return@setOnClickListener
             }
 
             lifecycleScope.launch {
-
                 try {
-
-                    val request =
-                        VerifyCodeRequest(
-                            email,
-                            code
-                        )
-
-                    val response =
-                        RetrofitClient
-                            .apiService
-                            .validateCode(request)
-
-                    if (
-                        response.isSuccessful &&
-                        response.body() == true
-                    ) {
-
+                    val response = RetrofitClient.apiService.validateCode(VerifyCodeRequest(email, code))
+                    if (response.isSuccessful && response.body() == true) {
                         emailVerificado = true
-
-                        Toast.makeText(
-                            this@Register,
-                            "Correo verificado correctamente",
-                            Toast.LENGTH_LONG
-                        ).show()
-
+                        etEmail.isEnabled = false
+                        etVerificationCode.isEnabled = false
+                        btnVerifyCode.visibility = View.GONE
+                        btnSendCode.visibility = View.GONE
+                        btnResendCode.visibility = View.GONE
+                        tvCountdown.visibility = View.GONE
+                        countDownTimer?.cancel()
+                        Toast.makeText(this@Register, "Correo verificado correctamente", Toast.LENGTH_LONG).show()
                     } else {
-
-                        emailVerificado = false
-
-                        Toast.makeText(
-                            this@Register,
-                            "Código incorrecto o vencido",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        mostrarAlerta("Código Incorrecto", "El código de verificación no es válido.")
                     }
-
                 } catch (e: Exception) {
-
-                    Toast.makeText(
-                        this@Register,
-                        e.message,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    mostrarAlerta("Error", "Error al validar el código: ${e.message}")
                 }
             }
         }
 
-        /*
-         * REGISTRAR USUARIO
-         */
+        etPassword.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val password = s.toString()
+
+                if (password.isEmpty()) {
+                    progressPassword.progress = 0
+                    tvPasswordStrength.text = ""
+                    tvPasswordRequirements.text = ""
+                    return
+                }
+
+                val tieneLongitud = password.length >= 8
+                val tieneMayuscula = password.any { it.isUpperCase() }
+                val tieneMinuscula = password.any { it.isLowerCase() }
+                val tieneNumero = password.any { it.isDigit() }
+                val tieneEspecial = password.any { !it.isLetterOrDigit() }
+
+                var score = 0
+                if (tieneLongitud) score += 20
+                if (tieneMayuscula) score += 20
+                if (tieneMinuscula) score += 20
+                if (tieneNumero) score += 20
+                if (tieneEspecial) score += 20
+
+                progressPassword.progress = score
+                
+                val color = when {
+                    score <= 20 -> {
+                        tvPasswordStrength.text = "🔴 Muy débil"
+                        Color.RED
+                    }
+                    score <= 40 -> {
+                        tvPasswordStrength.text = "🟠 Débil"
+                        Color.parseColor("#FF9800")
+                    }
+                    score <= 60 -> {
+                        tvPasswordStrength.text = "🟡 Aceptable"
+                        Color.parseColor("#FBC02D")
+                    }
+                    score <= 80 -> {
+                        tvPasswordStrength.text = "🟢 Fuerte"
+                        Color.parseColor("#4CAF50")
+                    }
+                    else -> {
+                        tvPasswordStrength.text = "✅ Muy fuerte"
+                        Color.parseColor("#2E7D32")
+                    }
+                }
+                
+                progressPassword.progressTintList = ColorStateList.valueOf(color)
+
+                actualizarRequisitos(
+                    tvPasswordRequirements,
+                    tieneLongitud,
+                    tieneMayuscula,
+                    tieneMinuscula,
+                    tieneNumero,
+                    tieneEspecial
+                )
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
         btnRegister.setOnClickListener {
+            val name = etName.text.toString().trim()
+            val username = etUsername.text.toString().trim()
+            val email = etEmail.text.toString().trim()
+            val password = etPassword.text.toString()
+            val age = etAge.text.toString()
 
-            val name =
-                etName.text.toString()
-
-            val username =
-                etUsername.text.toString()
-
-            val email =
-                etEmail.text.toString()
-
-            val password =
-                etPassword.text.toString()
-
-            val age =
-                etAge.text.toString()
-
-            if (
-                name.isEmpty() ||
-                username.isEmpty() ||
-                email.isEmpty() ||
-                password.isEmpty() ||
-                age.isEmpty()
-            ) {
-
-                Toast.makeText(
-                    this,
-                    "Complete todos los campos",
-                    Toast.LENGTH_SHORT
-                ).show()
-
+            if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty() || age.isEmpty()) {
+                mostrarAlerta("Campos incompletos", "Por favor completa todos los campos del formulario.")
                 return@setOnClickListener
             }
 
             if (!emailVerificado) {
-
-                Toast.makeText(
-                    this,
-                    "Debe verificar su correo antes de registrarse",
-                    Toast.LENGTH_LONG
-                ).show()
-
+                mostrarAlerta("Verificación pendiente", "Debes verificar tu correo antes de registrarte.")
                 return@setOnClickListener
             }
 
-            val user =
-                User(
-                    name = name,
-                    username = username,
-                    email = email,
-                    password = password,
-                    age = age.toInt()
-                )
+            if (!validarPassword(password)) {
+                mostrarAlerta("Contraseña insegura", "La contraseña debe cumplir con todos los requisitos de seguridad mostrados en verde.")
+                return@setOnClickListener
+            }
 
+            if (!cbTerms.isChecked) {
+                mostrarAlerta("Términos y condiciones", "Debes aceptar los términos para continuar.")
+                return@setOnClickListener
+            }
+
+            val user = User(name = name, username = username, email = email, password = password, age = age.toInt())
             lifecycleScope.launch {
-
                 try {
-
-                    val response =
-                        RetrofitClient
-                            .apiService
-                            .registerUser(user)
-
+                    val response = RetrofitClient.apiService.registerUser(user)
                     if (response.isSuccessful) {
-
-                        Toast.makeText(
-                            this@Register,
-                            "Usuario registrado correctamente",
-                            Toast.LENGTH_LONG
-                        ).show()
-
+                        Toast.makeText(this@Register, "¡Bienvenido! Usuario registrado.", Toast.LENGTH_LONG).show()
                         finish()
-
                     } else {
-
-                        val errorMessage =
-                            response.errorBody()?.string()
-
-                        Toast.makeText(
-                            this@Register,
-                            errorMessage
-                                ?: "Error al registrar usuario",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        val errorDetail = response.errorBody()?.string() ?: "Error al registrar"
+                        mostrarAlerta("Error de Registro", errorDetail)
                     }
-
                 } catch (e: Exception) {
-
-                    Toast.makeText(
-                        this@Register,
-                        e.message,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    mostrarAlerta("Error", "Ocurrió un error inesperado: ${e.message}")
                 }
             }
         }
 
-        btnBackLogin.setOnClickListener {
+        btnBackLogin.setOnClickListener { finish() }
+    }
 
-            finish()
+    private fun mostrarAlerta(titulo: String, mensaje: String) {
+        AlertDialog.Builder(this)
+            .setTitle(titulo)
+            .setMessage(mensaje)
+            .setPositiveButton("Entendido", null)
+            .setIcon(android.R.drawable.stat_notify_error)
+            .show()
+    }
+
+    private fun validarPassword(password: String): Boolean {
+        val regex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$")
+        return regex.matches(password)
+    }
+
+    private fun actualizarRequisitos(
+        tv: TextView,
+        tieneLongitud: Boolean,
+        tieneMayuscula: Boolean,
+        tieneMinuscula: Boolean,
+        tieneNumero: Boolean,
+        tieneEspecial: Boolean
+    ) {
+        val builder = SpannableStringBuilder()
+
+        fun agregarLinea(cumplido: Boolean, texto: String) {
+            val inicio = builder.length
+            builder.append("${if (cumplido) "✔" else "✖"} $texto\n")
+            builder.setSpan(
+                ForegroundColorSpan(if (cumplido) Color.parseColor("#2E7D32") else Color.parseColor("#D32F2F")),
+                inicio,
+                builder.length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }
+
+        agregarLinea(tieneLongitud, "Mínimo 8 caracteres")
+        agregarLinea(tieneMayuscula, "Una mayúscula")
+        agregarLinea(tieneMinuscula, "Una minúscula")
+        agregarLinea(tieneNumero, "Un número")
+        agregarLinea(tieneEspecial, "Un carácter especial")
+
+        tv.text = builder
+    }
+
+    private fun iniciarTemporizador(tvCountdown: TextView, btnSendCode: Button, btnResendCode: Button) {
+        btnSendCode.isEnabled = false
+        btnResendCode.visibility = View.GONE
+        countDownTimer?.cancel()
+
+        countDownTimer = object : CountDownTimer(120000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val minutos = millisUntilFinished / 60000
+                val segundos = (millisUntilFinished % 60000) / 1000
+                tvCountdown.text = String.format(Locale.getDefault(), "Código válido por %02d:%02d", minutos, segundos)
+            }
+
+            override fun onFinish() {
+                tvCountdown.text = "Código expirado"
+                btnSendCode.isEnabled = true
+                btnResendCode.visibility = View.VISIBLE
+            }
+        }.start()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        countDownTimer?.cancel()
     }
 }
