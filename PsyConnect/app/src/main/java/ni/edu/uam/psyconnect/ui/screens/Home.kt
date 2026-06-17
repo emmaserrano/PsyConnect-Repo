@@ -101,7 +101,7 @@ class Home : AppCompatActivity() {
                 val intent =
                     Intent(
                         this,
-                        Test::class.java
+                        DynamicTestActivity::class.java
                     )
 
                 intent.putExtra(

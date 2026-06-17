@@ -11,7 +11,6 @@ import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.button.MaterialButton
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.TestCategory
-import ni.edu.uam.psyconnect.ui.screens.Test
 
 class TestCategoryAdapter(
 
