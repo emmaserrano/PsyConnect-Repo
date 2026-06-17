@@ -6,6 +6,7 @@ import ni.edu.uam.psyconnect_backend.model.User;
 import ni.edu.uam.psyconnect_backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import ni.edu.uam.psyconnect_backend.dto.ResetPasswordRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -80,6 +81,21 @@ public class UserController {
         return userService.updateUser(
                 id,
                 user
+        );
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(
+            @RequestBody ResetPasswordRequest request
+    ) {
+
+        userService.resetPassword(
+                request.getEmail(),
+                request.getNewPassword()
+        );
+
+        return ResponseEntity.ok(
+                "Contraseña actualizada correctamente"
         );
     }
 }
