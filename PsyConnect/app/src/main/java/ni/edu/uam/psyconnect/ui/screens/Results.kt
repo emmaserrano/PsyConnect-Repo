@@ -22,25 +22,39 @@ class Results : AppCompatActivity() {
         setContentView(R.layout.activity_results)
 
         val tvScore =
-            findViewById<TextView>(R.id.tvScore)
+            findViewById<TextView>(
+                R.id.tvScore
+            )
 
         val tvTitle =
-            findViewById<TextView>(R.id.tvTitle)
+            findViewById<TextView>(
+                R.id.tvTitle
+            )
 
         val tvDescription =
-            findViewById<TextView>(R.id.tvDescription)
+            findViewById<TextView>(
+                R.id.tvDescription
+            )
 
         val tvRecommendations =
-            findViewById<TextView>(R.id.tvRecommendations)
+            findViewById<TextView>(
+                R.id.tvRecommendations
+            )
 
         val animation =
-            findViewById<LottieAnimationView>(R.id.lottieResult)
+            findViewById<LottieAnimationView>(
+                R.id.lottieResult
+            )
 
         val btnHistory =
-            findViewById<Button>(R.id.btnHistory)
+            findViewById<Button>(
+                R.id.btnHistory
+            )
 
         val btnHome =
-            findViewById<Button>(R.id.btnHome)
+            findViewById<Button>(
+                R.id.btnHome
+            )
 
         val score =
             intent.getIntExtra(
@@ -127,7 +141,7 @@ class Results : AppCompatActivity() {
         val userId =
             sharedPreferences.getLong(
                 "userId",
-                1
+                1L
             )
 
         val result =
@@ -146,13 +160,29 @@ class Results : AppCompatActivity() {
 
             try {
 
-                RetrofitClient
-                    .apiService
-                    .saveResult(
-                        result
+                val response =
+                    RetrofitClient
+                        .apiService
+                        .saveResult(
+                            result
+                        )
+
+                if (response.isSuccessful) {
+
+                    println(
+                        "Resultado guardado correctamente"
                     )
 
-            } catch (_: Exception) {
+                } else {
+
+                    println(
+                        "Error al guardar resultado"
+                    )
+                }
+
+            } catch (e: Exception) {
+
+                e.printStackTrace()
             }
         }
     }
