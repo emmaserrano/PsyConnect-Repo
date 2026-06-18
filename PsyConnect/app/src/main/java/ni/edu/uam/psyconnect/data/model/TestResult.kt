@@ -2,11 +2,11 @@ package ni.edu.uam.psyconnect.data.model
 
 data class TestResult(
 
-    val title: String,
+    val userId: Long,
 
-    val description: String,
+    val category: String,
 
-    val recommendations: List<String>,
+    val percentage: Int,
 
-    val animation: Int
+    val level: String
 )
