@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.lottie.LottieAnimationView
 import ni.edu.uam.psyconnect.R
-import ni.edu.uam.psyconnect.ui.helper.EmotionalFeedbackGenerator
+import ni.edu.uam.psyconnect.ui.helper.TestInterpreter
 
 class Results : AppCompatActivity() {
 
@@ -62,13 +62,19 @@ class Results : AppCompatActivity() {
                 0
             )
 
-        tvScore.text =
-            "Puntaje obtenido: $score"
+        val category =
+            intent.getStringExtra(
+                "category"
+            ) ?: "WELLNESS"
 
         val feedback =
-            EmotionalFeedbackGenerator.generate(
+            TestInterpreter.generate(
+                category,
                 score
             )
+
+        tvScore.text =
+            "Puntaje obtenido: $score"
 
         tvTitle.text =
             feedback.title
@@ -78,7 +84,7 @@ class Results : AppCompatActivity() {
 
         tvRecommendations.text =
             feedback.recommendations.joinToString(
-                separator = "\n\n"
+                "\n\n"
             ) {
                 "✔ $it"
             }
@@ -92,7 +98,6 @@ class Results : AppCompatActivity() {
         btnHistory.setOnClickListener {
 
             startActivity(
-
                 Intent(
                     this,
                     History::class.java
@@ -103,7 +108,6 @@ class Results : AppCompatActivity() {
         btnHome.setOnClickListener {
 
             startActivity(
-
                 Intent(
                     this,
                     Home::class.java
