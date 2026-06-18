@@ -4,15 +4,18 @@ import ni.edu.uam.psyconnect_backend.dto.LoginRequest;
 import ni.edu.uam.psyconnect_backend.dto.LoginResponse;
 import ni.edu.uam.psyconnect_backend.model.User;
 import ni.edu.uam.psyconnect_backend.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User saveUser(User user) {
@@ -28,6 +31,10 @@ public class UserService {
                     "El nombre de usuario ya está en uso"
             );
         }
+
+        user.setPassword(
+                passwordEncoder.encode(user.getPassword())
+        );
 
         return userRepository.save(user);
     }
@@ -55,7 +62,7 @@ public class UserService {
             );
         }
 
-        if (!user.getPassword().equals(request.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 
             return new LoginResponse(
                     false,
@@ -116,7 +123,9 @@ public class UserService {
                                 )
                         );
 
-        user.setPassword(newPassword);
+        user.setPassword(
+                passwordEncoder.encode(newPassword)
+        );
 
         userRepository.save(user);
     }
@@ -157,9 +166,11 @@ public class UserService {
                                         )
                         );
 
-        if(
-                !user.getPassword()
-                        .equals(currentPassword)
+        if (
+                !passwordEncoder.matches(
+                        currentPassword,
+                        user.getPassword()
+                )
         ) {
 
             throw new RuntimeException(
@@ -168,7 +179,7 @@ public class UserService {
         }
 
         user.setPassword(
-                newPassword
+                passwordEncoder.encode(newPassword)
         );
 
         userRepository.save(
