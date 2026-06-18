@@ -22,16 +22,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="📈 Mi progreso"
-                android:textStyle="bold"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tvInsight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:textColor="#6B7280"
-                android:textSize="16sp"
-                android:layout_marginTop="8dp"/>
+                android:textSize="16sp"/>
 
 
             <!-- FILA 1 -->
@@ -44,7 +44,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="130dp"
+                    android:layout_height="140dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
                     app:cardCornerRadius="24dp">
@@ -56,20 +56,19 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:text="🌿 Promedio"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:text="🌿 Promedio"
+                            android:textStyle="bold"/>
 
                         <TextView
                             android:id="@+id/tvAverage"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="32sp"
-                            android:textStyle="bold"
+                            android:layout_marginTop="12dp"
                             android:textColor="@color/turquesa_oscuro"
-                            android:layout_marginTop="10dp"/>
+                            android:textSize="34sp"
+                            android:textStyle="bold"/>
 
                     </LinearLayout>
 
@@ -78,7 +77,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="130dp"
+                    android:layout_height="140dp"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     app:cardCornerRadius="24dp">
@@ -90,20 +89,19 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:text="🏆 Mejor"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:text="🏆 Mejor"
+                            android:textStyle="bold"/>
 
                         <TextView
                             android:id="@+id/tvBest"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="32sp"
-                            android:textStyle="bold"
+                            android:layout_marginTop="12dp"
                             android:textColor="#16A34A"
-                            android:layout_marginTop="10dp"/>
+                            android:textSize="34sp"
+                            android:textStyle="bold"/>
 
                     </LinearLayout>
 
@@ -122,7 +120,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="130dp"
+                    android:layout_height="140dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
                     app:cardCornerRadius="24dp">
@@ -134,20 +132,19 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:text="📝 Tests"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:text="📝 Tests"
+                            android:textStyle="bold"/>
 
                         <TextView
                             android:id="@+id/tvTotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="32sp"
-                            android:textStyle="bold"
+                            android:layout_marginTop="12dp"
                             android:textColor="#9333EA"
-                            android:layout_marginTop="10dp"/>
+                            android:textSize="34sp"
+                            android:textStyle="bold"/>
 
                     </LinearLayout>
 
@@ -156,7 +153,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="130dp"
+                    android:layout_height="140dp"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     app:cardCornerRadius="24dp">
@@ -168,20 +165,19 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:text="⭐ Favorita"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:text="⭐ Área fuerte"
+                            android:textStyle="bold"/>
 
                         <TextView
                             android:id="@+id/tvFavorite"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
+                            android:layout_marginTop="16dp"
                             android:textColor="#F59E0B"
-                            android:layout_marginTop="12dp"/>
+                            android:textSize="20sp"
+                            android:textStyle="bold"/>
 
                     </LinearLayout>
 
@@ -190,34 +186,106 @@
             </LinearLayout>
 
 
-            <!-- GRÁFICO -->
+            <!-- PROMEDIOS POR CATEGORÍA -->
 
-            <androidx.cardview.widget.CardView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Promedio por categoría"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginTop="30dp"/>
+
+
+            <TextView
+                android:id="@+id/tvWellness"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🌿 Bienestar"/>
+
+            <ProgressBar
+                android:id="@+id/progressWellness"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="320dp"
+                android:layout_height="12dp"
+                android:max="100"/>
+
+
+            <TextView
+                android:id="@+id/tvStress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:cardCornerRadius="24dp">
+                android:text="😌 Estrés"/>
 
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chartMood"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+            <ProgressBar
+                android:id="@+id/progressStress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:max="100"/>
 
-            </androidx.cardview.widget.CardView>
 
+            <TextView
+                android:id="@+id/tvSleep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="😴 Sueño"/>
+
+            <ProgressBar
+                android:id="@+id/progressSleep"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:max="100"/>
+
+
+            <TextView
+                android:id="@+id/tvMood"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="😊 Estado de ánimo"/>
+
+            <ProgressBar
+                android:id="@+id/progressMood"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:max="100"/>
+
+
+            <TextView
+                android:id="@+id/tvSocial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="🤝 Relaciones"/>
+
+            <ProgressBar
+                android:id="@+id/progressSocial"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:max="100"/>
+
+
+            <!-- HISTORIAL -->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Resultados recientes"
-                android:textSize="22sp"
                 android:textStyle="bold"
-                android:layout_marginTop="24dp"/>
+                android:textSize="22sp"
+                android:layout_marginTop="32dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerResults"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
 
         </LinearLayout>
 

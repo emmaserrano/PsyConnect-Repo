@@ -1,17 +1,13 @@
 package ni.edu.uam.psyconnect.ui.screens
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
@@ -25,9 +21,7 @@ class History : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
 
-        setContentView(
-            R.layout.activity_history
-        )
+        setContentView(R.layout.activity_history)
 
         cargarHistorial()
 
@@ -37,39 +31,52 @@ class History : AppCompatActivity() {
     private fun cargarHistorial() {
 
         val tvAverage =
-            findViewById<TextView>(
-                R.id.tvAverage
-            )
+            findViewById<TextView>(R.id.tvAverage)
 
         val tvBest =
-            findViewById<TextView>(
-                R.id.tvBest
-            )
+            findViewById<TextView>(R.id.tvBest)
 
         val tvTotal =
-            findViewById<TextView>(
-                R.id.tvTotal
-            )
+            findViewById<TextView>(R.id.tvTotal)
 
         val tvFavorite =
-            findViewById<TextView>(
-                R.id.tvFavorite
-            )
+            findViewById<TextView>(R.id.tvFavorite)
 
         val tvInsight =
-            findViewById<TextView>(
-                R.id.tvInsight
-            )
+            findViewById<TextView>(R.id.tvInsight)
 
-        val chart =
-            findViewById<LineChart>(
-                R.id.chartMood
-            )
+        val tvWellness =
+            findViewById<TextView>(R.id.tvWellness)
+
+        val tvStress =
+            findViewById<TextView>(R.id.tvStress)
+
+        val tvSleep =
+            findViewById<TextView>(R.id.tvSleep)
+
+        val tvMood =
+            findViewById<TextView>(R.id.tvMood)
+
+        val tvSocial =
+            findViewById<TextView>(R.id.tvSocial)
+
+        val progressWellness =
+            findViewById<ProgressBar>(R.id.progressWellness)
+
+        val progressStress =
+            findViewById<ProgressBar>(R.id.progressStress)
+
+        val progressSleep =
+            findViewById<ProgressBar>(R.id.progressSleep)
+
+        val progressMood =
+            findViewById<ProgressBar>(R.id.progressMood)
+
+        val progressSocial =
+            findViewById<ProgressBar>(R.id.progressSocial)
 
         val recycler =
-            findViewById<RecyclerView>(
-                R.id.recyclerResults
-            )
+            findViewById<RecyclerView>(R.id.recyclerResults)
 
         lifecycleScope.launch {
 
@@ -90,33 +97,24 @@ class History : AppCompatActivity() {
                 val response =
                     RetrofitClient
                         .apiService
-                        .getHistory(
-                            userId
-                        )
+                        .getHistory(userId)
 
                 if (response.isSuccessful) {
 
                     val results =
-                        response.body()
-                            ?: emptyList()
+                        response.body() ?: emptyList()
 
                     recycler.layoutManager =
-                        LinearLayoutManager(
-                            this@History
-                        )
+                        LinearLayoutManager(this@History)
 
                     recycler.adapter =
-                        RecentResultAdapter(
-                            results
-                        )
+                        RecentResultAdapter(results.reversed())
 
                     if (results.isNotEmpty()) {
 
                         val average =
                             results
-                                .map {
-                                    it.percentage
-                                }
+                                .map { it.percentage }
                                 .average()
                                 .toInt()
 
@@ -128,18 +126,14 @@ class History : AppCompatActivity() {
                         val total =
                             results.size
 
-                        val bestCategory =
+                        val favorite =
                             results
-                                .groupBy {
+                                .groupingBy {
                                     it.category
                                 }
+                                .eachCount()
                                 .maxByOrNull {
-
                                     it.value
-                                        .map { result ->
-                                            result.percentage
-                                        }
-                                        .average()
                                 }
                                 ?.key ?: "-"
 
@@ -154,7 +148,7 @@ class History : AppCompatActivity() {
 
                         tvFavorite.text =
                             traducirCategoria(
-                                bestCategory
+                                favorite
                             )
 
                         tvInsight.text =
@@ -162,12 +156,46 @@ class History : AppCompatActivity() {
                                 average
                             )
 
-                        configurarGrafico(
-                            chart,
-                            results
+                        configurarCategoria(
+                            "WELLNESS",
+                            results,
+                            tvWellness,
+                            progressWellness,
+                            "🌿 Bienestar"
+                        )
+
+                        configurarCategoria(
+                            "STRESS",
+                            results,
+                            tvStress,
+                            progressStress,
+                            "😌 Estrés"
+                        )
+
+                        configurarCategoria(
+                            "SLEEP",
+                            results,
+                            tvSleep,
+                            progressSleep,
+                            "😴 Sueño"
+                        )
+
+                        configurarCategoria(
+                            "MOOD",
+                            results,
+                            tvMood,
+                            progressMood,
+                            "😊 Estado de ánimo"
+                        )
+
+                        configurarCategoria(
+                            "SOCIAL",
+                            results,
+                            tvSocial,
+                            progressSocial,
+                            "🤝 Relaciones"
                         )
                     }
-
                 }
 
             } catch (e: Exception) {
@@ -177,27 +205,61 @@ class History : AppCompatActivity() {
         }
     }
 
+    private fun configurarCategoria(
+
+        category: String,
+        results: List<TestResult>,
+        textView: TextView,
+        progressBar: ProgressBar,
+        nombre: String
+
+    ) {
+
+        val categoria =
+            results.filter {
+                it.category == category
+            }
+
+        if (categoria.isNotEmpty()) {
+
+            val promedio =
+                categoria
+                    .map {
+                        it.percentage
+                    }
+                    .average()
+                    .toInt()
+
+            textView.text =
+                "$nombre • $promedio %"
+
+            progressBar.progress =
+                promedio
+
+        } else {
+
+            textView.text =
+                "$nombre • Sin datos"
+
+            progressBar.progress =
+                0
+        }
+    }
+
     private fun generarInsight(
         average: Int
     ): String {
 
         return when {
 
-            average >= 85 ->
+            average >= 80 ->
+                "🌿 Tu bienestar general es excelente."
 
-                "🌿 Tu bienestar general es excelente. Continúa con tus hábitos saludables."
-
-            average >= 70 ->
-
-                "✨ Tus resultados muestran una evolución positiva y estable."
-
-            average >= 55 ->
-
-                "💜 Existen áreas que podrían fortalecerse con pequeños cambios diarios."
+            average >= 60 ->
+                "✨ Continúas avanzando positivamente."
 
             else ->
-
-                "🌷 Dedicar tiempo al autocuidado puede ayudarte a mejorar tu bienestar emocional."
+                "💜 Dedica más tiempo al autocuidado."
         }
     }
 
@@ -227,87 +289,6 @@ class History : AppCompatActivity() {
         }
     }
 
-    private fun configurarGrafico(
-
-        chart: LineChart,
-
-        results: List<TestResult>
-
-    ) {
-
-        val entries =
-            ArrayList<Entry>()
-
-        results
-            .reversed()
-            .forEachIndexed { index, result ->
-
-                entries.add(
-
-                    Entry(
-                        (index + 1).toFloat(),
-                        result.percentage.toFloat()
-                    )
-                )
-            }
-
-        val dataSet =
-            LineDataSet(
-                entries,
-                "Progreso"
-            )
-
-        dataSet.color =
-            Color.parseColor(
-                "#14B8A6"
-            )
-
-        dataSet.lineWidth = 4f
-
-        dataSet.setDrawCircles(
-            true
-        )
-
-        dataSet.circleRadius = 5f
-
-        dataSet.setDrawValues(
-            false
-        )
-
-        dataSet.mode =
-            LineDataSet.Mode.CUBIC_BEZIER
-
-        chart.data =
-            LineData(
-                dataSet
-            )
-
-        chart.description.isEnabled =
-            false
-
-        chart.axisRight.isEnabled =
-            false
-
-        chart.legend.isEnabled =
-            false
-
-        chart.axisLeft.axisMinimum =
-            0f
-
-        chart.axisLeft.axisMaximum =
-            100f
-
-        chart.xAxis.setDrawGridLines(
-            false
-        )
-
-        chart.axisLeft.setDrawGridLines(
-            false
-        )
-
-        chart.invalidate()
-    }
-
     private fun configurarBottomNav() {
 
         val bottomNav =
@@ -325,7 +306,6 @@ class History : AppCompatActivity() {
                 R.id.nav_home -> {
 
                     startActivity(
-
                         Intent(
                             this,
                             Home::class.java
@@ -340,7 +320,6 @@ class History : AppCompatActivity() {
                 R.id.nav_profile -> {
 
                     startActivity(
-
                         Intent(
                             this,
                             Profile::class.java
