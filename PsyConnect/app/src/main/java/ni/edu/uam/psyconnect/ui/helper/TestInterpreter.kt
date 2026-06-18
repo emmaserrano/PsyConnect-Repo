@@ -7,39 +7,39 @@ object TestInterpreter {
 
     fun generate(
         category: String,
-        score: Int
+        percentage: Int
     ): EmotionalFeedback {
 
         return when (category) {
 
             "WELLNESS" ->
-                interpretWellness(score)
+                interpretWellness(percentage)
 
             "STRESS" ->
-                interpretStress(score)
+                interpretStress(percentage)
 
             "SLEEP" ->
-                interpretSleep(score)
+                interpretSleep(percentage)
 
             "MOOD" ->
-                interpretMood(score)
+                interpretMood(percentage)
 
             else ->
-                interpretSocial(score)
+                interpretSocial(percentage)
         }
     }
 
     private fun interpretWellness(
-        score: Int
+        percentage: Int
     ): EmotionalFeedback {
 
         return when {
 
-            score >= 16 ->
+            percentage >= 80 ->
 
                 EmotionalFeedback(
                     "Excelente bienestar",
-                    "Presentas un equilibrio emocional saludable.",
+                    "Presentas un equilibrio emocional saludable y estable.",
                     listOf(
                         "Continúa con tus hábitos positivos.",
                         "Mantén actividades recreativas.",
@@ -48,15 +48,15 @@ object TestInterpreter {
                     R.raw.happy
                 )
 
-            score >= 10 ->
+            percentage >= 60 ->
 
                 EmotionalFeedback(
                     "Bienestar moderado",
-                    "Existen áreas emocionales que pueden fortalecerse.",
+                    "Existen áreas emocionales que podrían fortalecerse.",
                     listOf(
                         "Realiza ejercicio regularmente.",
                         "Practica técnicas de relajación.",
-                        "Dedica tiempo para ti."
+                        "Reserva tiempo para ti."
                     ),
                     R.raw.calm
                 )
@@ -65,11 +65,11 @@ object TestInterpreter {
 
                 EmotionalFeedback(
                     "Bienestar bajo",
-                    "Has experimentado dificultades emocionales recientemente.",
+                    "Tu bienestar emocional podría estar viéndose afectado.",
                     listOf(
                         "Busca apoyo en personas cercanas.",
                         "Evita aislarte.",
-                        "Considera hablar con un profesional."
+                        "Considera recibir orientación profesional."
                     ),
                     R.raw.sad
                 )
@@ -77,29 +77,29 @@ object TestInterpreter {
     }
 
     private fun interpretStress(
-        score: Int
+        percentage: Int
     ): EmotionalFeedback {
 
         return when {
 
-            score >= 16 ->
+            percentage >= 80 ->
 
                 EmotionalFeedback(
-                    "Estrés elevado",
-                    "Actualmente presentas niveles altos de estrés.",
+                    "Buen manejo del estrés",
+                    "Actualmente manejas adecuadamente las situaciones de tensión.",
                     listOf(
-                        "Practica respiración profunda.",
-                        "Reduce cargas innecesarias.",
-                        "Descansa adecuadamente."
+                        "Continúa con tus hábitos saludables.",
+                        "Mantén momentos de descanso.",
+                        "Dedica tiempo al ocio."
                     ),
-                    R.raw.stress
+                    R.raw.happy
                 )
 
-            score >= 10 ->
+            percentage >= 60 ->
 
                 EmotionalFeedback(
                     "Estrés moderado",
-                    "Existen señales de tensión que deben atenderse.",
+                    "Existen señales de tensión que sería conveniente atender.",
                     listOf(
                         "Organiza tus actividades.",
                         "Haz pausas durante el día.",
@@ -111,38 +111,38 @@ object TestInterpreter {
             else ->
 
                 EmotionalFeedback(
-                    "Estrés bajo",
-                    "Manejas adecuadamente las situaciones cotidianas.",
+                    "Estrés elevado",
+                    "Actualmente podrías estar experimentando altos niveles de estrés.",
                     listOf(
-                        "Continúa con tus hábitos saludables.",
-                        "Mantén momentos de descanso.",
-                        "Dedica tiempo al ocio."
+                        "Practica respiración profunda.",
+                        "Reduce cargas innecesarias.",
+                        "Descansa adecuadamente."
                     ),
-                    R.raw.happy
+                    R.raw.stress
                 )
         }
     }
 
     private fun interpretSleep(
-        score: Int
+        percentage: Int
     ): EmotionalFeedback {
 
         return when {
 
-            score >= 16 ->
+            percentage >= 80 ->
 
                 EmotionalFeedback(
                     "Buen descanso",
                     "Tu calidad de sueño es favorable.",
                     listOf(
                         "Mantén horarios regulares.",
-                        "Evita pantallas antes de dormir.",
-                        "Conserva una rutina saludable."
+                        "Conserva una rutina saludable.",
+                        "Continúa priorizando tu descanso."
                     ),
                     R.raw.sleep
                 )
 
-            score >= 10 ->
+            percentage >= 60 ->
 
                 EmotionalFeedback(
                     "Sueño moderado",
@@ -150,7 +150,7 @@ object TestInterpreter {
                     listOf(
                         "Evita cafeína en la noche.",
                         "Procura dormir más horas.",
-                        "Reduce el estrés."
+                        "Reduce el estrés diario."
                     ),
                     R.raw.calm
                 )
@@ -162,8 +162,8 @@ object TestInterpreter {
                     "Tu descanso podría estar afectando tu bienestar.",
                     listOf(
                         "Establece horarios fijos.",
-                        "Evita usar el teléfono antes de dormir.",
-                        "Consulta con un especialista si persiste."
+                        "Evita pantallas antes de dormir.",
+                        "Consulta con un especialista si el problema persiste."
                     ),
                     R.raw.sad
                 )
@@ -171,12 +171,12 @@ object TestInterpreter {
     }
 
     private fun interpretMood(
-        score: Int
+        percentage: Int
     ): EmotionalFeedback {
 
         return when {
 
-            score >= 16 ->
+            percentage >= 80 ->
 
                 EmotionalFeedback(
                     "Estado de ánimo positivo",
@@ -189,11 +189,11 @@ object TestInterpreter {
                     R.raw.happy
                 )
 
-            score >= 10 ->
+            percentage >= 60 ->
 
                 EmotionalFeedback(
                     "Estado de ánimo variable",
-                    "Has experimentado cambios emocionales recientes.",
+                    "Has experimentado algunos cambios emocionales recientes.",
                     listOf(
                         "Habla sobre tus emociones.",
                         "Practica gratitud.",
@@ -218,12 +218,12 @@ object TestInterpreter {
     }
 
     private fun interpretSocial(
-        score: Int
+        percentage: Int
     ): EmotionalFeedback {
 
         return when {
 
-            score >= 16 ->
+            percentage >= 80 ->
 
                 EmotionalFeedback(
                     "Relaciones saludables",
@@ -231,12 +231,12 @@ object TestInterpreter {
                     listOf(
                         "Fortalece tus amistades.",
                         "Dedica tiempo a tus seres queridos.",
-                        "Continúa comunicándote de manera abierta."
+                        "Mantén una comunicación abierta."
                     ),
                     R.raw.happy
                 )
 
-            score >= 10 ->
+            percentage >= 60 ->
 
                 EmotionalFeedback(
                     "Relaciones moderadas",
