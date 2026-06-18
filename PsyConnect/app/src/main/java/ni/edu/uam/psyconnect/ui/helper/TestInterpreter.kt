@@ -1,14 +1,14 @@
 package ni.edu.uam.psyconnect.ui.helper
 
 import ni.edu.uam.psyconnect.R
-import ni.edu.uam.psyconnect.data.model.TestResult
+import ni.edu.uam.psyconnect.data.model.EmotionalFeedback
 
 object TestInterpreter {
 
     fun generate(
         category: String,
         score: Int
-    ): TestResult {
+    ): EmotionalFeedback {
 
         return when (category) {
 
@@ -31,13 +31,13 @@ object TestInterpreter {
 
     private fun interpretWellness(
         score: Int
-    ): TestResult {
+    ): EmotionalFeedback {
 
         return when {
 
             score >= 16 ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Excelente bienestar",
                     "Presentas un equilibrio emocional saludable.",
                     listOf(
@@ -50,7 +50,7 @@ object TestInterpreter {
 
             score >= 10 ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Bienestar moderado",
                     "Existen áreas emocionales que pueden fortalecerse.",
                     listOf(
@@ -63,7 +63,7 @@ object TestInterpreter {
 
             else ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Bienestar bajo",
                     "Has experimentado dificultades emocionales recientemente.",
                     listOf(
@@ -78,13 +78,13 @@ object TestInterpreter {
 
     private fun interpretStress(
         score: Int
-    ): TestResult {
+    ): EmotionalFeedback {
 
         return when {
 
             score >= 16 ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Estrés elevado",
                     "Actualmente presentas niveles altos de estrés.",
                     listOf(
@@ -97,7 +97,7 @@ object TestInterpreter {
 
             score >= 10 ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Estrés moderado",
                     "Existen señales de tensión que deben atenderse.",
                     listOf(
@@ -110,7 +110,7 @@ object TestInterpreter {
 
             else ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Estrés bajo",
                     "Manejas adecuadamente las situaciones cotidianas.",
                     listOf(
@@ -125,13 +125,13 @@ object TestInterpreter {
 
     private fun interpretSleep(
         score: Int
-    ): TestResult {
+    ): EmotionalFeedback {
 
         return when {
 
             score >= 16 ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Buen descanso",
                     "Tu calidad de sueño es favorable.",
                     listOf(
@@ -144,7 +144,7 @@ object TestInterpreter {
 
             score >= 10 ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Sueño moderado",
                     "Hay aspectos que podrían mejorar tu descanso.",
                     listOf(
@@ -157,7 +157,7 @@ object TestInterpreter {
 
             else ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Problemas de sueño",
                     "Tu descanso podría estar afectando tu bienestar.",
                     listOf(
@@ -172,13 +172,13 @@ object TestInterpreter {
 
     private fun interpretMood(
         score: Int
-    ): TestResult {
+    ): EmotionalFeedback {
 
         return when {
 
             score >= 16 ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Estado de ánimo positivo",
                     "Predominan emociones agradables y optimismo.",
                     listOf(
@@ -191,7 +191,7 @@ object TestInterpreter {
 
             score >= 10 ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Estado de ánimo variable",
                     "Has experimentado cambios emocionales recientes.",
                     listOf(
@@ -204,7 +204,7 @@ object TestInterpreter {
 
             else ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Estado de ánimo bajo",
                     "Podrías estar atravesando una etapa emocional difícil.",
                     listOf(
@@ -219,13 +219,13 @@ object TestInterpreter {
 
     private fun interpretSocial(
         score: Int
-    ): TestResult {
+    ): EmotionalFeedback {
 
         return when {
 
             score >= 16 ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Relaciones saludables",
                     "Cuentas con vínculos sociales positivos.",
                     listOf(
@@ -238,7 +238,7 @@ object TestInterpreter {
 
             score >= 10 ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Relaciones moderadas",
                     "Existen oportunidades para fortalecer tus vínculos.",
                     listOf(
@@ -251,7 +251,7 @@ object TestInterpreter {
 
             else ->
 
-                TestResult(
+                EmotionalFeedback(
                     "Aislamiento social",
                     "Podrías sentirte poco acompañado emocionalmente.",
                     listOf(
