@@ -15,11 +15,15 @@ import ni.edu.uam.psyconnect.ui.helper.TestInterpreter
 
 class Results : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
 
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_results)
+        setContentView(
+            R.layout.activity_results
+        )
 
         val tvScore =
             findViewById<TextView>(
@@ -56,7 +60,7 @@ class Results : AppCompatActivity() {
                 R.id.btnHome
             )
 
-        val score =
+        val percentage =
             intent.getIntExtra(
                 "score",
                 0
@@ -70,11 +74,11 @@ class Results : AppCompatActivity() {
         val feedback =
             TestInterpreter.generate(
                 category,
-                score
+                percentage
             )
 
         tvScore.text =
-            "Puntaje obtenido: $score"
+            "Resultado obtenido: $percentage %"
 
         tvTitle.text =
             feedback.title
@@ -97,7 +101,7 @@ class Results : AppCompatActivity() {
 
         guardarResultado(
             category,
-            score,
+            percentage,
             feedback.title
         )
 
@@ -167,7 +171,9 @@ class Results : AppCompatActivity() {
                             result
                         )
 
-                if (response.isSuccessful) {
+                if (
+                    response.isSuccessful
+                ) {
 
                     println(
                         "Resultado guardado correctamente"
@@ -180,7 +186,9 @@ class Results : AppCompatActivity() {
                     )
                 }
 
-            } catch (e: Exception) {
+            } catch (
+                e: Exception
+            ) {
 
                 e.printStackTrace()
             }
