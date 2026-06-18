@@ -6,11 +6,11 @@ object TestRepository {
 
     private val defaultOptions =
         listOf(
-            "Nunca",
-            "Rara vez",
-            "A veces",
+            "Siempre",
             "Frecuentemente",
-            "Siempre"
+            "A veces",
+            "Rara vez",
+            "Nunca"
         )
 
     fun getQuestions(
@@ -27,17 +27,17 @@ object TestRepository {
                 ),
 
                 Question(
-                    "Disfruto mis actividades diarias.",
+                    "Disfruto las actividades que realizo diariamente.",
                     defaultOptions
                 ),
 
                 Question(
-                    "Me siento emocionalmente estable.",
+                    "Me siento emocionalmente equilibrado.",
                     defaultOptions
                 ),
 
                 Question(
-                    "Tengo energía para afrontar el día.",
+                    "Tengo energía para afrontar mis responsabilidades.",
                     defaultOptions
                 )
             )
@@ -45,22 +45,22 @@ object TestRepository {
             "STRESS" -> listOf(
 
                 Question(
-                    "Me siento abrumado por mis responsabilidades.",
+                    "Logro mantener la calma ante situaciones difíciles.",
                     defaultOptions
                 ),
 
                 Question(
-                    "Tengo dificultades para relajarme.",
+                    "Encuentro momentos para relajarme durante el día.",
                     defaultOptions
                 ),
 
                 Question(
-                    "Siento tensión física frecuentemente.",
+                    "Me siento capaz de manejar mis responsabilidades.",
                     defaultOptions
                 ),
 
                 Question(
-                    "Pienso constantemente en mis problemas.",
+                    "Puedo controlar mis preocupaciones de forma adecuada.",
                     defaultOptions
                 )
             )
@@ -73,7 +73,7 @@ object TestRepository {
                 ),
 
                 Question(
-                    "Disfruto pasar tiempo con otras personas.",
+                    "Disfruto compartir tiempo con otras personas.",
                     defaultOptions
                 ),
 
@@ -83,7 +83,7 @@ object TestRepository {
                 ),
 
                 Question(
-                    "Tengo pensamientos positivos sobre mí.",
+                    "Tengo pensamientos positivos acerca de mí mismo.",
                     defaultOptions
                 )
             )
@@ -91,22 +91,22 @@ object TestRepository {
             "SLEEP" -> listOf(
 
                 Question(
-                    "Duermo las horas necesarias.",
+                    "Duermo las horas necesarias para descansar.",
                     defaultOptions
                 ),
 
                 Question(
-                    "Me despierto descansado.",
+                    "Me despierto con sensación de descanso.",
                     defaultOptions
                 ),
 
                 Question(
-                    "Tengo dificultad para dormir.",
+                    "Logro dormir con facilidad.",
                     defaultOptions
                 ),
 
                 Question(
-                    "Mi sueño es reparador.",
+                    "Mi sueño suele ser reparador.",
                     defaultOptions
                 )
             )
@@ -119,17 +119,17 @@ object TestRepository {
                 ),
 
                 Question(
-                    "Tengo relaciones saludables.",
+                    "Mantengo relaciones saludables con otras personas.",
                     defaultOptions
                 ),
 
                 Question(
-                    "Puedo expresar mis emociones.",
+                    "Puedo expresar mis emociones con confianza.",
                     defaultOptions
                 ),
 
                 Question(
-                    "Me siento acompañado cuando lo necesito.",
+                    "Siento apoyo cuando lo necesito.",
                     defaultOptions
                 )
             )

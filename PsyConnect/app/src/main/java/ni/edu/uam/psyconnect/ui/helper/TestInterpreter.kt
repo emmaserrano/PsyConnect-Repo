@@ -58,7 +58,7 @@ object TestInterpreter {
                         "Practica técnicas de relajación.",
                         "Dedica tiempo para ti."
                     ),
-                    R.raw.calm
+                    R.raw.high_wellbeing
                 )
 
             else ->
@@ -105,7 +105,7 @@ object TestInterpreter {
                         "Haz pausas durante el día.",
                         "Evita sobrecargarte."
                     ),
-                    R.raw.calm
+                    R.raw.high_wellbeing
                 )
 
             else ->
@@ -152,7 +152,7 @@ object TestInterpreter {
                         "Procura dormir más horas.",
                         "Reduce el estrés."
                     ),
-                    R.raw.calm
+                    R.raw.high_wellbeing
                 )
 
             else ->
@@ -199,7 +199,7 @@ object TestInterpreter {
                         "Practica gratitud.",
                         "Realiza actividades recreativas."
                     ),
-                    R.raw.calm
+                    R.raw.high_wellbeing
                 )
 
             else ->
@@ -246,7 +246,7 @@ object TestInterpreter {
                         "Comparte más tiempo con los demás.",
                         "Escucha activamente."
                     ),
-                    R.raw.calm
+                    R.raw.high_wellbeing
                 )
 
             else ->

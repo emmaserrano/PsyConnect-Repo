@@ -76,7 +76,7 @@ object TestFeedbackGenerator {
                         "Evita la sobrecarga de actividades."
                     ),
 
-                    R.raw.relax
+                    R.raw.meditation
                 )
 
             else ->
@@ -96,7 +96,7 @@ object TestFeedbackGenerator {
                         "Considera buscar apoyo profesional."
                     ),
 
-                    R.raw.support
+                    R.raw.social
                 )
         }
     }
@@ -142,7 +142,7 @@ object TestFeedbackGenerator {
                         "Intenta acostarte a la misma hora."
                     ),
 
-                    R.raw.relax
+                    R.raw.meditation
                 )
 
             else ->
@@ -162,7 +162,7 @@ object TestFeedbackGenerator {
                         "Busca orientación profesional si persiste."
                     ),
 
-                    R.raw.support
+                    R.raw.social
                 )
         }
     }
@@ -206,7 +206,7 @@ object TestFeedbackGenerator {
                         "Mantén contacto con tus seres queridos."
                     ),
 
-                    R.raw.relax
+                    R.raw.meditation
                 )
 
             else ->
@@ -226,7 +226,7 @@ object TestFeedbackGenerator {
                         "Considera buscar ayuda profesional."
                     ),
 
-                    R.raw.support
+                    R.raw.social
                 )
         }
     }
