@@ -4,17 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ni.edu.uam.psyconnect.R
+import ni.edu.uam.psyconnect.data.model.TestResult
 
-class RecentResultAdapter :
-    RecyclerView.Adapter<RecentResultViewHolder>() {
-
-    private val results =
-        listOf(
-            "Bienestar emocional • 84 %",
-            "Estrés • 78 %",
-            "Sueño y descanso • 81 %",
-            "Estado de ánimo • 86 %"
-        )
+class RecentResultAdapter(
+    private var results: List<TestResult> = emptyList()
+) : RecyclerView.Adapter<RecentResultViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -22,7 +16,6 @@ class RecentResultAdapter :
     ): RecentResultViewHolder {
 
         return RecentResultViewHolder(
-
             LayoutInflater
                 .from(parent.context)
                 .inflate(
@@ -33,8 +26,10 @@ class RecentResultAdapter :
         )
     }
 
-    override fun getItemCount() =
-        results.size
+    override fun getItemCount(): Int {
+
+        return results.size
+    }
 
     override fun onBindViewHolder(
         holder: RecentResultViewHolder,
@@ -44,5 +39,14 @@ class RecentResultAdapter :
         holder.bind(
             results[position]
         )
+    }
+
+    fun updateData(
+        newResults: List<TestResult>
+    ) {
+
+        results = newResults
+
+        notifyDataSetChanged()
     }
 }
