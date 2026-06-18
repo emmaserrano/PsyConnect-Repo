@@ -21,40 +21,11 @@ import ni.edu.uam.psyconnect.ui.adapter.RecentResultAdapter
 
 class History : AppCompatActivity() {
 
-    private lateinit var tvInsight: TextView
-    private lateinit var tvAverage: TextView
-    private lateinit var chart: LineChart
-
-    private lateinit var adapter: RecentResultAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_history)
-
-        tvInsight =
-            findViewById(R.id.tvInsight)
-
-        tvAverage =
-            findViewById(R.id.tvAverage)
-
-        chart =
-            findViewById(R.id.chartMood)
-
-        val recycler =
-            findViewById<RecyclerView>(
-                R.id.recyclerResults
-            )
-
-        adapter =
-            RecentResultAdapter()
-
-        recycler.layoutManager =
-            LinearLayoutManager(this)
-
-        recycler.adapter =
-            adapter
 
         cargarHistorial()
 
@@ -63,98 +34,158 @@ class History : AppCompatActivity() {
 
     private fun cargarHistorial() {
 
-        val sharedPreferences =
-            getSharedPreferences(
-                "psyconnect",
-                MODE_PRIVATE
-            )
+        val tvAverage =
+            findViewById<TextView>(R.id.tvAverage)
 
-        val userId =
-            sharedPreferences.getLong(
-                "userId",
-                1
-            )
+        val tvBest =
+            findViewById<TextView>(R.id.tvBest)
+
+        val tvTotal =
+            findViewById<TextView>(R.id.tvTotal)
+
+        val tvFavorite =
+            findViewById<TextView>(R.id.tvFavorite)
+
+        val tvInsight =
+            findViewById<TextView>(R.id.tvInsight)
+
+        val chart =
+            findViewById<LineChart>(R.id.chartMood)
+
+        val recycler =
+            findViewById<RecyclerView>(R.id.recyclerResults)
 
         lifecycleScope.launch {
 
             try {
 
+                val sharedPreferences =
+                    getSharedPreferences(
+                        "psyconnect",
+                        MODE_PRIVATE
+                    )
+
+                val userId =
+                    sharedPreferences.getLong(
+                        "userId",
+                        1
+                    )
+
                 val response =
-                    RetrofitClient
-                        .apiService
+                    RetrofitClient.apiService
                         .getHistory(userId)
 
                 if (response.isSuccessful) {
 
                     val results =
-                        response.body()
-                            ?: emptyList()
+                        response.body() ?: emptyList()
 
-                    adapter.updateData(
-                        results
-                    )
+                    recycler.layoutManager =
+                        LinearLayoutManager(this@History)
 
-                    calcularPromedio(
-                        results
-                    )
+                    recycler.adapter =
+                        RecentResultAdapter(results)
 
-                    configurarGrafico(
-                        results
-                    )
+                    if (results.isNotEmpty()) {
+
+                        val average =
+                            results.map { it.percentage }
+                                .average()
+                                .toInt()
+
+                        val best =
+                            results.maxOf {
+                                it.percentage
+                            }
+
+                        val total =
+                            results.size
+
+                        val favorite =
+                            results.groupingBy {
+                                it.category
+                            }
+                                .eachCount()
+                                .maxByOrNull {
+                                    it.value
+                                }
+                                ?.key ?: "-"
+
+                        tvAverage.text =
+                            "$average %"
+
+                        tvBest.text =
+                            "$best %"
+
+                        tvTotal.text =
+                            total.toString()
+
+                        tvFavorite.text =
+                            traducirCategoria(
+                                favorite
+                            )
+
+                        tvInsight.text =
+                            generarInsight(
+                                average
+                            )
+
+                        configurarGrafico(
+                            chart,
+                            results
+                        )
+                    }
                 }
 
             } catch (e: Exception) {
 
-                tvInsight.text =
-                    "No se pudieron cargar tus estadísticas."
+                e.printStackTrace()
             }
         }
     }
 
-    private fun calcularPromedio(
-        results: List<TestResult>
-    ) {
+    private fun generarInsight(
+        average: Int
+    ): String {
 
-        if (results.isEmpty()) {
+        return when {
 
-            tvAverage.text = "0 %"
+            average >= 80 ->
+                "🌿 Tu bienestar emocional se mantiene en niveles saludables."
 
-            tvInsight.text =
-                "Aún no has realizado evaluaciones."
+            average >= 60 ->
+                "✨ Has mostrado avances positivos recientemente."
 
-            return
+            else ->
+                "💜 Recuerda dedicar tiempo a tu bienestar y autocuidado."
         }
+    }
 
-        val average =
-            results.map {
-                it.percentage
-            }.average()
+    private fun traducirCategoria(
+        category: String
+    ): String {
 
-        tvAverage.text =
-            "${average.toInt()} %"
+        return when (category) {
 
-        tvInsight.text =
-            when {
+            "WELLNESS" ->
+                "Bienestar"
 
-                average >= 80 ->
+            "STRESS" ->
+                "Estrés"
 
-                    "🌿 Tu bienestar general es excelente."
+            "SLEEP" ->
+                "Sueño"
 
-                average >= 60 ->
+            "MOOD" ->
+                "Estado de ánimo"
 
-                    "✨ Mantienes un equilibrio emocional saludable."
-
-                average >= 40 ->
-
-                    "🌸 Existen áreas que podrían fortalecerse."
-
-                else ->
-
-                    "💙 Es recomendable prestar mayor atención a tu bienestar emocional."
-            }
+            else ->
+                "Relaciones"
+        }
     }
 
     private fun configurarGrafico(
+        chart: LineChart,
         results: List<TestResult>
     ) {
 
@@ -167,7 +198,7 @@ class History : AppCompatActivity() {
                 entries.add(
 
                     Entry(
-                        index.toFloat(),
+                        (index + 1).toFloat(),
                         result.percentage.toFloat()
                     )
                 )
@@ -176,13 +207,11 @@ class History : AppCompatActivity() {
         val dataSet =
             LineDataSet(
                 entries,
-                "Progreso"
+                "Bienestar"
             )
 
         dataSet.color =
-            Color.parseColor(
-                "#14B8A6"
-            )
+            Color.parseColor("#14B8A6")
 
         dataSet.lineWidth = 4f
 
@@ -250,11 +279,9 @@ class History : AppCompatActivity() {
                     true
                 }
 
-                R.id.nav_history ->
-                    true
+                R.id.nav_history -> true
 
-                else ->
-                    false
+                else -> false
             }
         }
     }
