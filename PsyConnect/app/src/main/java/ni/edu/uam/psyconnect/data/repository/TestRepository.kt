@@ -45,7 +45,7 @@ object TestRepository {
             "STRESS" -> listOf(
 
                 Question(
-                    "Logro mantener la calma ante situaciones difíciles.",
+                    "Mantengo la calma ante situaciones difíciles.",
                     defaultOptions
                 ),
 
@@ -60,30 +60,7 @@ object TestRepository {
                 ),
 
                 Question(
-                    "Puedo controlar mis preocupaciones de forma adecuada.",
-                    defaultOptions
-                )
-            )
-
-            "MOOD" -> listOf(
-
-                Question(
-                    "Me siento optimista sobre mi futuro.",
-                    defaultOptions
-                ),
-
-                Question(
-                    "Disfruto compartir tiempo con otras personas.",
-                    defaultOptions
-                ),
-
-                Question(
-                    "Me siento motivado durante el día.",
-                    defaultOptions
-                ),
-
-                Question(
-                    "Tengo pensamientos positivos acerca de mí mismo.",
+                    "Puedo controlar mis preocupaciones adecuadamente.",
                     defaultOptions
                 )
             )
@@ -96,12 +73,12 @@ object TestRepository {
                 ),
 
                 Question(
-                    "Me despierto con sensación de descanso.",
+                    "Me despierto sintiéndome descansado.",
                     defaultOptions
                 ),
 
                 Question(
-                    "Logro dormir con facilidad.",
+                    "Consigo dormir con facilidad.",
                     defaultOptions
                 ),
 
@@ -111,7 +88,30 @@ object TestRepository {
                 )
             )
 
-            else -> listOf(
+            "SELF_ESTEEM" -> listOf(
+
+                Question(
+                    "Confío en mis capacidades.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Me siento valioso como persona.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Me siento satisfecho con quien soy.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Reconozco mis cualidades y fortalezas.",
+                    defaultOptions
+                )
+            )
+
+            "RELATIONSHIPS" -> listOf(
 
                 Question(
                     "Me siento escuchado por las personas cercanas.",
@@ -129,7 +129,30 @@ object TestRepository {
                 ),
 
                 Question(
-                    "Siento apoyo cuando lo necesito.",
+                    "Recibo apoyo cuando lo necesito.",
+                    defaultOptions
+                )
+            )
+
+            else -> listOf(
+
+                Question(
+                    "Me siento optimista respecto al futuro.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Disfruto compartir tiempo con otras personas.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Me siento motivado durante el día.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Tengo pensamientos positivos acerca de mí mismo.",
                     defaultOptions
                 )
             )
