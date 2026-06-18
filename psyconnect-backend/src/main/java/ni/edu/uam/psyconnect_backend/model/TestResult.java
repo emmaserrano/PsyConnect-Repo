@@ -14,6 +14,8 @@ public class TestResult {
 
     private Long userId;
 
+    private String category;
+
     private Integer percentage;
 
     private String level;
@@ -25,11 +27,13 @@ public class TestResult {
 
     public TestResult(
             Long userId,
+            String category,
             Integer percentage,
             String level,
             LocalDateTime createdAt
     ) {
         this.userId = userId;
+        this.category = category;
         this.percentage = percentage;
         this.level = level;
         this.createdAt = createdAt;
@@ -41,6 +45,10 @@ public class TestResult {
 
     public Long getUserId() {
         return userId;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public Integer getPercentage() {
@@ -55,8 +63,16 @@ public class TestResult {
         return createdAt;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public void setPercentage(Integer percentage) {

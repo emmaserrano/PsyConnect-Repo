@@ -7,23 +7,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <!-- SALUDO -->
+            android:padding="20dp"
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvGreeting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hola 👋"
                 android:textSize="32sp"
                 android:textStyle="bold"
                 android:textColor="@color/turquesa_oscuro"/>
@@ -36,85 +35,11 @@
                 android:textColor="@color/gris_texto"
                 android:layout_marginBottom="24dp"/>
 
-
-            <!-- CONSEJO -->
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:text="💡 Consejo"
-                        android:textStyle="bold"
-                        android:textSize="20sp"
-                        android:textColor="@color/turquesa_oscuro"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:text="Dedica unos minutos al día para respirar profundamente y desconectarte del estrés."
-                        android:textSize="16sp"
-                        android:layout_marginTop="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-
-            <!-- FRASE -->
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:text="🌿 Frase motivacional"
-                        android:textStyle="bold"
-                        android:textSize="20sp"
-                        android:textColor="@color/turquesa_oscuro"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:text='"Cuidar tu salud mental también es una forma de quererte."'
-                        android:textSize="16sp"
-                        android:layout_marginTop="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-
-            <!-- NUEVO TEST -->
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardTest"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="24dp"
                 app:cardBackgroundColor="#D8F6F2"
-                android:clickable="true"
-                android:focusable="true"
                 android:layout_marginBottom="24dp">
 
                 <LinearLayout
@@ -124,47 +49,48 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:text="🧠 Nuevo Test"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Continuar cuidando mi bienestar"
                         android:textSize="24sp"
                         android:textStyle="bold"
-                        android:textColor="@color/turquesa_oscuro"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:textColor="@color/turquesa_oscuro"/>
 
                     <TextView
-                        android:text="Evalúa tu bienestar emocional mediante preguntas sencillas."
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cada pequeño paso cuenta para sentirte mejor."
                         android:textSize="16sp"
-                        android:layout_marginTop="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:text="Comenzar →"
-                        android:textStyle="bold"
-                        android:textColor="@color/turquesa_oscuro"
-                        android:textSize="18sp"
-                        android:layout_marginTop="16dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_marginTop="10dp"/>
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
-
-
-            <!-- TITULO PSICOLOGOS -->
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="👩‍⚕️ Especialistas recomendados"
-                android:textStyle="bold"
+                android:text="Evaluaciones"
                 android:textSize="24sp"
+                android:textStyle="bold"
                 android:textColor="@color/turquesa_oscuro"
                 android:layout_marginBottom="12dp"/>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerWellness"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
 
-            <!-- RECYCLERVIEW -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Especialistas recomendados"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/turquesa_oscuro"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="12dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerPsychologists"
@@ -173,16 +99,12 @@
 
         </LinearLayout>
 
-    </ScrollView>
-
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
-        app:itemIconTint="@color/bottom_nav_colors"
-        app:itemTextColor="@color/bottom_nav_colors"
         app:menu="@menu/bottom_nav_menu"/>
 
 </LinearLayout>

@@ -6,84 +6,106 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.airbnb.lottie.LottieAnimationView
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.TestResult
 import ni.edu.uam.psyconnect.network.RetrofitClient
-import kotlin.math.abs
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import ni.edu.uam.psyconnect.ui.helper.TestInterpreter
 
 class Results : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
+
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_results)
+        setContentView(
+            R.layout.activity_results
+        )
 
-        val bottomNav =
-            findViewById<BottomNavigationView>(
-                R.id.bottomNavigation
+        val tvScore =
+            findViewById<TextView>(
+                R.id.tvScore
             )
 
-        bottomNav.selectedItemId =
-            R.id.nav_home
+        val tvTitle =
+            findViewById<TextView>(
+                R.id.tvTitle
+            )
 
-        bottomNav.setOnItemSelectedListener {
+        val tvDescription =
+            findViewById<TextView>(
+                R.id.tvDescription
+            )
 
-            when (it.itemId) {
+        val tvRecommendations =
+            findViewById<TextView>(
+                R.id.tvRecommendations
+            )
 
-                R.id.nav_home -> {
+        val animation =
+            findViewById<LottieAnimationView>(
+                R.id.lottieResult
+            )
 
-                    startActivity(
-                        Intent(
-                            this,
-                            Home::class.java
-                        )
-                    )
-
-                    finish()
-
-                    true
-                }
-
-                R.id.nav_history -> {
-
-                    startActivity(
-                        Intent(
-                            this,
-                            History::class.java
-                        )
-                    )
-
-                    finish()
-
-                    true
-                }
-
-                R.id.nav_profile -> {
-
-                    startActivity(
-                        Intent(
-                            this,
-                            Profile::class.java
-                        )
-                    )
-
-                    finish()
-
-                    true
-                }
-
-                else -> false
-            }
-        }
-
-        val btnProgress =
+        val btnHistory =
             findViewById<Button>(
-                R.id.btnProgress
+                R.id.btnHistory
             )
 
-        btnProgress.setOnClickListener {
+        val btnHome =
+            findViewById<Button>(
+                R.id.btnHome
+            )
+
+        val percentage =
+            intent.getIntExtra(
+                "percentage",
+                0
+            )
+
+        val category =
+            intent.getStringExtra(
+                "category"
+            ) ?: "WELLNESS"
+
+        val feedback =
+            TestInterpreter.generate(
+                category,
+                percentage
+            )
+
+        tvScore.text =
+            "Resultado obtenido: $percentage %"
+
+        tvTitle.text =
+            feedback.title
+
+        tvDescription.text =
+            feedback.description
+
+        tvRecommendations.text =
+            feedback.recommendations.joinToString(
+                "\n\n"
+            ) {
+                "✔ $it"
+            }
+
+        animation.setAnimation(
+            feedback.animation
+        )
+
+        animation.playAnimation()
+
+        guardarResultado(
+            category,
+            percentage,
+            feedback.title
+        )
+
+        btnHistory.setOnClickListener {
 
             startActivity(
                 Intent(
@@ -93,83 +115,26 @@ class Results : AppCompatActivity() {
             )
         }
 
-        val percentageText =
-            findViewById<TextView>(
-                R.id.tvPercentage
+        btnHome.setOnClickListener {
+
+            startActivity(
+                Intent(
+                    this,
+                    Home::class.java
+                )
             )
 
-        val levelText =
-            findViewById<TextView>(
-                R.id.tvLevel
-            )
-
-        val recommendationsText =
-            findViewById<TextView>(
-                R.id.tvRecommendations
-            )
-
-        val progressMessage =
-            findViewById<TextView>(
-                R.id.tvProgressMessage
-            )
-
-        // Obtener porcentaje enviado desde Test
-        val percentage =
-            intent.getIntExtra(
-                "percentage",
-                0
-            )
-
-        // Mostrar porcentaje
-        percentageText.text = "$percentage%"
-
-        val level: String
-        val recommendations: String
-
-        when {
-
-            percentage <= 30 -> {
-
-                level = "Ansiedad Leve"
-
-                recommendations =
-                    """
-                    • Dormir al menos 8 horas
-                    • Mantener una rutina saludable
-                    • Escuchar música relajante
-                    """.trimIndent()
-            }
-
-            percentage <= 60 -> {
-
-                level = "Ansiedad Moderada"
-
-                recommendations =
-                    """
-                    • Practicar respiración profunda
-                    • Realizar meditación 5 minutos
-                    • Llevar una bitácora emocional
-                    • Hacer ejercicio ligero
-                    """.trimIndent()
-            }
-
-            else -> {
-
-                level = "Ansiedad Alta"
-
-                recommendations =
-                    """
-                    • Buscar apoyo emocional
-                    • Practicar mindfulness
-                    • Reducir situaciones de estrés
-                    • Considerar visitar un psicólogo
-                    """.trimIndent()
-            }
+            finish()
         }
+    }
 
-        levelText.text = "Nivel: $level"
+    private fun guardarResultado(
 
-        recommendationsText.text = recommendations
+        category: String,
+        percentage: Int,
+        level: String
+
+    ) {
 
         val sharedPreferences =
             getSharedPreferences(
@@ -180,67 +145,52 @@ class Results : AppCompatActivity() {
         val userId =
             sharedPreferences.getLong(
                 "userId",
-                -1
+                1L
             )
 
-        if (userId != -1L) {
+        val result =
+            TestResult(
 
-            lifecycleScope.launch {
+                userId = userId,
 
-                try {
+                category = category,
 
-                    val historyResponse =
-                        RetrofitClient
-                            .apiService
-                            .getHistory(userId)
+                percentage = percentage,
 
-                    if (historyResponse.isSuccessful) {
+                level = level
+            )
 
-                        val history =
-                            historyResponse.body()
-                                ?: emptyList()
+        lifecycleScope.launch {
 
-                        if (history.isNotEmpty()) {
+            try {
 
-                            val previous =
-                                history.first()
-
-                            val difference =
-                                percentage -
-                                        previous.percentage
-
-                            progressMessage.text =
-                                when {
-
-                                    difference < 0 ->
-                                        "Excelente. Tu ansiedad disminuyó ${abs(difference)}% respecto al test anterior."
-
-                                    difference > 0 ->
-                                        "Tu ansiedad aumentó $difference% respecto al test anterior."
-
-                                    else ->
-                                        "Tu resultado es igual al test anterior."
-                                }
-
-                        } else {
-
-                            progressMessage.text =
-                                "Este es tu primer test registrado."
-                        }
-                    }
-
+                val response =
                     RetrofitClient
                         .apiService
                         .saveResult(
-                            TestResult(
-                                userId = userId,
-                                percentage = percentage,
-                                level = level
-                            )
+                            result
                         )
 
-                } catch (_: Exception) {
+                if (
+                    response.isSuccessful
+                ) {
+
+                    println(
+                        "Resultado guardado correctamente"
+                    )
+
+                } else {
+
+                    println(
+                        "Error al guardar resultado"
+                    )
                 }
+
+            } catch (
+                e: Exception
+            ) {
+
+                e.printStackTrace()
             }
         }
     }
