@@ -24,8 +24,14 @@ object TestInterpreter {
             "MOOD" ->
                 interpretMood(percentage)
 
+            "SELF_ESTEEM" ->
+                interpretSelfEsteem(percentage)
+
+            "RELATIONSHIPS" ->
+                interpretRelationships(percentage)
+
             else ->
-                interpretSocial(percentage)
+                interpretWellness(percentage)
         }
     }
 
@@ -35,7 +41,7 @@ object TestInterpreter {
 
         return when {
 
-            percentage >= 80 ->
+            percentage >= 75 ->
 
                 EmotionalFeedback(
                     "Excelente bienestar",
@@ -48,7 +54,7 @@ object TestInterpreter {
                     R.raw.happy
                 )
 
-            percentage >= 60 ->
+            percentage >= 50 ->
 
                 EmotionalFeedback(
                     "Bienestar moderado",
@@ -82,7 +88,7 @@ object TestInterpreter {
 
         return when {
 
-            percentage >= 80 ->
+            percentage >= 75 ->
 
                 EmotionalFeedback(
                     "Buen manejo del estrés",
@@ -95,7 +101,7 @@ object TestInterpreter {
                     R.raw.happy
                 )
 
-            percentage >= 60 ->
+            percentage >= 50 ->
 
                 EmotionalFeedback(
                     "Estrés moderado",
@@ -129,7 +135,7 @@ object TestInterpreter {
 
         return when {
 
-            percentage >= 80 ->
+            percentage >= 75 ->
 
                 EmotionalFeedback(
                     "Buen descanso",
@@ -142,7 +148,7 @@ object TestInterpreter {
                     R.raw.sleep
                 )
 
-            percentage >= 60 ->
+            percentage >= 50 ->
 
                 EmotionalFeedback(
                     "Sueño moderado",
@@ -176,7 +182,7 @@ object TestInterpreter {
 
         return when {
 
-            percentage >= 80 ->
+            percentage >= 75 ->
 
                 EmotionalFeedback(
                     "Estado de ánimo positivo",
@@ -189,7 +195,7 @@ object TestInterpreter {
                     R.raw.happy
                 )
 
-            percentage >= 60 ->
+            percentage >= 50 ->
 
                 EmotionalFeedback(
                     "Estado de ánimo variable",
@@ -217,17 +223,64 @@ object TestInterpreter {
         }
     }
 
-    private fun interpretSocial(
+    private fun interpretSelfEsteem(
         percentage: Int
     ): EmotionalFeedback {
 
         return when {
 
-            percentage >= 80 ->
+            percentage >= 75 ->
+
+                EmotionalFeedback(
+                    "Autoestima saludable",
+                    "Tienes una percepción positiva de ti mismo y de tus capacidades.",
+                    listOf(
+                        "Continúa reconociendo tus logros.",
+                        "Mantén pensamientos positivos sobre ti.",
+                        "Sigue fortaleciendo tu confianza."
+                    ),
+                    R.raw.happy
+                )
+
+            percentage >= 50 ->
+
+                EmotionalFeedback(
+                    "Autoestima moderada",
+                    "Existen aspectos de tu autoconfianza que podrían fortalecerse.",
+                    listOf(
+                        "Reconoce tus fortalezas.",
+                        "Evita compararte constantemente.",
+                        "Celebra tus pequeños logros."
+                    ),
+                    R.raw.calm
+                )
+
+            else ->
+
+                EmotionalFeedback(
+                    "Autoestima baja",
+                    "Podrías estar teniendo dificultades para valorar tus capacidades.",
+                    listOf(
+                        "Practica la autocompasión.",
+                        "Identifica pensamientos negativos frecuentes.",
+                        "Busca apoyo emocional si lo necesitas."
+                    ),
+                    R.raw.sad
+                )
+        }
+    }
+
+    private fun interpretRelationships(
+        percentage: Int
+    ): EmotionalFeedback {
+
+        return when {
+
+            percentage >= 75 ->
 
                 EmotionalFeedback(
                     "Relaciones saludables",
-                    "Cuentas con vínculos sociales positivos.",
+                    "Cuentas con vínculos sociales positivos y de apoyo.",
                     listOf(
                         "Fortalece tus amistades.",
                         "Dedica tiempo a tus seres queridos.",
@@ -236,13 +289,13 @@ object TestInterpreter {
                     R.raw.happy
                 )
 
-            percentage >= 60 ->
+            percentage >= 50 ->
 
                 EmotionalFeedback(
                     "Relaciones moderadas",
-                    "Existen oportunidades para fortalecer tus vínculos.",
+                    "Existen oportunidades para fortalecer tus vínculos personales.",
                     listOf(
-                        "Expresa tus emociones.",
+                        "Expresa tus emociones con confianza.",
                         "Comparte más tiempo con los demás.",
                         "Escucha activamente."
                     ),
@@ -252,8 +305,8 @@ object TestInterpreter {
             else ->
 
                 EmotionalFeedback(
-                    "Aislamiento social",
-                    "Podrías sentirte poco acompañado emocionalmente.",
+                    "Dificultades relacionales",
+                    "Podrías sentirte poco acompañado o desconectado socialmente.",
                     listOf(
                         "Busca apoyo en familiares o amigos.",
                         "Participa en actividades sociales.",

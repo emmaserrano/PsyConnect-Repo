@@ -62,7 +62,7 @@ class Results : AppCompatActivity() {
 
         val percentage =
             intent.getIntExtra(
-                "score",
+                "percentage",
                 0
             )
 
