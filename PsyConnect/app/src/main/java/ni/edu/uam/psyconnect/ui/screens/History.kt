@@ -17,11 +17,15 @@ import ni.edu.uam.psyconnect.ui.adapter.RecentResultAdapter
 
 class History : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
 
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_history)
+        setContentView(
+            R.layout.activity_history
+        )
 
         cargarHistorial()
 
@@ -31,52 +35,84 @@ class History : AppCompatActivity() {
     private fun cargarHistorial() {
 
         val tvAverage =
-            findViewById<TextView>(R.id.tvAverage)
+            findViewById<TextView>(
+                R.id.tvAverage
+            )
 
         val tvBest =
-            findViewById<TextView>(R.id.tvBest)
+            findViewById<TextView>(
+                R.id.tvBest
+            )
 
         val tvTotal =
-            findViewById<TextView>(R.id.tvTotal)
+            findViewById<TextView>(
+                R.id.tvTotal
+            )
 
         val tvFavorite =
-            findViewById<TextView>(R.id.tvFavorite)
+            findViewById<TextView>(
+                R.id.tvFavorite
+            )
 
         val tvInsight =
-            findViewById<TextView>(R.id.tvInsight)
-
-        val tvWellness =
-            findViewById<TextView>(R.id.tvWellness)
-
-        val tvStress =
-            findViewById<TextView>(R.id.tvStress)
-
-        val tvSleep =
-            findViewById<TextView>(R.id.tvSleep)
-
-        val tvMood =
-            findViewById<TextView>(R.id.tvMood)
-
-        val tvSocial =
-            findViewById<TextView>(R.id.tvSocial)
-
-        val progressWellness =
-            findViewById<ProgressBar>(R.id.progressWellness)
-
-        val progressStress =
-            findViewById<ProgressBar>(R.id.progressStress)
-
-        val progressSleep =
-            findViewById<ProgressBar>(R.id.progressSleep)
-
-        val progressMood =
-            findViewById<ProgressBar>(R.id.progressMood)
-
-        val progressSocial =
-            findViewById<ProgressBar>(R.id.progressSocial)
+            findViewById<TextView>(
+                R.id.tvInsight
+            )
 
         val recycler =
-            findViewById<RecyclerView>(R.id.recyclerResults)
+            findViewById<RecyclerView>(
+                R.id.recyclerResults
+            )
+
+        val progressWellness =
+            findViewById<ProgressBar>(
+                R.id.progressWellness
+            )
+
+        val progressStress =
+            findViewById<ProgressBar>(
+                R.id.progressStress
+            )
+
+        val progressSleep =
+            findViewById<ProgressBar>(
+                R.id.progressSleep
+            )
+
+        val progressMood =
+            findViewById<ProgressBar>(
+                R.id.progressMood
+            )
+
+        val progressSocial =
+            findViewById<ProgressBar>(
+                R.id.progressSocial
+            )
+
+        val tvWellness =
+            findViewById<TextView>(
+                R.id.tvWellness
+            )
+
+        val tvStress =
+            findViewById<TextView>(
+                R.id.tvStress
+            )
+
+        val tvSleep =
+            findViewById<TextView>(
+                R.id.tvSleep
+            )
+
+        val tvMood =
+            findViewById<TextView>(
+                R.id.tvMood
+            )
+
+        val tvSocial =
+            findViewById<TextView>(
+                R.id.tvSocial
+            )
 
         lifecycleScope.launch {
 
@@ -97,24 +133,35 @@ class History : AppCompatActivity() {
                 val response =
                     RetrofitClient
                         .apiService
-                        .getHistory(userId)
+                        .getHistory(
+                            userId
+                        )
 
                 if (response.isSuccessful) {
 
                     val results =
-                        response.body() ?: emptyList()
+                        response.body()
+                            ?: emptyList()
 
                     recycler.layoutManager =
-                        LinearLayoutManager(this@History)
+                        LinearLayoutManager(
+                            this@History
+                        )
 
                     recycler.adapter =
-                        RecentResultAdapter(results.reversed())
+                        RecentResultAdapter(
+                            results.sortedByDescending {
+                                it.id
+                            }
+                        )
 
                     if (results.isNotEmpty()) {
 
                         val average =
                             results
-                                .map { it.percentage }
+                                .map {
+                                    it.percentage
+                                }
                                 .average()
                                 .toInt()
 
@@ -126,29 +173,18 @@ class History : AppCompatActivity() {
                         val total =
                             results.size
 
-                        val favorite =
-                            results
-                                .groupingBy {
-                                    it.category
-                                }
-                                .eachCount()
-                                .maxByOrNull {
-                                    it.value
-                                }
-                                ?.key ?: "-"
-
                         tvAverage.text =
-                            "$average %"
+                            "$average%"
 
                         tvBest.text =
-                            "$best %"
+                            "$best%"
 
                         tvTotal.text =
                             total.toString()
 
                         tvFavorite.text =
-                            traducirCategoria(
-                                favorite
+                            obtenerAreaFuerte(
+                                results
                             )
 
                         tvInsight.text =
@@ -156,94 +192,165 @@ class History : AppCompatActivity() {
                                 average
                             )
 
-                        configurarCategoria(
-                            "WELLNESS",
+                        configurarCategorias(
+
                             results,
-                            tvWellness,
+
                             progressWellness,
-                            "🌿 Bienestar"
-                        )
-
-                        configurarCategoria(
-                            "STRESS",
-                            results,
-                            tvStress,
                             progressStress,
-                            "😌 Estrés"
-                        )
-
-                        configurarCategoria(
-                            "SLEEP",
-                            results,
-                            tvSleep,
                             progressSleep,
-                            "😴 Sueño"
-                        )
-
-                        configurarCategoria(
-                            "MOOD",
-                            results,
-                            tvMood,
                             progressMood,
-                            "😊 Estado de ánimo"
-                        )
-
-                        configurarCategoria(
-                            "SOCIAL",
-                            results,
-                            tvSocial,
                             progressSocial,
-                            "🤝 Relaciones"
+
+                            tvWellness,
+                            tvStress,
+                            tvSleep,
+                            tvMood,
+                            tvSocial
                         )
                     }
                 }
 
-            } catch (e: Exception) {
+            } catch (
+                e: Exception
+            ) {
 
                 e.printStackTrace()
             }
         }
     }
 
-    private fun configurarCategoria(
+    private fun configurarCategorias(
 
-        category: String,
         results: List<TestResult>,
-        textView: TextView,
-        progressBar: ProgressBar,
-        nombre: String
+
+        progressWellness: ProgressBar,
+        progressStress: ProgressBar,
+        progressSleep: ProgressBar,
+        progressMood: ProgressBar,
+        progressSocial: ProgressBar,
+
+        tvWellness: TextView,
+        tvStress: TextView,
+        tvSleep: TextView,
+        tvMood: TextView,
+        tvSocial: TextView
 
     ) {
 
-        val categoria =
+        val wellness =
+            promedioCategoria(
+                results,
+                "WELLNESS"
+            )
+
+        val stress =
+            promedioCategoria(
+                results,
+                "STRESS"
+            )
+
+        val sleep =
+            promedioCategoria(
+                results,
+                "SLEEP"
+            )
+
+        val mood =
+            promedioCategoria(
+                results,
+                "MOOD"
+            )
+
+        val social =
+            promedioCategoria(
+                results,
+                "RELATIONSHIPS"
+            )
+
+        progressWellness.progress =
+            wellness
+
+        progressStress.progress =
+            stress
+
+        progressSleep.progress =
+            sleep
+
+        progressMood.progress =
+            mood
+
+        progressSocial.progress =
+            social
+
+        tvWellness.text =
+            "🌿 Bienestar ($wellness%)"
+
+        tvStress.text =
+            "😌 Estrés ($stress%)"
+
+        tvSleep.text =
+            "😴 Sueño ($sleep%)"
+
+        tvMood.text =
+            "😊 Estado de ánimo ($mood%)"
+
+        tvSocial.text =
+            "🤝 Relaciones ($social%)"
+    }
+
+    private fun promedioCategoria(
+        results: List<TestResult>,
+        category: String
+    ): Int {
+
+        val categoryResults =
             results.filter {
                 it.category == category
             }
 
-        if (categoria.isNotEmpty()) {
-
-            val promedio =
-                categoria
-                    .map {
-                        it.percentage
-                    }
-                    .average()
-                    .toInt()
-
-            textView.text =
-                "$nombre • $promedio %"
-
-            progressBar.progress =
-                promedio
-
-        } else {
-
-            textView.text =
-                "$nombre • Sin datos"
-
-            progressBar.progress =
-                0
+        if (
+            categoryResults.isEmpty()
+        ) {
+            return 0
         }
+
+        return categoryResults
+            .map {
+                it.percentage
+            }
+            .average()
+            .toInt()
+    }
+
+    private fun obtenerAreaFuerte(
+        results: List<TestResult>
+    ): String {
+
+        val mejoresPromedios =
+
+            results.groupBy {
+                it.category
+            }
+                .mapValues {
+
+                    it.value
+                        .map { result ->
+                            result.percentage
+                        }
+                        .average()
+                }
+
+        val mejor =
+            mejoresPromedios
+                .maxByOrNull {
+                    it.value
+                }
+                ?.key ?: "-"
+
+        return traducirCategoria(
+            mejor
+        )
     }
 
     private fun generarInsight(
@@ -253,13 +360,13 @@ class History : AppCompatActivity() {
         return when {
 
             average >= 80 ->
-                "🌿 Tu bienestar general es excelente."
+                "🌿 Tu bienestar general se mantiene en niveles saludables."
 
             average >= 60 ->
-                "✨ Continúas avanzando positivamente."
+                "✨ Has mostrado avances positivos en tu bienestar."
 
             else ->
-                "💜 Dedica más tiempo al autocuidado."
+                "💜 Dedica tiempo al autocuidado y seguimiento de tus emociones."
         }
     }
 
@@ -281,7 +388,10 @@ class History : AppCompatActivity() {
             "MOOD" ->
                 "Estado de ánimo"
 
-            "SOCIAL" ->
+            "SELF_ESTEEM" ->
+                "Autoestima"
+
+            "RELATIONSHIPS" ->
                 "Relaciones"
 
             else ->
@@ -331,9 +441,11 @@ class History : AppCompatActivity() {
                     true
                 }
 
-                R.id.nav_history -> true
+                R.id.nav_history ->
+                    true
 
-                else -> false
+                else ->
+                    false
             }
         }
     }

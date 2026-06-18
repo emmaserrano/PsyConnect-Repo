@@ -7,7 +7,7 @@ import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.TestResult
 
 class RecentResultAdapter(
-    private var results: List<TestResult> = emptyList()
+    private val results: List<TestResult>
 ) : RecyclerView.Adapter<RecentResultViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -16,6 +16,7 @@ class RecentResultAdapter(
     ): RecentResultViewHolder {
 
         return RecentResultViewHolder(
+
             LayoutInflater
                 .from(parent.context)
                 .inflate(
@@ -26,10 +27,8 @@ class RecentResultAdapter(
         )
     }
 
-    override fun getItemCount(): Int {
-
-        return results.size
-    }
+    override fun getItemCount() =
+        results.size
 
     override fun onBindViewHolder(
         holder: RecentResultViewHolder,
@@ -39,14 +38,5 @@ class RecentResultAdapter(
         holder.bind(
             results[position]
         )
-    }
-
-    fun updateData(
-        newResults: List<TestResult>
-    ) {
-
-        results = newResults
-
-        notifyDataSetChanged()
     }
 }

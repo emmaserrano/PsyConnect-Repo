@@ -10,43 +10,64 @@ class RecentResultViewHolder(
     itemView: View
 ) : RecyclerView.ViewHolder(itemView) {
 
-    private val tvResult =
+    private val tvCategory =
         itemView.findViewById<TextView>(
-            R.id.tvResult
+            R.id.tvCategory
+        )
+
+    private val tvPercentage =
+        itemView.findViewById<TextView>(
+            R.id.tvPercentage
+        )
+
+    private val tvLevel =
+        itemView.findViewById<TextView>(
+            R.id.tvLevel
+        )
+
+    private val tvDate =
+        itemView.findViewById<TextView>(
+            R.id.tvDate
         )
 
     fun bind(
         result: TestResult
     ) {
 
-        val categoryName = when(result.category){
-
-            "WELLNESS" ->
-                "🌿 Bienestar emocional"
-
-            "STRESS" ->
-                "🌊 Estrés"
-
-            "SLEEP" ->
-                "🌙 Sueño"
-
-            "MOOD" ->
-                "☀ Estado de ánimo"
-
-            "RELATIONSHIPS" ->
-                "🤝 Relaciones sociales"
-
-            else ->
+        tvCategory.text =
+            traducirCategoria(
                 result.category
+            )
+
+        tvPercentage.text =
+            "${result.percentage}%"
+
+        tvLevel.text =
+            result.level
+
+        tvDate.text =
+            result.createdAt
+                ?.substring(0, 10)
+                ?: "-"
+    }
+
+    private fun traducirCategoria(
+        category: String
+    ): String {
+
+        return when (category) {
+
+            "WELLNESS" -> "🌿 Bienestar"
+
+            "STRESS" -> "😌 Estrés"
+
+            "SLEEP" -> "😴 Sueño"
+
+            "MOOD" -> "😊 Estado de ánimo"
+
+            "SELF_ESTEEM" -> "💜 Autoestima"
+
+            else -> "🤝 Relaciones"
         }
-
-        tvResult.text =
-            """
-$categoryName
-
-${result.level}
-
-${result.percentage} %
-            """.trimIndent()
     }
 }
