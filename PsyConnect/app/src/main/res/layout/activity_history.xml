@@ -296,20 +296,26 @@
                     android:checked="true"
                     android:checkable="true"
                     app:checkedIconVisible="false"
-                    app:chipBackgroundColor="@color/chip_selector"
-                    app:chipTextColor="@color/chip_text_selector"/>
+                    app:chipBackgroundColor="@color/chip_selector"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipWellness"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bienestar"/>
+                    android:text="Bienestar"
+                    android:checkable="true"
+                    app:checkedIconVisible="false"
+                    app:chipBackgroundColor="@color/chip_selector"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipStress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Estrés"/>
+                    android:text="Estrés"
+                    android:checkable="true"
+                    app:checkedIconVisible="false"
+                    app:chipBackgroundColor="@color/chip_selector"/>
+                />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipSleep"
