@@ -8,9 +8,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import android.app.DatePickerDialog
+import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.User
 import ni.edu.uam.psyconnect.network.RetrofitClient
@@ -33,40 +35,27 @@ class EditProfile : AppCompatActivity() {
         val etBirthdate =
             findViewById<EditText>(R.id.etBirthdate)
 
-        val calendar =
-            Calendar.getInstance()
-
         etBirthdate.setOnClickListener {
 
-            DatePickerDialog(
+            val picker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Selecciona tu fecha de nacimiento")
+                .build()
 
-                this,
+            picker.show(supportFragmentManager, "DATE_PICKER")
 
-                { _, year, month, day ->
+            picker.addOnPositiveButtonClickListener { selection ->
 
-                    calendar.set(
-                        year,
-                        month,
-                        day
-                    )
+                val formato = SimpleDateFormat(
+                    "yyyy-MM-dd",
+                    Locale.getDefault()
+                )
 
-                    val format =
-                        SimpleDateFormat(
-                            "yyyy-MM-dd"
-                        )
+                formato.timeZone = TimeZone.getTimeZone("UTC")
 
-                    etBirthdate.setText(
-                        format.format(
-                            calendar.time
-                        )
-                    )
-                },
-
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-
-            ).show()
+                etBirthdate.setText(
+                    formato.format(Date(selection))
+                )
+            }
         }
 
         val btnSave =
