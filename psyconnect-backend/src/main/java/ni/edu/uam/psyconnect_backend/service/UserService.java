@@ -58,6 +58,7 @@ public class UserService {
             return new LoginResponse(
                     false,
                     "Usuario no encontrado",
+                    null,
                     null
             );
         }
@@ -67,6 +68,7 @@ public class UserService {
             return new LoginResponse(
                     false,
                     "Contraseña incorrecta",
+                    null,
                     null
             );
         }
@@ -74,7 +76,8 @@ public class UserService {
         return new LoginResponse(
                 true,
                 "Inicio de sesión exitoso",
-                user.getId()
+                user.getId(),
+                user.getName()
         );
     }
     public User getUserById(Long id) {
@@ -105,7 +108,7 @@ public class UserService {
         user.setName(updatedUser.getName());
         user.setUsername(updatedUser.getUsername());
         user.setEmail(updatedUser.getEmail());
-        user.setAge(updatedUser.getAge());
+        user.setBirthdate(updatedUser.getBirthdate());
 
         return userRepository.save(user);
     }
