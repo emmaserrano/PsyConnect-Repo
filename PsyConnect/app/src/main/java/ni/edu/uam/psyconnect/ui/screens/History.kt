@@ -148,11 +148,19 @@ class History : AppCompatActivity() {
                             this@History
                         )
 
-                    recycler.adapter =
-                        RecentResultAdapter(
-                            results.sortedByDescending {
+                    val latestPerCategory =
+
+                        results
+                            .sortedByDescending {
                                 it.id
                             }
+                            .distinctBy {
+                                it.category
+                            }
+
+                    recycler.adapter =
+                        RecentResultAdapter(
+                            latestPerCategory
                         )
 
                     if (results.isNotEmpty()) {
