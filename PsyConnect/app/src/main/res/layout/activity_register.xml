@@ -111,15 +111,22 @@
             android:text="Verificar código"
             android:layout_marginBottom="14dp"/>
 
-        <EditText
-            android:id="@+id/etAge"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:hint="@string/hint_age"
-            android:inputType="number"
-            android:padding="16dp"
-            android:backgroundTint="@color/turquesa_principal"
-            android:layout_marginBottom="14dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etBirthdate"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:hint="Fecha de nacimiento"
+                android:focusable="false"
+                android:clickable="true"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"

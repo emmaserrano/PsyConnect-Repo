@@ -12,5 +12,5 @@ data class User(
 
     val password: String,
 
-    val age: Int
+    val birthdate: String
 )

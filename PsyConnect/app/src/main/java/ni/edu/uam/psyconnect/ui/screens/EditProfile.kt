@@ -8,6 +8,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import android.app.DatePickerDialog
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.User
 import ni.edu.uam.psyconnect.network.RetrofitClient
@@ -27,8 +30,44 @@ class EditProfile : AppCompatActivity() {
         val etEmail =
             findViewById<EditText>(R.id.etEmail)
 
-        val etAge =
-            findViewById<EditText>(R.id.etAge)
+        val etBirthdate =
+            findViewById<EditText>(R.id.etBirthdate)
+
+        val calendar =
+            Calendar.getInstance()
+
+        etBirthdate.setOnClickListener {
+
+            DatePickerDialog(
+
+                this,
+
+                { _, year, month, day ->
+
+                    calendar.set(
+                        year,
+                        month,
+                        day
+                    )
+
+                    val format =
+                        SimpleDateFormat(
+                            "yyyy-MM-dd"
+                        )
+
+                    etBirthdate.setText(
+                        format.format(
+                            calendar.time
+                        )
+                    )
+                },
+
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+
+            ).show()
+        }
 
         val btnSave =
             findViewById<Button>(R.id.btnSave)
@@ -67,7 +106,7 @@ class EditProfile : AppCompatActivity() {
 
                             etName.setText(user.name)
                             etEmail.setText(user.email)
-                            etAge.setText(user.age.toString())
+                            etBirthdate.setText(user.birthdate)
                         }
                     }
 
@@ -95,7 +134,7 @@ class EditProfile : AppCompatActivity() {
                             username = "",
                             email = etEmail.text.toString(),
                             password = "",
-                            age = etAge.text.toString().toInt()
+                            birthdate = etBirthdate.text.toString()
                         )
 
                     val response =

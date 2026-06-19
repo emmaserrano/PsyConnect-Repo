@@ -2,6 +2,8 @@ package ni.edu.uam.psyconnect_backend.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -18,7 +20,7 @@ public class User {
 
     private String password;
 
-    private Integer age;
+    private LocalDate birthdate;
 
     public User() {
     }
@@ -29,14 +31,14 @@ public class User {
             String username,
             String email,
             String password,
-            Integer age
+            LocalDate birthdate
     ) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.age = age;
+        this.birthdate = birthdate;
     }
 
     public Long getId() {
@@ -47,9 +49,13 @@ public class User {
         return name;
     }
 
-    public String getUsername() {return username;}
+    public String getUsername() {
+        return username;
+    }
 
-    public void setUsername(String username) {this.username = username;}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -63,12 +69,12 @@ public class User {
         this.email = email;
     }
 
-    public Integer getAge() {
-        return age;
+    public LocalDate getBirthdate() {
+        return birthdate;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
     }
 
     public String getPassword() {

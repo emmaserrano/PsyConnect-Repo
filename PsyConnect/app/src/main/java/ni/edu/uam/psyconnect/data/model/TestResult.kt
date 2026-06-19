@@ -6,6 +6,8 @@ data class TestResult(
 
     val userId: Long,
 
+    val category: String,
+
     val percentage: Int,
 
     val level: String,

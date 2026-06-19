@@ -5,9 +5,13 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
+import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
-import ni.edu.uam.psyconnect.ui.helper.EmotionalFeedbackGenerator
+import ni.edu.uam.psyconnect.data.model.TestResult
+import ni.edu.uam.psyconnect.network.RetrofitClient
+import ni.edu.uam.psyconnect.ui.helper.TestInterpreter
 
 class Results : AppCompatActivity() {
 
@@ -56,19 +60,25 @@ class Results : AppCompatActivity() {
                 R.id.btnHome
             )
 
-        val score =
+        val percentage =
             intent.getIntExtra(
-                "score",
+                "percentage",
                 0
             )
 
-        tvScore.text =
-            "Puntaje obtenido: $score"
+        val category =
+            intent.getStringExtra(
+                "category"
+            ) ?: "WELLNESS"
 
         val feedback =
-            EmotionalFeedbackGenerator.generate(
-                score
+            TestInterpreter.generate(
+                category,
+                percentage
             )
+
+        tvScore.text =
+            "Resultado obtenido: $percentage %"
 
         tvTitle.text =
             feedback.title
@@ -78,7 +88,7 @@ class Results : AppCompatActivity() {
 
         tvRecommendations.text =
             feedback.recommendations.joinToString(
-                separator = "\n\n"
+                "\n\n"
             ) {
                 "✔ $it"
             }
@@ -89,10 +99,15 @@ class Results : AppCompatActivity() {
 
         animation.playAnimation()
 
+        guardarResultado(
+            category,
+            percentage,
+            feedback.title
+        )
+
         btnHistory.setOnClickListener {
 
             startActivity(
-
                 Intent(
                     this,
                     History::class.java
@@ -103,7 +118,6 @@ class Results : AppCompatActivity() {
         btnHome.setOnClickListener {
 
             startActivity(
-
                 Intent(
                     this,
                     Home::class.java
@@ -111,6 +125,73 @@ class Results : AppCompatActivity() {
             )
 
             finish()
+        }
+    }
+
+    private fun guardarResultado(
+
+        category: String,
+        percentage: Int,
+        level: String
+
+    ) {
+
+        val sharedPreferences =
+            getSharedPreferences(
+                "psyconnect",
+                MODE_PRIVATE
+            )
+
+        val userId =
+            sharedPreferences.getLong(
+                "userId",
+                1L
+            )
+
+        val result =
+            TestResult(
+
+                userId = userId,
+
+                category = category,
+
+                percentage = percentage,
+
+                level = level
+            )
+
+        lifecycleScope.launch {
+
+            try {
+
+                val response =
+                    RetrofitClient
+                        .apiService
+                        .saveResult(
+                            result
+                        )
+
+                if (
+                    response.isSuccessful
+                ) {
+
+                    println(
+                        "Resultado guardado correctamente"
+                    )
+
+                } else {
+
+                    println(
+                        "Error al guardar resultado"
+                    )
+                }
+
+            } catch (
+                e: Exception
+            ) {
+
+                e.printStackTrace()
+            }
         }
     }
 }

@@ -4,17 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ni.edu.uam.psyconnect.R
+import ni.edu.uam.psyconnect.data.model.TestResult
 
-class RecentResultAdapter :
-    RecyclerView.Adapter<RecentResultViewHolder>() {
-
-    private val results =
-        listOf(
-            "Bienestar emocional • 84 %",
-            "Estrés • 78 %",
-            "Sueño y descanso • 81 %",
-            "Estado de ánimo • 86 %"
-        )
+class RecentResultAdapter(
+    private val results: List<TestResult>
+) : RecyclerView.Adapter<RecentResultViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

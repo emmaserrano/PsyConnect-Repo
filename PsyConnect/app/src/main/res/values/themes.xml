@@ -9,6 +9,11 @@
 
         <item name="colorTertiary">@color/turquesa_oscuro</item>
 
+        <!-- Colores para Material 3 (Bottom Navigation y otros) -->
+        <item name="colorSecondaryContainer">@color/turquesa_claro</item>
+        <item name="colorOnSecondaryContainer">@color/turquesa_oscuro</item>
+        <item name="colorSurface">@color/blanco</item>
+
         <item name="android:statusBarColor">
             @color/status_bar_color
         </item>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta Turquesa Tenue para Modo Oscuro (Descanso Visual) -->
+    <color name="turquesa_principal">#4DB6AC</color> <!-- Turquesa mate desaturado -->
+    <color name="turquesa_oscuro">#80CBC4</color>    <!-- Turquesa pastel suave -->
+    <color name="turquesa_claro">#1F2937</color>     <!-- Gris azulado profundo para contenedores -->
+
+    <color name="fondo_login">#121212</color>        <!-- Negro mate para evitar fatiga -->
+    <color name="gris_texto">#9CA3AF</color>         <!-- Gris suave para lectura -->
+    <color name="blanco">#1E1E1E</color>             <!-- Gris oscuro para superficies/tarjetas -->
+    <color name="turquesa_texto">#B2DFDB</color>
+    <color name="gris_claro">#2D2D2D</color>
+
+    <color name="status_bar_color">#121212</color>
+    <color name="navigation_bar_color">#121212</color>
+
+    <color name="white">#E1E1E1</color>             <!-- Blanco hueso para evitar alto contraste -->
+    <color name="black">#000000</color>
+</resources>
