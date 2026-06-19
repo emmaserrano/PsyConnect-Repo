@@ -131,15 +131,23 @@ class Login : AppCompatActivity() {
                 )
 
             startActivity(intent)
-        }
-        tvForgotPassword.setOnClickListener {
 
-            startActivity(
-                Intent(
-                    this,
-                    ForgotPassword::class.java
+
+            tvForgotPassword.setOnClickListener {
+
+                val intent =
+                    Intent(
+                        this,
+                        ForgotPassword::class.java
+                    )
+
+                intent.putExtra(
+                    "email",
+                    etEmail.text.toString().trim()
                 )
-            )
+
+                startActivity(intent)
+            }
         }
     }
 }

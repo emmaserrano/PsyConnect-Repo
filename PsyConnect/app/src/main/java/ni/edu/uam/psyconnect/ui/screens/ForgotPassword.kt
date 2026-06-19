@@ -26,6 +26,16 @@ class ForgotPassword : AppCompatActivity() {
         setContentView(R.layout.activity_forgot_password)
 
         val etEmail = findViewById<EditText>(R.id.etEmailRecovery)
+
+        val emailRecibido = intent.getStringExtra("email")
+
+        if (!emailRecibido.isNullOrEmpty()) {
+
+            etEmail.setText(emailRecibido)
+
+            etEmail.isEnabled = false
+        }
+
         val btnSend = findViewById<Button>(R.id.btnSendRecovery)
         val etCode = findViewById<EditText>(R.id.etRecoveryCode)
         val btnVerify = findViewById<Button>(R.id.btnVerifyRecovery)
@@ -182,4 +192,5 @@ class ForgotPassword : AppCompatActivity() {
         super.onDestroy()
         countDownTimer?.cancel()
     }
+
 }

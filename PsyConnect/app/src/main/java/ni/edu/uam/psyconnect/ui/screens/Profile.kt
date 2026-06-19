@@ -165,7 +165,7 @@ class Profile : AppCompatActivity() {
                             "Hola ${user.name}, gracias por cuidar de tu bienestar hoy."
 
                         tvAge.text =
-                            "Edad: ${user.age}"
+                            "Edad: ${user.birthdate}"
                     }
 
                 } else {
