@@ -39,8 +39,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="24dp"
-                app:cardBackgroundColor="#D8F6F2"
-                android:layout_marginBottom="24dp">
+                app:cardBackgroundColor="@color/turquesa_claro"
+                android:layout_marginBottom="24dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -61,7 +63,8 @@
                         android:layout_height="wrap_content"
                         android:text="Cada pequeño paso cuenta para sentirte mejor."
                         android:textSize="16sp"
-                        android:layout_marginTop="10dp"/>
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/gris_texto"/>
 
                 </LinearLayout>
 

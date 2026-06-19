@@ -56,38 +56,19 @@ class Register : AppCompatActivity() {
         val calendar = Calendar.getInstance()
 
         etBirthdate.setOnClickListener {
-
             DatePickerDialog(
-
                 this,
-
                 { _, year, month, day ->
-
-                    calendar.set(
-                        year,
-                        month,
-                        day
-                    )
-
-                    val format =
-                        SimpleDateFormat(
-                            "yyyy-MM-dd"
-                        )
-
-                    etBirthdate.setText(
-                        format.format(
-                            calendar.time
-                        )
-                    )
+                    calendar.set(year, month, day)
+                    val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    etBirthdate.setText(format.format(calendar.time))
                 },
-
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
-
             ).show()
         }
-        // Limpieza inicial
+
         tvPasswordStrength.text = ""
         tvPasswordRequirements.text = ""
 
@@ -107,10 +88,10 @@ class Register : AppCompatActivity() {
                         Toast.makeText(this@Register, "Código enviado correctamente", Toast.LENGTH_LONG).show()
                     } else {
                         val errorDetail = response.errorBody()?.string() ?: "Error desconocido"
-                        mostrarAlerta("Error de Envío", "No se pudo enviar el código.\n\nServidor: $errorDetail")
+                        mostrarAlerta("Error de Envío", "No se pudo enviar el código.")
                     }
                 } catch (e: Exception) {
-                    mostrarAlerta("Error de Conexión", "No se pudo conectar con el servidor.\n\n${e.message}")
+                    mostrarAlerta("Error de Conexión", "No se pudo conectar con el servidor.")
                 }
             }
         }
@@ -145,7 +126,7 @@ class Register : AppCompatActivity() {
                         mostrarAlerta("Código Incorrecto", "El código de verificación no es válido.")
                     }
                 } catch (e: Exception) {
-                    mostrarAlerta("Error", "Error al validar el código: ${e.message}")
+                    mostrarAlerta("Error", "Error al validar el código.")
                 }
             }
         }
@@ -154,7 +135,6 @@ class Register : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val password = s.toString()
-
                 if (password.isEmpty()) {
                     progressPassword.progress = 0
                     tvPasswordStrength.text = ""
@@ -199,17 +179,8 @@ class Register : AppCompatActivity() {
                         Color.parseColor("#2E7D32")
                     }
                 }
-                
                 progressPassword.progressTintList = ColorStateList.valueOf(color)
-
-                actualizarRequisitos(
-                    tvPasswordRequirements,
-                    tieneLongitud,
-                    tieneMayuscula,
-                    tieneMinuscula,
-                    tieneNumero,
-                    tieneEspecial
-                )
+                actualizarRequisitos(tvPasswordRequirements, tieneLongitud, tieneMayuscula, tieneMinuscula, tieneNumero, tieneEspecial)
             }
             override fun afterTextChanged(s: Editable?) {}
         })
@@ -222,7 +193,7 @@ class Register : AppCompatActivity() {
             val birthdate = etBirthdate.text.toString()
 
             if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty() || birthdate.isEmpty()) {
-                mostrarAlerta("Campos incompletos", "Por favor completa todos los campos del formulario.")
+                mostrarAlerta("Campos incompletos", "Por favor completa todos los campos, el nombre de usuario es obligatorio.")
                 return@setOnClickListener
             }
 
@@ -232,7 +203,7 @@ class Register : AppCompatActivity() {
             }
 
             if (!validarPassword(password)) {
-                mostrarAlerta("Contraseña insegura", "La contraseña debe cumplir con todos los requisitos de seguridad mostrados en verde.")
+                mostrarAlerta("Contraseña insegura", "La contraseña debe cumplir con todos los requisitos.")
                 return@setOnClickListener
             }
 
@@ -249,11 +220,10 @@ class Register : AppCompatActivity() {
                         Toast.makeText(this@Register, "¡Bienvenido! Usuario registrado.", Toast.LENGTH_LONG).show()
                         finish()
                     } else {
-                        val errorDetail = response.errorBody()?.string() ?: "Error al registrar"
-                        mostrarAlerta("Error de Registro", errorDetail)
+                        mostrarAlerta("Error de Registro", "No se pudo crear la cuenta.")
                     }
                 } catch (e: Exception) {
-                    mostrarAlerta("Error", "Ocurrió un error inesperado: ${e.message}")
+                    mostrarAlerta("Error", "Ocurrió un error inesperado.")
                 }
             }
         }
@@ -266,7 +236,6 @@ class Register : AppCompatActivity() {
             .setTitle(titulo)
             .setMessage(mensaje)
             .setPositiveButton("Entendido", null)
-            .setIcon(android.R.drawable.stat_notify_error)
             .show()
     }
 
@@ -275,33 +244,21 @@ class Register : AppCompatActivity() {
         return regex.matches(password)
     }
 
-    private fun actualizarRequisitos(
-        tv: TextView,
-        tieneLongitud: Boolean,
-        tieneMayuscula: Boolean,
-        tieneMinuscula: Boolean,
-        tieneNumero: Boolean,
-        tieneEspecial: Boolean
-    ) {
+    private fun actualizarRequisitos(tv: TextView, tieneLongitud: Boolean, tieneMayuscula: Boolean, tieneMinuscula: Boolean, tieneNumero: Boolean, tieneEspecial: Boolean) {
         val builder = SpannableStringBuilder()
-
         fun agregarLinea(cumplido: Boolean, texto: String) {
             val inicio = builder.length
             builder.append("${if (cumplido) "✔" else "✖"} $texto\n")
             builder.setSpan(
                 ForegroundColorSpan(if (cumplido) Color.parseColor("#2E7D32") else Color.parseColor("#D32F2F")),
-                inicio,
-                builder.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                inicio, builder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
-
         agregarLinea(tieneLongitud, "Mínimo 8 caracteres")
         agregarLinea(tieneMayuscula, "Una mayúscula")
         agregarLinea(tieneMinuscula, "Una minúscula")
         agregarLinea(tieneNumero, "Un número")
         agregarLinea(tieneEspecial, "Un carácter especial")
-
         tv.text = builder
     }
 
@@ -309,14 +266,12 @@ class Register : AppCompatActivity() {
         btnSendCode.isEnabled = false
         btnResendCode.visibility = View.GONE
         countDownTimer?.cancel()
-
         countDownTimer = object : CountDownTimer(120000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val minutos = millisUntilFinished / 60000
                 val segundos = (millisUntilFinished % 60000) / 1000
                 tvCountdown.text = String.format(Locale.getDefault(), "Código válido por %02d:%02d", minutos, segundos)
             }
-
             override fun onFinish() {
                 tvCountdown.text = "Código expirado"
                 btnSendCode.isEnabled = true

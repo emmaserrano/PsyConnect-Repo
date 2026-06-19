@@ -4,7 +4,10 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
@@ -54,6 +57,11 @@ class ChangePassword : AppCompatActivity() {
                 R.id.tvPasswordStrength
             )
 
+        val tvPasswordRequirements =
+            findViewById<TextView>(
+                R.id.tvPasswordRequirements
+            )
+
         val btnSave =
             findViewById<Button>(
                 R.id.btnSavePassword
@@ -67,6 +75,10 @@ class ChangePassword : AppCompatActivity() {
                 "userId",
                 -1
             )
+
+        // Limpieza inicial
+        tvPasswordStrength.text = ""
+        tvPasswordRequirements.text = ""
 
         etNewPassword.addTextChangedListener(
             object : TextWatcher {
@@ -88,6 +100,13 @@ class ChangePassword : AppCompatActivity() {
 
                     val password =
                         s.toString()
+
+                    if (password.isEmpty()) {
+                        progressPassword.progress = 0
+                        tvPasswordStrength.text = ""
+                        tvPasswordRequirements.text = ""
+                        return
+                    }
 
                     val tieneLongitud =
                         password.length >= 8
@@ -179,6 +198,15 @@ class ChangePassword : AppCompatActivity() {
                         ColorStateList.valueOf(
                             color
                         )
+
+                    actualizarRequisitos(
+                        tvPasswordRequirements,
+                        tieneLongitud,
+                        tieneMayuscula,
+                        tieneMinuscula,
+                        tieneNumero,
+                        tieneEspecial
+                    )
                 }
 
                 override fun afterTextChanged(
@@ -235,7 +263,7 @@ class ChangePassword : AppCompatActivity() {
 
                 Toast.makeText(
                     this,
-                    "La contraseña debe tener mínimo 8 caracteres, mayúscula, minúscula, número y carácter especial",
+                    "La contraseña debe cumplir con todos los requisitos de seguridad en verde",
                     Toast.LENGTH_LONG
                 ).show()
 
@@ -277,9 +305,7 @@ class ChangePassword : AppCompatActivity() {
 
                         Toast.makeText(
                             this@ChangePassword,
-                            response.errorBody()
-                                ?.string()
-                                ?: "Error",
+                            "Error: La contraseña actual es incorrecta o el servidor no respondió.",
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -294,6 +320,36 @@ class ChangePassword : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun actualizarRequisitos(
+        tv: TextView,
+        tieneLongitud: Boolean,
+        tieneMayuscula: Boolean,
+        tieneMinuscula: Boolean,
+        tieneNumero: Boolean,
+        tieneEspecial: Boolean
+    ) {
+        val builder = SpannableStringBuilder()
+
+        fun agregarLinea(cumplido: Boolean, texto: String) {
+            val inicio = builder.length
+            builder.append("${if (cumplido) "✔" else "✖"} $texto\n")
+            builder.setSpan(
+                ForegroundColorSpan(if (cumplido) Color.parseColor("#2E7D32") else Color.parseColor("#D32F2F")),
+                inicio,
+                builder.length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
+        agregarLinea(tieneLongitud, "Mínimo 8 caracteres")
+        agregarLinea(tieneMayuscula, "Una mayúscula")
+        agregarLinea(tieneMinuscula, "Una minúscula")
+        agregarLinea(tieneNumero, "Un número")
+        agregarLinea(tieneEspecial, "Un carácter especial")
+
+        tv.text = builder
     }
 
     private fun validarPassword(

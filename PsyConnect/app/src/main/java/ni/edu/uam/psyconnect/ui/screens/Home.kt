@@ -118,7 +118,7 @@ class Home : AppCompatActivity() {
                     "🤝 Relaciones sociales",
                     "Reflexiona sobre tu interacción con otras personas.",
                     R.raw.social,
-                    "SOCIAL"
+                    "RELATIONSHIPS"
                 )
             )
 

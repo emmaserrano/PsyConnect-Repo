@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.material.switchmaterial.SwitchMaterial
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -98,6 +100,43 @@ class Profile : AppCompatActivity() {
                 "userId",
                 -1
             )
+
+        val switchDarkMode =
+            findViewById<SwitchMaterial>(
+                R.id.switchDarkMode
+            )
+
+        val darkModeEnabled =
+            sharedPreferences.getBoolean(
+                "darkMode",
+                false
+            )
+
+        switchDarkMode.isChecked =
+            darkModeEnabled
+
+        switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
+
+            sharedPreferences.edit()
+                .putBoolean(
+                    "darkMode",
+                    isChecked
+                )
+                .apply()
+
+            if (isChecked) {
+
+                AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_YES
+                )
+
+            } else {
+
+                AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_NO
+                )
+            }
+        }
 
         btnEdit.setOnClickListener {
 
