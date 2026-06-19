@@ -5,6 +5,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
+import android.app.DatePickerDialog
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
@@ -39,7 +42,7 @@ class Register : AppCompatActivity() {
         val etEmail = findViewById<EditText>(R.id.etEmail)
         val etVerificationCode = findViewById<EditText>(R.id.etVerificationCode)
         val etPassword = findViewById<EditText>(R.id.etPassword)
-        val etAge = findViewById<EditText>(R.id.etAge)
+        val etBirthdate = findViewById<EditText>(R.id.etBirthdate)
         val btnSendCode = findViewById<Button>(R.id.btnSendCode)
         val btnVerifyCode = findViewById<Button>(R.id.btnVerifyCode)
         val btnResendCode = findViewById<Button>(R.id.btnResendCode)
@@ -50,7 +53,40 @@ class Register : AppCompatActivity() {
         val progressPassword = findViewById<android.widget.ProgressBar>(R.id.progressPassword)
         val tvPasswordStrength = findViewById<TextView>(R.id.tvPasswordStrength)
         val tvPasswordRequirements = findViewById<TextView>(R.id.tvPasswordRequirements)
+        val calendar = Calendar.getInstance()
 
+        etBirthdate.setOnClickListener {
+
+            DatePickerDialog(
+
+                this,
+
+                { _, year, month, day ->
+
+                    calendar.set(
+                        year,
+                        month,
+                        day
+                    )
+
+                    val format =
+                        SimpleDateFormat(
+                            "yyyy-MM-dd"
+                        )
+
+                    etBirthdate.setText(
+                        format.format(
+                            calendar.time
+                        )
+                    )
+                },
+
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+
+            ).show()
+        }
         // Limpieza inicial
         tvPasswordStrength.text = ""
         tvPasswordRequirements.text = ""
@@ -183,9 +219,9 @@ class Register : AppCompatActivity() {
             val username = etUsername.text.toString().trim()
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString()
-            val age = etAge.text.toString()
+            val birthdate = etBirthdate.text.toString()
 
-            if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty() || age.isEmpty()) {
+            if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty() || birthdate.isEmpty()) {
                 mostrarAlerta("Campos incompletos", "Por favor completa todos los campos del formulario.")
                 return@setOnClickListener
             }
@@ -205,7 +241,7 @@ class Register : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val user = User(name = name, username = username, email = email, password = password, age = age.toInt())
+            val user = User(name = name, username = username, email = email, password = password, birthdate = birthdate)
             lifecycleScope.launch {
                 try {
                     val response = RetrofitClient.apiService.registerUser(user)
