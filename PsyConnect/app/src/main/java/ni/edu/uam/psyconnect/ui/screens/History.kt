@@ -154,20 +154,7 @@ class History : AppCompatActivity() {
                             this@History
                         )
 
-                    val latestPerCategory =
-
-                        results
-                            .sortedByDescending {
-                                it.id
-                            }
-                            .distinctBy {
-                                it.category
-                            }
-
-                    recycler.adapter =
-                        RecentResultAdapter(
-                            latestPerCategory
-                        )
+                    filtrarResultados(null)
 
                     if (results.isNotEmpty()) {
 
@@ -245,22 +232,30 @@ class History : AppCompatActivity() {
 
         val filtered =
 
-            if (category == null)
+            if (category == null) {
 
                 allResults
+                    .sortedByDescending {
+                        it.id
+                    }
+                    .distinctBy {
+                        it.category
+                    }
 
-            else
+            } else {
 
-                allResults.filter {
-                    it.category == category
-                }
+                allResults
+                    .filter {
+                        it.category == category
+                    }
+                    .sortedByDescending {
+                        it.id
+                    }
+            }
 
         recycler.adapter =
             RecentResultAdapter(
                 filtered
-                    .sortedByDescending {
-                        it.id
-                    }
             )
     }
 
