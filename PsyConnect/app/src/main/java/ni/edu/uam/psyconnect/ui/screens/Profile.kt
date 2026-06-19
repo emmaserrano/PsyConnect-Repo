@@ -13,6 +13,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.network.RetrofitClient
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class Profile : AppCompatActivity() {
 
@@ -172,6 +175,43 @@ class Profile : AppCompatActivity() {
         loadProfile()
     }
 
+    private fun calcularEdad(fechaNacimiento: String?): String {
+
+        if (fechaNacimiento.isNullOrBlank()) {
+            return "No registrada"
+        }
+
+        return try {
+
+            val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val fecha = formato.parse(fechaNacimiento)
+
+            if (fecha == null) {
+                return "No registrada"
+            }
+
+            val nacimiento = Calendar.getInstance()
+            nacimiento.time = fecha
+
+            val hoy = Calendar.getInstance()
+
+            var edad = hoy.get(Calendar.YEAR) - nacimiento.get(Calendar.YEAR)
+
+            if (
+                hoy.get(Calendar.DAY_OF_YEAR) <
+                nacimiento.get(Calendar.DAY_OF_YEAR)
+            ) {
+                edad--
+            }
+
+            "$edad años"
+
+        } catch (e: Exception) {
+
+            "No registrada"
+        }
+    }
+
     private fun loadProfile() {
 
         if (userId == -1L) {
@@ -204,7 +244,7 @@ class Profile : AppCompatActivity() {
                             "Hola ${user.name}, gracias por cuidar de tu bienestar hoy."
 
                         tvAge.text =
-                            "Edad: ${user.birthdate}"
+                            "Edad: ${calcularEdad(user.birthdate)}"
                     }
 
                 } else {
