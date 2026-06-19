@@ -1,21 +1,24 @@
 package ni.edu.uam.psyconnect.ui.screens
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 import com.google.android.material.datepicker.MaterialDatePicker
+import kotlinx.coroutines.launch
+import ni.edu.uam.psyconnect.R
+import ni.edu.uam.psyconnect.data.model.User
+import ni.edu.uam.psyconnect.network.RetrofitClient
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-import ni.edu.uam.psyconnect.R
-import ni.edu.uam.psyconnect.data.model.User
-import ni.edu.uam.psyconnect.network.RetrofitClient
 
 class EditProfile : AppCompatActivity() {
 
@@ -26,14 +29,45 @@ class EditProfile : AppCompatActivity() {
 
         setContentView(R.layout.activity_edit_profile)
 
-        val etName =
-            findViewById<EditText>(R.id.etName)
+        val etName = findViewById<EditText>(R.id.etName)
+        val etEmail = findViewById<EditText>(R.id.etEmail)
+        val etBirthdate = findViewById<EditText>(R.id.etBirthdate)
 
-        val etEmail =
-            findViewById<EditText>(R.id.etEmail)
+        val btnSave = findViewById<Button>(R.id.btnSave)
+        val btnChangePassword = findViewById<Button>(R.id.btnChangePassword)
+        val switchDarkMode = findViewById<Switch>(R.id.switchDarkMode)
 
-        val etBirthdate =
-            findViewById<EditText>(R.id.etBirthdate)
+        //=========================
+        // MODO OSCURO
+        //=========================
+
+        val isDark =
+            resources.configuration.uiMode and
+                    Configuration.UI_MODE_NIGHT_MASK ==
+                    Configuration.UI_MODE_NIGHT_YES
+
+        switchDarkMode.isChecked = isDark
+
+        switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
+
+            if (isChecked) {
+
+                AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_YES
+                )
+
+            } else {
+
+                AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_NO
+                )
+
+            }
+        }
+
+        //=========================
+        // SELECTOR DE FECHA
+        //=========================
 
         etBirthdate.setOnClickListener {
 
@@ -58,11 +92,6 @@ class EditProfile : AppCompatActivity() {
             }
         }
 
-        val btnSave =
-            findViewById<Button>(R.id.btnSave)
-        val btnChangePassword =
-            findViewById<Button>(R.id.btnChangePassword)
-
         val sharedPreferences =
             getSharedPreferences(
                 "psyconnect",
@@ -82,14 +111,12 @@ class EditProfile : AppCompatActivity() {
                 try {
 
                     val response =
-                        RetrofitClient
-                            .apiService
+                        RetrofitClient.apiService
                             .getUserById(userId)
 
                     if (response.isSuccessful) {
 
-                        val user =
-                            response.body()
+                        val user = response.body()
 
                         if (user != null) {
 
@@ -127,8 +154,7 @@ class EditProfile : AppCompatActivity() {
                         )
 
                     val response =
-                        RetrofitClient
-                            .apiService
+                        RetrofitClient.apiService
                             .updateUser(
                                 userId,
                                 updatedUser
@@ -167,7 +193,6 @@ class EditProfile : AppCompatActivity() {
         btnChangePassword.setOnClickListener {
 
             startActivity(
-
                 Intent(
                     this,
                     ChangePassword::class.java
