@@ -3,6 +3,7 @@ package ni.edu.uam.psyconnect.ui.screens
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ProgressBar
+import com.google.android.material.chip.Chip
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +18,8 @@ import ni.edu.uam.psyconnect.ui.adapter.RecentResultAdapter
 
 class History : AppCompatActivity() {
 
+    private var allResults: List<TestResult> = emptyList()
+
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
@@ -28,7 +31,7 @@ class History : AppCompatActivity() {
         )
 
         cargarHistorial()
-
+        configurarFiltros()
         configurarBottomNav()
     }
 
@@ -143,6 +146,9 @@ class History : AppCompatActivity() {
                         response.body()
                             ?: emptyList()
 
+                    allResults = results
+
+
                     recycler.layoutManager =
                         LinearLayoutManager(
                             this@History
@@ -225,6 +231,93 @@ class History : AppCompatActivity() {
 
                 e.printStackTrace()
             }
+        }
+    }
+
+    private fun filtrarResultados(
+        category: String?
+    ) {
+
+        val recycler =
+            findViewById<RecyclerView>(
+                R.id.recyclerResults
+            )
+
+        val filtered =
+
+            if (category == null)
+
+                allResults
+
+            else
+
+                allResults.filter {
+                    it.category == category
+                }
+
+        recycler.adapter =
+            RecentResultAdapter(
+                filtered
+                    .sortedByDescending {
+                        it.id
+                    }
+            )
+    }
+
+    private fun configurarFiltros() {
+
+        findViewById<Chip>(
+            R.id.chipAll
+        ).setOnClickListener {
+
+            filtrarResultados(
+                null
+            )
+        }
+
+        findViewById<Chip>(
+            R.id.chipWellness
+        ).setOnClickListener {
+
+            filtrarResultados(
+                "WELLNESS"
+            )
+        }
+
+        findViewById<Chip>(
+            R.id.chipStress
+        ).setOnClickListener {
+
+            filtrarResultados(
+                "STRESS"
+            )
+        }
+
+        findViewById<Chip>(
+            R.id.chipSleep
+        ).setOnClickListener {
+
+            filtrarResultados(
+                "SLEEP"
+            )
+        }
+
+        findViewById<Chip>(
+            R.id.chipMood
+        ).setOnClickListener {
+
+            filtrarResultados(
+                "MOOD"
+            )
+        }
+
+        findViewById<Chip>(
+            R.id.chipRelationships
+        ).setOnClickListener {
+
+            filtrarResultados(
+                "RELATIONSHIPS"
+            )
         }
     }
 

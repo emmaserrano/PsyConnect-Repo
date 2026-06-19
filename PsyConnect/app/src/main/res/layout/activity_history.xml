@@ -281,6 +281,51 @@
                 android:textSize="22sp"
                 android:layout_marginTop="32dp"/>
 
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupCategories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Todos"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipWellness"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bienestar"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipStress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estrés"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSleep"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sueño"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipMood"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ánimo"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipRelationships"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Relaciones"/>
+
+            </com.google.android.material.chip.ChipGroup>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerResults"
                 android:layout_width="match_parent"
