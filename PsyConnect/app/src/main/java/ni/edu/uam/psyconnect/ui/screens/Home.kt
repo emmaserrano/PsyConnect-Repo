@@ -34,15 +34,39 @@ class Home : AppCompatActivity() {
                 MODE_PRIVATE
             )
 
-        val username =
-            sharedPreferences.getString(
-                "username",
-                "Usuario"
+        val userId =
+            sharedPreferences.getLong(
+                "userId",
+                -1
             )
 
-        tvGreeting.text =
-            "Hola, $username 👋"
+        if (userId != -1L) {
 
+            lifecycleScope.launch {
+
+                try {
+
+                    val response =
+                        RetrofitClient
+                            .apiService
+                            .getUserById(userId)
+
+                    if (response.isSuccessful) {
+
+                        val user =
+                            response.body()
+
+                        tvGreeting.text =
+                            "Hola, ${user?.name} 👋"
+                    }
+
+                } catch (_: Exception) {
+
+                    tvGreeting.text =
+                        "Hola 👋"
+                }
+            }
+        }
         /*
          * EVALUACIONES
          */
