@@ -286,13 +286,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:singleSelection="true">
+                app:singleSelection="true">
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Todos"/>
+                    android:text="Todos"
+                    android:checked="true"
+                    android:checkable="true"
+                    app:checkedIconVisible="false"
+                    app:chipBackgroundColor="@color/chip_selector"
+                    app:chipTextColor="@color/chip_text_selector"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipWellness"
