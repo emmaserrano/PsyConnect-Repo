@@ -19,24 +19,24 @@ class AppearanceActivity : AppCompatActivity() {
                 R.id.switchDarkMode
             )
 
-        val preferences =
+        val sharedPreferences =
             getSharedPreferences(
                 "psyconnect",
                 MODE_PRIVATE
             )
 
-        val darkMode =
-            preferences.getBoolean(
+        val darkModeEnabled =
+            sharedPreferences.getBoolean(
                 "darkMode",
                 false
             )
 
         switchDarkMode.isChecked =
-            darkMode
+            darkModeEnabled
 
         switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
 
-            preferences.edit()
+            sharedPreferences.edit()
                 .putBoolean(
                     "darkMode",
                     isChecked
@@ -55,6 +55,8 @@ class AppearanceActivity : AppCompatActivity() {
                     AppCompatDelegate.MODE_NIGHT_NO
                 )
             }
+
+            recreate()
         }
     }
 }
