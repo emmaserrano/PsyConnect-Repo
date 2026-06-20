@@ -18,8 +18,6 @@ import java.util.TimeZone
 
 class EditProfile : AppCompatActivity() {
 
-    private var hasChanges = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -28,6 +26,9 @@ class EditProfile : AppCompatActivity() {
 
         val etName =
             findViewById<EditText>(R.id.etName)
+
+        val etUsername =
+            findViewById<EditText>(R.id.etUsername)
 
         val etEmail =
             findViewById<EditText>(R.id.etEmail)
@@ -38,15 +39,13 @@ class EditProfile : AppCompatActivity() {
         val btnSave =
             findViewById<Button>(R.id.btnSave)
 
-        //=========================
-        // SELECTOR DE FECHA
-        //=========================
-
         etBirthdate.setOnClickListener {
 
             val picker =
                 MaterialDatePicker.Builder.datePicker()
-                    .setTitleText("Selecciona tu fecha de nacimiento")
+                    .setTitleText(
+                        "Selecciona tu fecha de nacimiento"
+                    )
                     .build()
 
             picker.show(
@@ -104,8 +103,18 @@ class EditProfile : AppCompatActivity() {
                         if (user != null) {
 
                             etName.setText(user.name)
-                            etEmail.setText(user.email)
-                            etBirthdate.setText(user.birthdate)
+
+                            etUsername.setText(
+                                user.username
+                            )
+
+                            etEmail.setText(
+                                user.email
+                            )
+
+                            etBirthdate.setText(
+                                user.birthdate
+                            )
                         }
                     }
 
@@ -129,11 +138,20 @@ class EditProfile : AppCompatActivity() {
                     val updatedUser =
                         User(
                             id = userId,
-                            name = etName.text.toString(),
-                            username = "",
-                            email = etEmail.text.toString(),
+
+                            name =
+                                etName.text.toString(),
+
+                            username =
+                                etUsername.text.toString(),
+
+                            email =
+                                etEmail.text.toString(),
+
                             password = "",
-                            birthdate = etBirthdate.text.toString()
+
+                            birthdate =
+                                etBirthdate.text.toString()
                         )
 
                     val response =
