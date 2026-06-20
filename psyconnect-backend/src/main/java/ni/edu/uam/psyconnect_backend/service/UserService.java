@@ -109,6 +109,7 @@ public class UserService {
         user.setUsername(updatedUser.getUsername());
         user.setEmail(updatedUser.getEmail());
         user.setBirthdate(updatedUser.getBirthdate());
+        user.setDescription(updatedUser.getDescription());
 
         return userRepository.save(user);
     }
