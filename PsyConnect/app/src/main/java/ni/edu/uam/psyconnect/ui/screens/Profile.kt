@@ -23,6 +23,8 @@ class Profile : AppCompatActivity() {
     private lateinit var tvAge: TextView
     private lateinit var tvUsername: TextView
 
+    private lateinit var tvDescription: TextView
+
     private var userId: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +38,7 @@ class Profile : AppCompatActivity() {
         tvWelcome = findViewById(R.id.tvWelcome)
         tvAge = findViewById(R.id.tvAge)
         tvUsername = findViewById(R.id.tvUsername)
+        tvDescription = findViewById(R.id.tvDescription)
 
         val btnEdit =
             findViewById<Button>(R.id.btnEdit)
@@ -225,6 +228,16 @@ class Profile : AppCompatActivity() {
 
                         tvUsername.text =
                             "Usuario: ${user.username}"
+
+                        tvDescription.text =
+                            if (user.description.isBlank()) {
+
+                                "Aún no has agregado una descripción personal."
+
+                            } else {
+
+                                user.description
+                            }
                     }
 
                 } else {
