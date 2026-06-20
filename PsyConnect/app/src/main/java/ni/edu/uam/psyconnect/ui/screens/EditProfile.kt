@@ -1,14 +1,10 @@
 package ni.edu.uam.psyconnect.ui.screens
 
-import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.launch
@@ -25,45 +21,22 @@ class EditProfile : AppCompatActivity() {
     private var hasChanges = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_edit_profile)
 
-        val etName = findViewById<EditText>(R.id.etName)
-        val etEmail = findViewById<EditText>(R.id.etEmail)
-        val etBirthdate = findViewById<EditText>(R.id.etBirthdate)
+        val etName =
+            findViewById<EditText>(R.id.etName)
 
-        val btnSave = findViewById<Button>(R.id.btnSave)
-        val btnChangePassword = findViewById<Button>(R.id.btnChangePassword)
-        val switchDarkMode = findViewById<Switch>(R.id.switchDarkMode)
+        val etEmail =
+            findViewById<EditText>(R.id.etEmail)
 
-        //=========================
-        // MODO OSCURO
-        //=========================
+        val etBirthdate =
+            findViewById<EditText>(R.id.etBirthdate)
 
-        val isDark =
-            resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK ==
-                    Configuration.UI_MODE_NIGHT_YES
-
-        switchDarkMode.isChecked = isDark
-
-        switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
-
-            if (isChecked) {
-
-                AppCompatDelegate.setDefaultNightMode(
-                    AppCompatDelegate.MODE_NIGHT_YES
-                )
-
-            } else {
-
-                AppCompatDelegate.setDefaultNightMode(
-                    AppCompatDelegate.MODE_NIGHT_NO
-                )
-
-            }
-        }
+        val btnSave =
+            findViewById<Button>(R.id.btnSave)
 
         //=========================
         // SELECTOR DE FECHA
@@ -71,23 +44,31 @@ class EditProfile : AppCompatActivity() {
 
         etBirthdate.setOnClickListener {
 
-            val picker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Selecciona tu fecha de nacimiento")
-                .build()
+            val picker =
+                MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Selecciona tu fecha de nacimiento")
+                    .build()
 
-            picker.show(supportFragmentManager, "DATE_PICKER")
+            picker.show(
+                supportFragmentManager,
+                "DATE_PICKER"
+            )
 
             picker.addOnPositiveButtonClickListener { selection ->
 
-                val formato = SimpleDateFormat(
-                    "yyyy-MM-dd",
-                    Locale.getDefault()
-                )
+                val formato =
+                    SimpleDateFormat(
+                        "yyyy-MM-dd",
+                        Locale.getDefault()
+                    )
 
-                formato.timeZone = TimeZone.getTimeZone("UTC")
+                formato.timeZone =
+                    TimeZone.getTimeZone("UTC")
 
                 etBirthdate.setText(
-                    formato.format(Date(selection))
+                    formato.format(
+                        Date(selection)
+                    )
                 )
             }
         }
@@ -111,12 +92,14 @@ class EditProfile : AppCompatActivity() {
                 try {
 
                     val response =
-                        RetrofitClient.apiService
+                        RetrofitClient
+                            .apiService
                             .getUserById(userId)
 
                     if (response.isSuccessful) {
 
-                        val user = response.body()
+                        val user =
+                            response.body()
 
                         if (user != null) {
 
@@ -154,7 +137,8 @@ class EditProfile : AppCompatActivity() {
                         )
 
                     val response =
-                        RetrofitClient.apiService
+                        RetrofitClient
+                            .apiService
                             .updateUser(
                                 userId,
                                 updatedUser
@@ -188,16 +172,6 @@ class EditProfile : AppCompatActivity() {
                     ).show()
                 }
             }
-        }
-
-        btnChangePassword.setOnClickListener {
-
-            startActivity(
-                Intent(
-                    this,
-                    ChangePassword::class.java
-                )
-            )
         }
     }
 }
