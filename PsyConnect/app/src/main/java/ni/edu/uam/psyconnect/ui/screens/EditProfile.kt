@@ -30,8 +30,8 @@ class EditProfile : AppCompatActivity() {
         val etUsername =
             findViewById<EditText>(R.id.etUsername)
 
-        val etEmail =
-            findViewById<EditText>(R.id.etEmail)
+        val etDescription =
+            findViewById<EditText>(R.id.etDescription)
 
         val etBirthdate =
             findViewById<EditText>(R.id.etBirthdate)
@@ -84,6 +84,8 @@ class EditProfile : AppCompatActivity() {
                 -1
             )
 
+        var currentEmail = ""
+
         if (userId != -1L) {
 
             lifecycleScope.launch {
@@ -102,18 +104,20 @@ class EditProfile : AppCompatActivity() {
 
                         if (user != null) {
 
+                            currentEmail = user.email
+
                             etName.setText(user.name)
 
                             etUsername.setText(
                                 user.username
                             )
 
-                            etEmail.setText(
-                                user.email
-                            )
-
                             etBirthdate.setText(
                                 user.birthdate
+                            )
+
+                            etDescription.setText(
+                                user.description
                             )
                         }
                     }
@@ -146,12 +150,15 @@ class EditProfile : AppCompatActivity() {
                                 etUsername.text.toString(),
 
                             email =
-                                etEmail.text.toString(),
+                                currentEmail,
 
                             password = "",
 
                             birthdate =
-                                etBirthdate.text.toString()
+                                etBirthdate.text.toString(),
+
+                            description =
+                                etDescription.text.toString()
                         )
 
                     val response =

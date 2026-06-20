@@ -61,10 +61,14 @@
                     android:hint="Usuario"/>
 
                 <EditText
-                    android:id="@+id/etEmail"
+                    android:id="@+id/etDescription"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Correo"/>
+                    android:layout_height="120dp"
+                    android:layout_marginTop="12dp"
+                    android:gravity="top"
+                    android:hint="Cuéntanos un poco sobre ti"
+                    android:inputType="textMultiLine"
+                    android:maxLength="500"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
