@@ -15,22 +15,35 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         val appearance =
-            findViewById<LinearLayout>(R.id.cardAppearance)
+            findViewById<LinearLayout>(
+                R.id.cardAppearance
+            )
 
         val security =
-            findViewById<LinearLayout>(R.id.cardSecurity)
+            findViewById<LinearLayout>(
+                R.id.cardSecurity
+            )
 
         val about =
-            findViewById<LinearLayout>(R.id.cardAbout)
+            findViewById<LinearLayout>(
+                R.id.cardAbout
+            )
 
         appearance.setOnClickListener {
 
-            // Próximo commit
+            startActivity(
+
+                Intent(
+                    this,
+                    AppearanceActivity::class.java
+                )
+            )
         }
 
         security.setOnClickListener {
 
             startActivity(
+
                 Intent(
                     this,
                     ChangePassword::class.java
@@ -41,13 +54,12 @@ class SettingsActivity : AppCompatActivity() {
         about.setOnClickListener {
 
             startActivity(
+
                 Intent(
                     this,
                     AboutActivity::class.java
                 )
             )
         }
-
     }
-
 }
