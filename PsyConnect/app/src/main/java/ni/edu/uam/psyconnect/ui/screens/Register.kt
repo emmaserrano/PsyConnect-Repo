@@ -5,9 +5,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
-import android.app.DatePickerDialog
+import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.SimpleDateFormat
-import java.util.Calendar
+import java.util.Date
+import java.util.TimeZone
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
@@ -53,20 +54,36 @@ class Register : AppCompatActivity() {
         val progressPassword = findViewById<android.widget.ProgressBar>(R.id.progressPassword)
         val tvPasswordStrength = findViewById<TextView>(R.id.tvPasswordStrength)
         val tvPasswordRequirements = findViewById<TextView>(R.id.tvPasswordRequirements)
-        val calendar = Calendar.getInstance()
 
         etBirthdate.setOnClickListener {
-            DatePickerDialog(
-                this,
-                { _, year, month, day ->
-                    calendar.set(year, month, day)
-                    val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    etBirthdate.setText(format.format(calendar.time))
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
+
+            val picker =
+                MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Selecciona tu fecha de nacimiento")
+                    .build()
+
+            picker.show(
+                supportFragmentManager,
+                "DATE_PICKER"
+            )
+
+            picker.addOnPositiveButtonClickListener { selection ->
+
+                val formato =
+                    SimpleDateFormat(
+                        "yyyy-MM-dd",
+                        Locale.getDefault()
+                    )
+
+                formato.timeZone =
+                    TimeZone.getTimeZone("UTC")
+
+                etBirthdate.setText(
+                    formato.format(
+                        Date(selection)
+                    )
+                )
+            }
         }
 
         tvPasswordStrength.text = ""
