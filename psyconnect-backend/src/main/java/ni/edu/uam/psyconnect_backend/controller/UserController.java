@@ -141,15 +141,26 @@ public class UserController {
             ChangeEmailRequest request
     ) {
 
-        userService.changeEmail(
+        try {
 
-                request.getUserId(),
+            userService.changeEmail(
 
-                request.getNewEmail()
-        );
+                    request.getUserId(),
 
-        return ResponseEntity.ok(
-                "Correo actualizado"
-        );
+                    request.getNewEmail()
+            );
+
+            return ResponseEntity.ok(
+                    "Correo actualizado"
+            );
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(
+                            e.getMessage()
+                    );
+        }
     }
 }

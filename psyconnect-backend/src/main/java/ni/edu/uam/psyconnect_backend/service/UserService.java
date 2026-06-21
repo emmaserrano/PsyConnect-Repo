@@ -235,25 +235,28 @@ public class UserService {
             String newEmail
     ) {
 
+        User user =
+                userRepository.findById(userId)
+                        .orElseThrow(
+                                () -> new RuntimeException(
+                                        "Usuario no encontrado"
+                                )
+                        );
+
         if (
                 userRepository.existsByEmail(
                         newEmail
                 )
+                        &&
+                        !user.getEmail().equals(
+                                newEmail
+                        )
         ) {
 
             throw new RuntimeException(
                     "El correo ya está registrado"
             );
         }
-
-        User user =
-                userRepository.findById(userId)
-                        .orElseThrow(
-                                () ->
-                                        new RuntimeException(
-                                                "Usuario no encontrado"
-                                        )
-                        );
 
         user.setEmail(
                 newEmail
