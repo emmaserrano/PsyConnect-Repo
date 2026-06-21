@@ -26,21 +26,41 @@ class ForgotPassword : AppCompatActivity() {
         setContentView(R.layout.activity_forgot_password)
 
         val etEmail = findViewById<EditText>(R.id.etEmailRecovery)
+        val tvRecoveryMessage = findViewById<TextView>(R.id.tvRecoveryMessage)
+        val tvDescription = findViewById<TextView>(R.id.tvDescription)
 
         val emailRecibido = intent.getStringExtra("email")
 
-        if (!emailRecibido.isNullOrEmpty()) {
+        val esCorreoValido =
+            !emailRecibido.isNullOrBlank() &&
+                    android.util.Patterns.EMAIL_ADDRESS
+                        .matcher(emailRecibido)
+                        .matches()
+
+        if (esCorreoValido) {
 
             etEmail.setText(emailRecibido)
 
             etEmail.isEnabled = false
+
+            tvDescription.text =
+                "Te enviaremos un código de verificación al correo mostrado a continuación."
+
+        } else {
+
+            etEmail.setText("")
+
+            etEmail.isEnabled = true
+
+            tvDescription.text =
+                "Ingresa el correo asociado a tu cuenta para enviarte un código de recuperación."
+
         }
 
         val btnSend = findViewById<Button>(R.id.btnSendRecovery)
         val etCode = findViewById<EditText>(R.id.etRecoveryCode)
         val btnVerify = findViewById<Button>(R.id.btnVerifyRecovery)
         val btnBackLogin = findViewById<Button>(R.id.btnBackLogin)
-        val tvRecoveryMessage = findViewById<TextView>(R.id.tvRecoveryMessage)
         val tvRecoveryCountdown = findViewById<TextView>(R.id.tvRecoveryCountdown)
 
         btnBackLogin.setOnClickListener {
@@ -98,10 +118,21 @@ class ForgotPassword : AppCompatActivity() {
                             "Código enviado correctamente",
                             Toast.LENGTH_LONG
                         ).show()
-                        
-                        // Iniciamos el temporizador y mostramos los mensajes
+
                         tvRecoveryMessage.visibility = View.VISIBLE
-                        tvRecoveryMessage.text = "Se ha enviado un código a su correo"
+
+                        if (esCorreoValido) {
+
+                            tvRecoveryMessage.text =
+                                "✓ Se ha enviado un código de verificación al correo mostrado."
+
+                        } else {
+
+                            tvRecoveryMessage.text =
+                                "✓ Se ha enviado un código de verificación al correo ingresado."
+
+                        }
+
                         iniciarTemporizador(tvRecoveryCountdown, btnSend)
 
                     } else {

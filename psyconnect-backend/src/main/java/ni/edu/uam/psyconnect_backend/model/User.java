@@ -22,6 +22,9 @@ public class User {
 
     private LocalDate birthdate;
 
+    @Column(length = 500)
+    private String description;
+
     public User() {
     }
 
@@ -31,7 +34,8 @@ public class User {
             String username,
             String email,
             String password,
-            LocalDate birthdate
+            LocalDate birthdate,
+            String description
     ) {
         this.id = id;
         this.name = name;
@@ -39,6 +43,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.birthdate = birthdate;
+        this.description = description;
     }
 
     public Long getId() {
@@ -83,5 +88,15 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(
+            String description
+    ) {
+        this.description = description;
     }
 }
