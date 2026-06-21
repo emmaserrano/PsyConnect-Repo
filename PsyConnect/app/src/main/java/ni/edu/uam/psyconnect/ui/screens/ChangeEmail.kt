@@ -171,6 +171,18 @@ class ChangeEmail : AppCompatActivity() {
         }
 
         btnVerify.setOnClickListener {
+            if (
+                !emailDisponible
+            ) {
+
+                Toast.makeText(
+                    this,
+                    "Debes ingresar un correo disponible",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                return@setOnClickListener
+            }
 
             lifecycleScope.launch {
 
