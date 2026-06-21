@@ -37,6 +37,7 @@ class EditProfile : AppCompatActivity() {
         val etBirthdate = findViewById<EditText>(R.id.etBirthdate)
         val tvUsernameStatus = findViewById<TextView>(R.id.tvUsernameStatus)
         val tvChanges = findViewById<TextView>(R.id.tvChanges)
+        val tvDescriptionCounter = findViewById<TextView>(R.id.tvDescriptionCounter)
         val btnSave = findViewById<Button>(R.id.btnSave)
 
         val userId =
@@ -122,6 +123,7 @@ class EditProfile : AppCompatActivity() {
                         etName.setText(user.name)
                         etUsername.setText(user.username)
                         etDescription.setText(user.description)
+                        tvDescriptionCounter.text = "${etDescription.text.length}/100"
                         etBirthdate.setText(user.birthdate)
 
                         originalName = user.name
@@ -286,7 +288,11 @@ class EditProfile : AppCompatActivity() {
                     before: Int,
                     count: Int
                 ) {
+
                     verificarCambios()
+
+                    tvDescriptionCounter.text =
+                        "${s?.length ?: 0}/100"
                 }
 
                 override fun afterTextChanged(
