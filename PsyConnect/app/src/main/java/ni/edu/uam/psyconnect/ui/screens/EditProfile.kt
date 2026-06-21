@@ -23,6 +23,7 @@ import java.util.TimeZone
 class EditProfile : AppCompatActivity() {
 
     private var usernameDisponible = true
+    private var nombreValido = true
     private var usernameOriginal = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +37,7 @@ class EditProfile : AppCompatActivity() {
         val etDescription = findViewById<EditText>(R.id.etDescription)
         val etBirthdate = findViewById<EditText>(R.id.etBirthdate)
         val tvUsernameStatus = findViewById<TextView>(R.id.tvUsernameStatus)
+        val tvNameStatus = findViewById<TextView>(R.id.tvNameStatus)
         val tvChanges = findViewById<TextView>(R.id.tvChanges)
         val tvDescriptionCounter = findViewById<TextView>(R.id.tvDescriptionCounter)
         val btnSave = findViewById<Button>(R.id.btnSave)
@@ -271,6 +273,76 @@ class EditProfile : AppCompatActivity() {
             }
         )
 
+        etName.addTextChangedListener(
+
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+
+                    verificarCambios()
+
+                    val nombre =
+                        s.toString().trim()
+
+                    if (
+                        nombre.length < 3
+                    ) {
+
+                        tvNameStatus.visibility =
+                            TextView.VISIBLE
+
+                        tvNameStatus.text =
+                            "❌ Ingresa un nombre válido"
+
+                        tvNameStatus.setTextColor(
+                            Color.RED
+                        )
+
+                        nombreValido = false
+
+                        btnSave.isEnabled = false
+
+                    } else {
+
+                        tvNameStatus.visibility =
+                            TextView.VISIBLE
+
+                        tvNameStatus.text =
+                            "✅ Nombre válido"
+
+                        tvNameStatus.setTextColor(
+                            Color.parseColor(
+                                "#2E7D32"
+                            )
+                        )
+
+                        nombreValido = true
+
+                        btnSave.isEnabled =
+                            usernameDisponible
+                    }
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {
+                }
+            }
+        )
+
         etDescription.addTextChangedListener(
             object : TextWatcher {
 
@@ -303,6 +375,18 @@ class EditProfile : AppCompatActivity() {
         )
 
         btnSave.setOnClickListener {
+            if (
+                !nombreValido
+            ) {
+
+                Toast.makeText(
+                    this,
+                    "Ingresa un nombre válido",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                return@setOnClickListener
+            }
 
             if (
                 !usernameDisponible
