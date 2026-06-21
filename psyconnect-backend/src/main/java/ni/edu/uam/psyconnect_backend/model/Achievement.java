@@ -2,8 +2,6 @@ package ni.edu.uam.psyconnect_backend.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "achievements")
 public class Achievement {
@@ -14,28 +12,49 @@ public class Achievement {
 
     private Long userId;
 
-    private String badge;
+    private String title;
 
     private String description;
 
-    private LocalDate unlockedAt;
-
-    public Achievement() {
-    }
+    public Achievement() {}
 
     public Achievement(
             Long id,
             Long userId,
-            String badge,
-            String description,
-            LocalDate unlockedAt
+            String title,
+            String description
     ) {
         this.id = id;
         this.userId = userId;
-        this.badge = badge;
+        this.title = title;
         this.description = description;
-        this.unlockedAt = unlockedAt;
     }
 
-    // getters y setters
+    public Long getId() {
+        return id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

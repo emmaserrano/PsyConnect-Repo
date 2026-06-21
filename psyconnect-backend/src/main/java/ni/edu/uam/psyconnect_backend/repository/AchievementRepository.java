@@ -12,8 +12,8 @@ public interface AchievementRepository
             Long userId
     );
 
-    boolean existsByUserIdAndBadge(
+    boolean existsByUserIdAndTitle(
             Long userId,
-            String badge
+            String title
     );
 }

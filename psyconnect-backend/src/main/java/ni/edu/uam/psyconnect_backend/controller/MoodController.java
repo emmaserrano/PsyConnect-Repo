@@ -1,6 +1,7 @@
 package ni.edu.uam.psyconnect_backend.controller;
 
 import ni.edu.uam.psyconnect_backend.model.Mood;
+import ni.edu.uam.psyconnect_backend.service.AchievementService;
 import ni.edu.uam.psyconnect_backend.service.MoodService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,20 +14,33 @@ import java.util.Optional;
 public class MoodController {
 
     private final MoodService moodService;
+    private final AchievementService achievementService;
 
     public MoodController(
-            MoodService moodService
+            MoodService moodService,
+            AchievementService achievementService
     ) {
         this.moodService = moodService;
+        this.achievementService = achievementService;
     }
 
     @PostMapping
     public Mood saveMood(
             @RequestBody Mood mood
     ) {
-        return moodService.saveMood(
-                mood
+
+        Mood savedMood =
+                moodService.saveMood(
+                        mood
+                );
+
+        achievementService.unlock(
+                mood.getUserId(),
+                "😊 Conectado Contigo",
+                "Registraste tu primer estado emocional"
         );
+
+        return savedMood;
     }
 
     @GetMapping("/today/{userId}")

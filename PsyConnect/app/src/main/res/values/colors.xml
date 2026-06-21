@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <color name="turquesa_principal">#14B8A6</color>
-
     <color name="turquesa_oscuro">#0F766E</color>
 
-    <color name="fondo_login">#F5FFFE</color>
+    <!-- Fondo unificado a Blanco Puro para todas las pantallas -->
+    <color name="fondo_login">#FFFFFF</color>
+    <color name="blanco">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
 
     <color name="gris_texto">#6B7280</color>
-
-    <color name="blanco">#FFFFFF</color>
-
-    <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
-    <color name="turquesa_claro">#E6F8F6</color>
-
+    <!-- Color muy tenue solo para resaltar algunas tarjetas si es necesario -->
+    <color name="turquesa_claro">#F9FAFB</color>
     <color name="turquesa_texto">#0F766E</color>
-
-    <color name="gris_claro">#F8FAFA</color>
+    <color name="gris_claro">#F3F4F6</color>
 
     <color name="status_bar_color">#134E4A</color>
-
-    <color name="navigation_bar_color">#F5FFFE</color>
-
+    <color name="navigation_bar_color">#FFFFFF</color>
 </resources>

@@ -4,7 +4,6 @@ import ni.edu.uam.psyconnect_backend.model.Achievement;
 import ni.edu.uam.psyconnect_backend.repository.AchievementRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,36 +17,34 @@ public class AchievementService {
         this.repository = repository;
     }
 
-    public Achievement unlock(
+    public void unlock(
             Long userId,
-            String badge,
+            String title,
             String description
     ) {
 
         if (
-                repository.existsByUserIdAndBadge(
+                repository.existsByUserIdAndTitle(
                         userId,
-                        badge
+                        title
                 )
         ) {
-            return null;
+            return;
         }
 
         Achievement achievement =
-                new Achievement(
-                        null,
-                        userId,
-                        badge,
-                        description,
-                        LocalDate.now()
-                );
+                new Achievement();
 
-        return repository.save(
+        achievement.setUserId(userId);
+        achievement.setTitle(title);
+        achievement.setDescription(description);
+
+        repository.save(
                 achievement
         );
     }
 
-    public List<Achievement> getUserAchievements(
+    public List<Achievement> getAchievements(
             Long userId
     ) {
         return repository.findByUserId(
