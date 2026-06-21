@@ -1,6 +1,7 @@
 package ni.edu.uam.psyconnect.network
 
 import ni.edu.uam.psyconnect.data.model.AuthResponse
+import ni.edu.uam.psyconnect.data.model.ChangeEmailRequest
 import ni.edu.uam.psyconnect.data.model.ChangePasswordRequest
 import ni.edu.uam.psyconnect.data.model.LoginRequest
 import ni.edu.uam.psyconnect.data.model.Psychologist
@@ -59,8 +60,22 @@ interface ApiService {
         @Path("email") email: String
     ): Response<Boolean>
 
+    @GET(
+        "api/users/exists-username/{username}"
+    )
+    suspend fun existsUsername(
+        @Path("username")
+        username: String
+    ): Response<Boolean>
+
     @POST("api/users/change-password")
     suspend fun changePassword(
         @Body request: ChangePasswordRequest
     ): Response<ResponseBody>
+
+    @POST("api/users/change-email")
+    suspend fun changeEmail(
+        @Body request: ChangeEmailRequest
+    ): Response<ResponseBody>
+
 }

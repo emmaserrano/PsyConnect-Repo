@@ -31,9 +31,16 @@ class ForgotPassword : AppCompatActivity() {
 
         val emailRecibido = intent.getStringExtra("email")
 
-        if (!emailRecibido.isNullOrEmpty()) {
+        val esCorreoValido =
+            !emailRecibido.isNullOrBlank() &&
+                    android.util.Patterns.EMAIL_ADDRESS
+                        .matcher(emailRecibido)
+                        .matches()
+
+        if (esCorreoValido) {
 
             etEmail.setText(emailRecibido)
+
             etEmail.isEnabled = false
 
             tvDescription.text =
@@ -41,8 +48,12 @@ class ForgotPassword : AppCompatActivity() {
 
         } else {
 
+            etEmail.setText("")
+
+            etEmail.isEnabled = true
+
             tvDescription.text =
-                "Ingresa tu correo electrónico y te enviaremos un código para recuperar tu cuenta."
+                "Ingresa el correo asociado a tu cuenta para enviarte un código de recuperación."
 
         }
 
@@ -110,7 +121,7 @@ class ForgotPassword : AppCompatActivity() {
 
                         tvRecoveryMessage.visibility = View.VISIBLE
 
-                        if (!emailRecibido.isNullOrEmpty()) {
+                        if (esCorreoValido) {
 
                             tvRecoveryMessage.text =
                                 "✓ Se ha enviado un código de verificación al correo mostrado."

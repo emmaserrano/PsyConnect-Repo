@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
-import com.google.android.material.switchmaterial.SwitchMaterial
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -23,6 +21,9 @@ class Profile : AppCompatActivity() {
     private lateinit var tvWelcome: TextView
     private lateinit var tvEmail: TextView
     private lateinit var tvAge: TextView
+    private lateinit var tvUsername: TextView
+
+    private lateinit var tvDescription: TextView
 
     private var userId: Long = -1
 
@@ -36,9 +37,14 @@ class Profile : AppCompatActivity() {
         tvEmail = findViewById(R.id.tvEmail)
         tvWelcome = findViewById(R.id.tvWelcome)
         tvAge = findViewById(R.id.tvAge)
+        tvUsername = findViewById(R.id.tvUsername)
+        tvDescription = findViewById(R.id.tvDescription)
 
         val btnEdit =
             findViewById<Button>(R.id.btnEdit)
+
+        val btnSettings =
+            findViewById<Button>(R.id.btnSettings)
 
         val btnLogout =
             findViewById<Button>(R.id.btnLogout)
@@ -104,49 +110,23 @@ class Profile : AppCompatActivity() {
                 -1
             )
 
-        val switchDarkMode =
-            findViewById<SwitchMaterial>(
-                R.id.switchDarkMode
-            )
-
-        val darkModeEnabled =
-            sharedPreferences.getBoolean(
-                "darkMode",
-                false
-            )
-
-        switchDarkMode.isChecked =
-            darkModeEnabled
-
-        switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
-
-            sharedPreferences.edit()
-                .putBoolean(
-                    "darkMode",
-                    isChecked
-                )
-                .apply()
-
-            if (isChecked) {
-
-                AppCompatDelegate.setDefaultNightMode(
-                    AppCompatDelegate.MODE_NIGHT_YES
-                )
-
-            } else {
-
-                AppCompatDelegate.setDefaultNightMode(
-                    AppCompatDelegate.MODE_NIGHT_NO
-                )
-            }
-        }
-
         btnEdit.setOnClickListener {
 
             startActivity(
                 Intent(
                     this,
                     EditProfile::class.java
+                )
+            )
+        }
+
+        btnSettings.setOnClickListener {
+
+            startActivity(
+
+                Intent(
+                    this,
+                    SettingsActivity::class.java
                 )
             )
         }
@@ -245,6 +225,19 @@ class Profile : AppCompatActivity() {
 
                         tvAge.text =
                             "Edad: ${calcularEdad(user.birthdate)}"
+
+                        tvUsername.text =
+                            "Usuario: ${user.username}"
+
+                        tvDescription.text =
+                            if (user.description.isBlank()) {
+
+                                "Aún no has agregado una descripción personal."
+
+                            } else {
+
+                                user.description
+                            }
                     }
 
                 } else {

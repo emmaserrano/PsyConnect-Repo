@@ -12,5 +12,7 @@ data class User(
 
     val password: String,
 
-    val birthdate: String
+    val birthdate: String,
+
+    val description: String = ""
 )
