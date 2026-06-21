@@ -7,6 +7,8 @@ import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -39,6 +41,7 @@ class EditProfile : AppCompatActivity() {
         val tvUsernameStatus = findViewById<TextView>(R.id.tvUsernameStatus)
         val tvNameStatus = findViewById<TextView>(R.id.tvNameStatus)
         val tvChanges = findViewById<TextView>(R.id.tvChanges)
+        val lottieProfileSuccess =findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottieProfileSuccess)
         val tvDescriptionCounter = findViewById<TextView>(R.id.tvDescriptionCounter)
         val btnSave = findViewById<Button>(R.id.btnSave)
 
@@ -426,13 +429,24 @@ class EditProfile : AppCompatActivity() {
 
                     if (response.isSuccessful) {
 
+                        lottieProfileSuccess.visibility =
+                            TextView.VISIBLE
+
+                        lottieProfileSuccess.playAnimation()
+
                         Toast.makeText(
                             this@EditProfile,
-                            "Perfil actualizado",
+                            "Perfil actualizado correctamente",
                             Toast.LENGTH_LONG
                         ).show()
 
-                        finish()
+                        Handler(
+                            Looper.getMainLooper()
+                        ).postDelayed({
+
+                            finish()
+
+                        }, 2000)
 
                     } else {
 
