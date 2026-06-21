@@ -36,6 +36,7 @@ class EditProfile : AppCompatActivity() {
         val etDescription = findViewById<EditText>(R.id.etDescription)
         val etBirthdate = findViewById<EditText>(R.id.etBirthdate)
         val tvUsernameStatus = findViewById<TextView>(R.id.tvUsernameStatus)
+        val tvChanges = findViewById<TextView>(R.id.tvChanges)
         val btnSave = findViewById<Button>(R.id.btnSave)
 
         val userId =
@@ -48,6 +49,25 @@ class EditProfile : AppCompatActivity() {
             )
 
         var currentEmail = ""
+
+        var originalName = ""
+        var originalDescription = ""
+        var originalBirthdate = ""
+
+        fun verificarCambios() {
+
+            val hayCambios =
+                etName.text.toString() != originalName ||
+                        etUsername.text.toString() != usernameOriginal ||
+                        etDescription.text.toString() != originalDescription ||
+                        etBirthdate.text.toString() != originalBirthdate
+
+            tvChanges.visibility =
+                if (hayCambios)
+                    TextView.VISIBLE
+                else
+                    TextView.GONE
+        }
 
         etBirthdate.setOnClickListener {
 
@@ -79,6 +99,8 @@ class EditProfile : AppCompatActivity() {
                         Date(it)
                     )
                 )
+
+                verificarCambios()
             }
         }
 
@@ -96,13 +118,17 @@ class EditProfile : AppCompatActivity() {
                     response.body()?.let { user ->
 
                         usernameOriginal = user.username
+
                         etName.setText(user.name)
                         etUsername.setText(user.username)
                         etDescription.setText(user.description)
                         etBirthdate.setText(user.birthdate)
 
+                        originalName = user.name
+                        originalDescription = user.description ?: ""
+                        originalBirthdate = user.birthdate
+
                         currentEmail = user.email
-                        usernameOriginal = user.username
                     }
                 }
 
@@ -127,6 +153,8 @@ class EditProfile : AppCompatActivity() {
                     before: Int,
                     count: Int
                 ) {
+
+                    verificarCambios()
 
                     val username =
                         s.toString()
@@ -205,6 +233,60 @@ class EditProfile : AppCompatActivity() {
                         } catch (_: Exception) {
                         }
                     }
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {
+                }
+            }
+        )
+
+        etName.addTextChangedListener(
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+                    verificarCambios()
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {
+                }
+            }
+        )
+
+        etDescription.addTextChangedListener(
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+                    verificarCambios()
                 }
 
                 override fun afterTextChanged(
