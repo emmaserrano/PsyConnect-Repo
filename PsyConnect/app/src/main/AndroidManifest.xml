@@ -47,6 +47,8 @@
         <activity android:name=".ui.screens.AboutActivity"/>
         <activity android:name=".ui.screens.ChangeEmail" />
         <activity android:name=".ui.screens.SecurityActivity" />
+        <activity android:name=".ui.screens.MoodHistoryActivity" />
+        <activity android:name=".ui.screens.AchievementsActivity" />
     </application>
 
 </manifest>

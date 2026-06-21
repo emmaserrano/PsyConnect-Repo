@@ -60,6 +60,14 @@
             android:backgroundTint="@color/turquesa_principal"
             android:layout_marginBottom="14dp"/>
 
+        <TextView
+            android:id="@+id/tvUsernameStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:visibility="gone"
+            android:layout_marginBottom="10dp"/>
+
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
@@ -69,6 +77,14 @@
             android:padding="16dp"
             android:backgroundTint="@color/turquesa_principal"
             android:layout_marginBottom="14dp"/>
+
+        <TextView
+            android:id="@+id/tvEmailStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:visibility="gone"
+            android:layout_marginBottom="10dp"/>
 
         <Button
             android:id="@+id/btnSendCode"

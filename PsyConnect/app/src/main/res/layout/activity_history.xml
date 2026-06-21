@@ -1,285 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/fondo_login"
+    tools:context=".ui.screens.History">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📈 Mi progreso"
-                android:textSize="30sp"
-                android:textStyle="bold"/>
+                android:text="Resumen de Progreso"
+                android:textColor="@color/turquesa_oscuro"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvInsight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="#6B7280"
-                android:textSize="16sp"/>
-
-
-            <!-- FILA 1 -->
-
-            <LinearLayout
+            <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:orientation="horizontal">
+                android:columnCount="2">
 
+                <!-- Promedio -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardCornerRadius="24dp">
-
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="8dp"
+                    app:cardBackgroundColor="@color/blanco"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="2dp">
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="18dp"
-                        android:orientation="vertical">
-
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="🌿 Promedio"
-                            android:textStyle="bold"/>
-
+                            android:textColor="@color/gris_texto"
+                            android:textStyle="bold" />
                         <TextView
                             android:id="@+id/tvAverage"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:textColor="@color/turquesa_oscuro"
-                            android:textSize="34sp"
-                            android:textStyle="bold"/>
-
+                            android:layout_marginTop="8dp"
+                            android:text="0%"
+                            android:textColor="@color/turquesa_principal"
+                            android:textSize="32sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
-
                 </androidx.cardview.widget.CardView>
 
-
+                <!-- Mejor -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    app:cardCornerRadius="24dp">
-
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="8dp"
+                    app:cardBackgroundColor="@color/blanco"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="2dp">
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="18dp"
-                        android:orientation="vertical">
-
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="🏆 Mejor"
-                            android:textStyle="bold"/>
-
+                            android:textColor="@color/gris_texto"
+                            android:textStyle="bold" />
                         <TextView
                             android:id="@+id/tvBest"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:textColor="#16A34A"
-                            android:textSize="34sp"
-                            android:textStyle="bold"/>
-
+                            android:layout_marginTop="8dp"
+                            android:text="0%"
+                            android:textColor="#4CAF50"
+                            android:textSize="32sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
-
                 </androidx.cardview.widget.CardView>
 
-            </LinearLayout>
-
-
-            <!-- FILA 2 -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
+                <!-- Tests -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardCornerRadius="24dp">
-
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="8dp"
+                    app:cardBackgroundColor="@color/blanco"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="2dp">
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="18dp"
-                        android:orientation="vertical">
-
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="📝 Tests"
-                            android:textStyle="bold"/>
-
+                            android:textColor="@color/gris_texto"
+                            android:textStyle="bold" />
                         <TextView
                             android:id="@+id/tvTotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:textColor="#9333EA"
-                            android:textSize="34sp"
-                            android:textStyle="bold"/>
-
+                            android:layout_marginTop="8dp"
+                            android:text="0"
+                            android:textColor="#BB86FC"
+                            android:textSize="32sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
-
                 </androidx.cardview.widget.CardView>
 
-
+                <!-- Área fuerte -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="140dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    app:cardCornerRadius="24dp">
-
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="8dp"
+                    app:cardBackgroundColor="@color/blanco"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="2dp">
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="18dp"
-                        android:orientation="vertical">
-
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="⭐ Área fuerte"
-                            android:textStyle="bold"/>
-
+                            android:textColor="@color/gris_texto"
+                            android:textStyle="bold" />
                         <TextView
                             android:id="@+id/tvFavorite"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:textColor="#F59E0B"
+                            android:layout_marginTop="8dp"
+                            android:text="-"
+                            android:textColor="#FFB74D"
                             android:textSize="20sp"
-                            android:textStyle="bold"/>
-
+                            android:textStyle="bold" />
                     </LinearLayout>
-
                 </androidx.cardview.widget.CardView>
 
+            </GridLayout>
+
+            <TextView
+                android:id="@+id/tvInsight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:textColor="@color/gris_texto"
+                android:textSize="16sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Promedio por categoría"
+                android:textColor="@color/turquesa_oscuro"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- Categorías con sus barras de progreso (IDs vinculados a History.kt) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical">
+
+                <TextView android:id="@+id/tvWellness" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/gris_texto" android:layout_marginTop="8dp"/>
+                <ProgressBar android:id="@+id/progressWellness" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:progressTint="@color/turquesa_principal"/>
+
+                <TextView android:id="@+id/tvStress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/gris_texto" android:layout_marginTop="8dp"/>
+                <ProgressBar android:id="@+id/progressStress" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:progressTint="@color/turquesa_principal"/>
+
+                <TextView android:id="@+id/tvSleep" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/gris_texto" android:layout_marginTop="8dp"/>
+                <ProgressBar android:id="@+id/progressSleep" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:progressTint="@color/turquesa_principal"/>
+
+                <TextView android:id="@+id/tvMood" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/gris_texto" android:layout_marginTop="8dp"/>
+                <ProgressBar android:id="@+id/progressMood" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:progressTint="@color/turquesa_principal"/>
+
+                <TextView android:id="@+id/tvSocial" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/gris_texto" android:layout_marginTop="8dp"/>
+                <ProgressBar android:id="@+id/progressSocial" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:progressTint="@color/turquesa_principal"/>
             </LinearLayout>
 
-
-            <!-- PROMEDIOS POR CATEGORÍA -->
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Promedio por categoría"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:layout_marginTop="30dp"/>
-
-
-            <TextView
-                android:id="@+id/tvWellness"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🌿 Bienestar"/>
-
-            <ProgressBar
-                android:id="@+id/progressWellness"
-                style="?android:attr/progressBarStyleHorizontal"
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="12dp"
-                android:max="100"/>
-
-
-            <TextView
-                android:id="@+id/tvStress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="😌 Estrés"/>
-
-            <ProgressBar
-                android:id="@+id/progressStress"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="12dp"
-                android:max="100"/>
-
-
-            <TextView
-                android:id="@+id/tvSleep"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="😴 Sueño"/>
-
-            <ProgressBar
-                android:id="@+id/progressSleep"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="12dp"
-                android:max="100"/>
-
-
-            <TextView
-                android:id="@+id/tvMood"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="😊 Estado de ánimo"/>
-
-            <ProgressBar
-                android:id="@+id/progressMood"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="12dp"
-                android:max="100"/>
-
-
-            <TextView
-                android:id="@+id/tvSocial"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="🤝 Relaciones"/>
-
-            <ProgressBar
-                android:id="@+id/progressSocial"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="12dp"
-                android:max="100"/>
-
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:background="@color/gris_claro" />
 
             <!-- HISTORIAL -->
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:text="Resultados recientes"
-                android:textStyle="bold"
+                android:textColor="@color/turquesa_oscuro"
                 android:textSize="22sp"
-                android:layout_marginTop="32dp"/>
+                android:textStyle="bold" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroupCategories"
@@ -290,50 +230,64 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipAll"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Todos"
                     android:checked="true"
-                    android:checkable="true"
-                    app:checkedIconVisible="false"
-                    app:chipBackgroundColor="@color/chip_selector"/>
+                    android:text="Todos"
+                    android:textColor="@color/chip_text_selector"
+                    app:chipBackgroundColor="@color/chip_selector"
+                    app:checkedIconVisible="false"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipWellness"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Bienestar"
-                    android:checkable="true"
-                    app:checkedIconVisible="false"
-                    app:chipBackgroundColor="@color/chip_selector"/>
+                    android:textColor="@color/chip_text_selector"
+                    app:chipBackgroundColor="@color/chip_selector"
+                    app:checkedIconVisible="false"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipStress"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Estrés"
-                    android:checkable="true"
-                    app:checkedIconVisible="false"
-                    app:chipBackgroundColor="@color/chip_selector"/>
-                />
+                    android:textColor="@color/chip_text_selector"
+                    app:chipBackgroundColor="@color/chip_selector"
+                    app:checkedIconVisible="false"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipSleep"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sueño"/>
+                    android:text="Sueño"
+                    android:textColor="@color/chip_text_selector"
+                    app:chipBackgroundColor="@color/chip_selector"
+                    app:checkedIconVisible="false"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipMood"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ánimo"/>
+                    android:text="Ánimo"
+                    android:textColor="@color/chip_text_selector"
+                    app:chipBackgroundColor="@color/chip_selector"
+                    app:checkedIconVisible="false"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipRelationships"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Relaciones"/>
+                    android:text="Relaciones"
+                    android:textColor="@color/chip_text_selector"
+                    app:chipBackgroundColor="@color/chip_selector"
+                    app:checkedIconVisible="false"/>
 
             </com.google.android.material.chip.ChipGroup>
 
@@ -341,17 +295,23 @@
                 android:id="@+id/recyclerResults"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
+                android:layout_marginTop="16dp"
+                android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
-
     </ScrollView>
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:menu="@menu/bottom_nav_menu"/>
+        android:layout_height="85dp"
+        android:background="@color/fondo_login"
+        app:backgroundTint="@color/fondo_login"
+        app:elevation="0dp"
+        app:itemIconSize="28dp"
+        app:itemIconTint="@color/nav_item_selector"
+        app:itemTextColor="@color/nav_item_selector"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu" />
 
 </LinearLayout>

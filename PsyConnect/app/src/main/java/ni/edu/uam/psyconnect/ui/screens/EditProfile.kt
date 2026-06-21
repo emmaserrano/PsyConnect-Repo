@@ -7,6 +7,11 @@ import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.os.Handler
+import android.os.Looper
+import android.net.Uri
+import android.widget.ImageView
+import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +28,8 @@ import java.util.TimeZone
 class EditProfile : AppCompatActivity() {
 
     private var usernameDisponible = true
+    private var nombreValido = true
+    private var selectedImageUri: Uri? = null
     private var usernameOriginal = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +43,12 @@ class EditProfile : AppCompatActivity() {
         val etDescription = findViewById<EditText>(R.id.etDescription)
         val etBirthdate = findViewById<EditText>(R.id.etBirthdate)
         val tvUsernameStatus = findViewById<TextView>(R.id.tvUsernameStatus)
+        val tvNameStatus = findViewById<TextView>(R.id.tvNameStatus)
+        val tvChanges = findViewById<TextView>(R.id.tvChanges)
+        val lottieProfileSuccess =findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottieProfileSuccess)
+        val tvDescriptionCounter = findViewById<TextView>(R.id.tvDescriptionCounter)
         val btnSave = findViewById<Button>(R.id.btnSave)
+        val imgProfile = findViewById<ImageView>(R.id.imgProfile)
 
         val userId =
             getSharedPreferences(
@@ -47,7 +59,48 @@ class EditProfile : AppCompatActivity() {
                 -1
             )
 
+        val imagePicker =
+            registerForActivityResult(
+                ActivityResultContracts.GetContent()
+            ) { uri ->
+
+                if (uri != null) {
+
+                    selectedImageUri = uri
+
+                    imgProfile.setImageURI(
+                        uri
+                    )
+                }
+            }
+        imgProfile.setOnClickListener {
+
+            imagePicker.launch(
+                "image/*"
+            )
+        }
+
+
         var currentEmail = ""
+
+        var originalName = ""
+        var originalDescription = ""
+        var originalBirthdate = ""
+
+        fun verificarCambios() {
+
+            val hayCambios =
+                etName.text.toString() != originalName ||
+                        etUsername.text.toString() != usernameOriginal ||
+                        etDescription.text.toString() != originalDescription ||
+                        etBirthdate.text.toString() != originalBirthdate
+
+            tvChanges.visibility =
+                if (hayCambios)
+                    TextView.VISIBLE
+                else
+                    TextView.GONE
+        }
 
         etBirthdate.setOnClickListener {
 
@@ -79,6 +132,8 @@ class EditProfile : AppCompatActivity() {
                         Date(it)
                     )
                 )
+
+                verificarCambios()
             }
         }
 
@@ -96,13 +151,32 @@ class EditProfile : AppCompatActivity() {
                     response.body()?.let { user ->
 
                         usernameOriginal = user.username
+
                         etName.setText(user.name)
                         etUsername.setText(user.username)
                         etDescription.setText(user.description)
+                        tvDescriptionCounter.text = "${etDescription.text.length}/100"
                         etBirthdate.setText(user.birthdate)
 
+                        originalName = user.name
+                        originalDescription = user.description ?: ""
+                        originalBirthdate = user.birthdate
+
                         currentEmail = user.email
-                        usernameOriginal = user.username
+
+                        if (
+                            !user.profileImage.isNullOrBlank()
+                        ) {
+
+                            selectedImageUri =
+                                Uri.parse(
+                                    user.profileImage
+                                )
+
+                            imgProfile.setImageURI(
+                                selectedImageUri
+                            )
+                        }
                     }
                 }
 
@@ -127,6 +201,8 @@ class EditProfile : AppCompatActivity() {
                     before: Int,
                     count: Int
                 ) {
+
+                    verificarCambios()
 
                     val username =
                         s.toString()
@@ -214,7 +290,147 @@ class EditProfile : AppCompatActivity() {
             }
         )
 
+        etName.addTextChangedListener(
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+                    verificarCambios()
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {
+                }
+            }
+        )
+
+        etName.addTextChangedListener(
+
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+
+                    verificarCambios()
+
+                    val nombre =
+                        s.toString().trim()
+
+                    if (
+                        nombre.length < 3
+                    ) {
+
+                        tvNameStatus.visibility =
+                            TextView.VISIBLE
+
+                        tvNameStatus.text =
+                            "❌ Ingresa un nombre válido"
+
+                        tvNameStatus.setTextColor(
+                            Color.RED
+                        )
+
+                        nombreValido = false
+
+                        btnSave.isEnabled = false
+
+                    } else {
+
+                        tvNameStatus.visibility =
+                            TextView.VISIBLE
+
+                        tvNameStatus.text =
+                            "✅ Nombre válido"
+
+                        tvNameStatus.setTextColor(
+                            Color.parseColor(
+                                "#2E7D32"
+                            )
+                        )
+
+                        nombreValido = true
+
+                        btnSave.isEnabled =
+                            usernameDisponible
+                    }
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {
+                }
+            }
+        )
+
+        etDescription.addTextChangedListener(
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+
+                    verificarCambios()
+
+                    tvDescriptionCounter.text =
+                        "${s?.length ?: 0}/100"
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {
+                }
+            }
+        )
+
         btnSave.setOnClickListener {
+            if (
+                !nombreValido
+            ) {
+
+                Toast.makeText(
+                    this,
+                    "Ingresa un nombre válido",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                return@setOnClickListener
+            }
 
             if (
                 !usernameDisponible
@@ -241,7 +457,8 @@ class EditProfile : AppCompatActivity() {
                             email = currentEmail,
                             password = "",
                             birthdate = etBirthdate.text.toString(),
-                            description = etDescription.text.toString()
+                            description = etDescription.text.toString(),
+                            profileImage = selectedImageUri?.toString()
                         )
 
                     val response =
@@ -254,13 +471,24 @@ class EditProfile : AppCompatActivity() {
 
                     if (response.isSuccessful) {
 
+                        lottieProfileSuccess.visibility =
+                            TextView.VISIBLE
+
+                        lottieProfileSuccess.playAnimation()
+
                         Toast.makeText(
                             this@EditProfile,
-                            "Perfil actualizado",
+                            "Perfil actualizado correctamente",
                             Toast.LENGTH_LONG
                         ).show()
 
-                        finish()
+                        Handler(
+                            Looper.getMainLooper()
+                        ).postDelayed({
+
+                            finish()
+
+                        }, 2000)
 
                     } else {
 
