@@ -100,18 +100,57 @@ public class UserService {
                         )
                 );
     }
-    public User updateUser(Long id, User updatedUser) {
+    public User updateUser(
+            Long id,
+            User updatedUser
+    ) {
 
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        User user =
+                userRepository.findById(id)
+                        .orElseThrow(
+                                () -> new RuntimeException(
+                                        "Usuario no encontrado"
+                                )
+                        );
 
-        user.setName(updatedUser.getName());
-        user.setUsername(updatedUser.getUsername());
-        user.setEmail(updatedUser.getEmail());
-        user.setBirthdate(updatedUser.getBirthdate());
-        user.setDescription(updatedUser.getDescription());
+        if (
+                !user.getUsername().equals(
+                        updatedUser.getUsername()
+                )
+                        &&
+                        userRepository.existsByUsername(
+                                updatedUser.getUsername()
+                        )
+        ) {
 
-        return userRepository.save(user);
+            throw new RuntimeException(
+                    "El nombre de usuario ya está en uso"
+            );
+        }
+
+        user.setName(
+                updatedUser.getName()
+        );
+
+        user.setUsername(
+                updatedUser.getUsername()
+        );
+
+        user.setEmail(
+                updatedUser.getEmail()
+        );
+
+        user.setBirthdate(
+                updatedUser.getBirthdate()
+        );
+
+        user.setDescription(
+                updatedUser.getDescription()
+        );
+
+        return userRepository.save(
+                user
+        );
     }
 
     public void resetPassword(
