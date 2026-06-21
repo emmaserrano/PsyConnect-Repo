@@ -162,14 +162,14 @@ class DynamicTestActivity : AppCompatActivity() {
 
                 } else {
 
-                    val score =
-                        answers.sum()
+                    val score = answers.sum()
 
-                    val maxScore =
-                        questions.size * 5
+                    val maxScore = questions.size * 5
 
                     val percentage =
-                        (score * 100) / maxScore
+                        ((score.toFloat() / maxScore.toFloat()) * 100)
+                            .toInt()
+                            .coerceIn(0, 100)
 
                     val intent =
                         Intent(
@@ -178,13 +178,23 @@ class DynamicTestActivity : AppCompatActivity() {
                         )
 
                     intent.putExtra(
-                        "percentage",
-                        percentage
+                        "category",
+                        category
                     )
 
                     intent.putExtra(
-                        "category",
-                        category
+                        "score",
+                        score
+                    )
+
+                    intent.putExtra(
+                        "maxScore",
+                        maxScore
+                    )
+
+                    intent.putExtra(
+                        "percentage",
+                        percentage
                     )
 
                     startActivity(

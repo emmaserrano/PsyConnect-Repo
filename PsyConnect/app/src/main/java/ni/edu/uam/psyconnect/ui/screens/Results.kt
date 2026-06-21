@@ -66,6 +66,18 @@ class Results : AppCompatActivity() {
                 0
             )
 
+        val score =
+            intent.getIntExtra(
+                "score",
+                0
+            )
+
+        val maxScore =
+            intent.getIntExtra(
+                "maxScore",
+                0
+            )
+
         val category =
             intent.getStringExtra(
                 "category"
@@ -78,7 +90,11 @@ class Results : AppCompatActivity() {
             )
 
         tvScore.text =
-            "Resultado obtenido: $percentage %"
+            """
+    Puntaje: $score / $maxScore
+
+    Resultado obtenido: $percentage %
+    """.trimIndent()
 
         tvTitle.text =
             feedback.title
@@ -176,7 +192,17 @@ class Results : AppCompatActivity() {
                 ) {
 
                     println(
-                        "Resultado guardado correctamente"
+                        """
+    Resultado guardado
+
+    Categoría: $category
+
+    Puntaje: $score/$maxScore
+
+    Porcentaje: $percentage%
+
+    Nivel: $level
+    """.trimIndent()
                     )
 
                 } else {
