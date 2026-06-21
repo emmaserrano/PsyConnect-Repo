@@ -1,5 +1,6 @@
 package ni.edu.uam.psyconnect.network
 
+import ni.edu.uam.psyconnect.data.model.Achievement
 import ni.edu.uam.psyconnect.data.model.AuthResponse
 import ni.edu.uam.psyconnect.data.model.ChangeEmailRequest
 import ni.edu.uam.psyconnect.data.model.ChangePasswordRequest
@@ -76,4 +77,7 @@ interface ApiService {
 
     @GET("api/moods/user/{userId}")
     suspend fun getMoodHistory(@Path("userId") userId: Long): Response<List<Mood>>
+
+    @GET("api/achievements/{userId}")
+    suspend fun getAchievements(@Path("userId") userId: Long): Response<List<Achievement>>
 }

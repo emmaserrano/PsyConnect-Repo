@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAFC">
+    android:background="@color/fondo_login">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,22 +18,23 @@
             android:text="📧 Cambiar correo electrónico"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:textColor="#0F766E"/>
+            android:textColor="@color/turquesa_oscuro"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Actualiza tu correo y protege tu cuenta verificando la nueva dirección."
             android:textSize="15sp"
-            android:textColor="#64748B"
+            android:textColor="@color/gris_texto"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="24dp"/>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/blanco"
             app:cardCornerRadius="20dp"
-            app:cardElevation="8dp">
+            app:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:text="Nuevo correo"
                     android:textStyle="bold"
-                    android:textColor="#334155"/>
+                    android:textColor="@color/turquesa_oscuro"/>
 
                 <EditText
                     android:id="@+id/etNewEmail"
@@ -55,6 +55,7 @@
                     android:layout_height="55dp"
                     android:layout_marginTop="8dp"
                     android:hint="correo@ejemplo.com"
+                    android:textColorHint="@color/gris_texto"
                     android:inputType="textEmailAddress"/>
 
                 <TextView
@@ -80,14 +81,14 @@
                     android:layout_height="55dp"
                     android:layout_marginTop="20dp"
                     android:text="Enviar código de verificación"
-                    android:backgroundTint="#14B8A6"/>
+                    android:backgroundTint="@color/turquesa_principal"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Código recibido"
                     android:textStyle="bold"
-                    android:textColor="#334155"
+                    android:textColor="@color/turquesa_oscuro"
                     android:layout_marginTop="24dp"/>
 
                 <EditText
@@ -96,6 +97,7 @@
                     android:layout_height="55dp"
                     android:layout_marginTop="8dp"
                     android:hint="Ingresa el código"
+                    android:textColorHint="@color/gris_texto"
                     android:inputType="number"/>
 
                 <TextView
@@ -113,7 +115,7 @@
                     android:layout_height="55dp"
                     android:text="Verificar y actualizar correo"
                     android:layout_marginTop="24dp"
-                    android:backgroundTint="#0F766E"/>
+                    android:backgroundTint="@color/turquesa_oscuro"/>
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/lottieSuccess"
@@ -132,8 +134,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="🔒 Tu correo se utilizará para recuperar tu cuenta y recibir notificaciones importantes."
-            android:textColor="#64748B"
+            android:text="🔒 Tu correo se utilizará para recuperar tu cuenta."
+            android:textColor="@color/gris_texto"
             android:textStyle="italic"
             android:layout_marginTop="20dp"/>
 

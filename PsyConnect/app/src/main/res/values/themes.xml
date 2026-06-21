@@ -28,4 +28,8 @@
         name="Theme.PsyConnect"
         parent="Base.Theme.PsyConnect" />
 
+    <style name="CircleImage" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
+
 </resources>

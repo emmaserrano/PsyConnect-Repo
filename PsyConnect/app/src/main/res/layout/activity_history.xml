@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#121212"
+    android:background="@color/fondo_login"
     tools:context=".ui.screens.History">
 
     <ScrollView
@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Resumen de Progreso"
-                android:textColor="@android:color/white"
+                android:textColor="@color/turquesa_oscuro"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -39,8 +39,9 @@
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
-                    app:cardBackgroundColor="#2A2A2A"
-                    app:cardCornerRadius="16dp">
+                    app:cardBackgroundColor="@color/blanco"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -50,7 +51,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="🌿 Promedio"
-                            android:textColor="#E0E0E0"
+                            android:textColor="@color/gris_texto"
                             android:textStyle="bold" />
                         <TextView
                             android:id="@+id/tvAverage"
@@ -70,8 +71,9 @@
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
-                    app:cardBackgroundColor="#2A2A2A"
-                    app:cardCornerRadius="16dp">
+                    app:cardBackgroundColor="@color/blanco"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -81,7 +83,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="🏆 Mejor"
-                            android:textColor="#E0E0E0"
+                            android:textColor="@color/gris_texto"
                             android:textStyle="bold" />
                         <TextView
                             android:id="@+id/tvBest"
@@ -101,8 +103,9 @@
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
-                    app:cardBackgroundColor="#2A2A2A"
-                    app:cardCornerRadius="16dp">
+                    app:cardBackgroundColor="@color/blanco"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -112,7 +115,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="📝 Tests"
-                            android:textColor="#E0E0E0"
+                            android:textColor="@color/gris_texto"
                             android:textStyle="bold" />
                         <TextView
                             android:id="@+id/tvTotal"
@@ -132,8 +135,9 @@
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
-                    app:cardBackgroundColor="#2A2A2A"
-                    app:cardCornerRadius="16dp">
+                    app:cardBackgroundColor="@color/blanco"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -143,7 +147,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="⭐ Área fuerte"
-                            android:textColor="#E0E0E0"
+                            android:textColor="@color/gris_texto"
                             android:textStyle="bold" />
                         <TextView
                             android:id="@+id/tvFavorite"
@@ -165,7 +169,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:textColor="#BDBDBD"
+                android:textColor="@color/gris_texto"
                 android:textSize="16sp"
                 android:textStyle="italic" />
 
@@ -174,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Promedio por categoría"
-                android:textColor="@android:color/white"
+                android:textColor="@color/turquesa_oscuro"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -185,19 +189,19 @@
                 android:layout_marginTop="12dp"
                 android:orientation="vertical">
 
-                <TextView android:id="@+id/tvWellness" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#E0E0E0" android:layout_marginTop="8dp"/>
+                <TextView android:id="@+id/tvWellness" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/gris_texto" android:layout_marginTop="8dp"/>
                 <ProgressBar android:id="@+id/progressWellness" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:progressTint="@color/turquesa_principal"/>
 
-                <TextView android:id="@+id/tvStress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#E0E0E0" android:layout_marginTop="8dp"/>
+                <TextView android:id="@+id/tvStress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/gris_texto" android:layout_marginTop="8dp"/>
                 <ProgressBar android:id="@+id/progressStress" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:progressTint="@color/turquesa_principal"/>
 
-                <TextView android:id="@+id/tvSleep" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#E0E0E0" android:layout_marginTop="8dp"/>
+                <TextView android:id="@+id/tvSleep" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/gris_texto" android:layout_marginTop="8dp"/>
                 <ProgressBar android:id="@+id/progressSleep" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:progressTint="@color/turquesa_principal"/>
 
-                <TextView android:id="@+id/tvMood" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#E0E0E0" android:layout_marginTop="8dp"/>
+                <TextView android:id="@+id/tvMood" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/gris_texto" android:layout_marginTop="8dp"/>
                 <ProgressBar android:id="@+id/progressMood" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:progressTint="@color/turquesa_principal"/>
 
-                <TextView android:id="@+id/tvSocial" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#E0E0E0" android:layout_marginTop="8dp"/>
+                <TextView android:id="@+id/tvSocial" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/gris_texto" android:layout_marginTop="8dp"/>
                 <ProgressBar android:id="@+id/progressSocial" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:progressTint="@color/turquesa_principal"/>
             </LinearLayout>
 
@@ -205,7 +209,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="24dp"
-                android:background="#333333" />
+                android:background="@color/gris_claro" />
 
             <!-- HISTORIAL -->
             <TextView
@@ -213,7 +217,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="Resultados recientes"
-                android:textColor="@android:color/white"
+                android:textColor="@color/turquesa_oscuro"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -301,7 +305,7 @@
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#1A1A1A"
+        android:background="@color/blanco"
         app:itemIconTint="@color/turquesa_principal"
         app:itemTextColor="@color/turquesa_principal"
         app:menu="@menu/bottom_nav_menu" />
