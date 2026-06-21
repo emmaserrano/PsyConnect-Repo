@@ -3,6 +3,9 @@ package ni.edu.uam.psyconnect.ui.screens
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -76,9 +79,39 @@ class Home : AppCompatActivity() {
                             moodResponse.body() == false
                         ) {
 
-                            mostrarDialogoMood(
-                                userId
-                            )
+                            val prefs =
+                                getSharedPreferences(
+                                    "psyconnect",
+                                    MODE_PRIVATE
+                                )
+
+                            val hoy =
+                                SimpleDateFormat(
+                                    "yyyy-MM-dd",
+                                    Locale.getDefault()
+                                ).format(
+                                    Date()
+                                )
+
+                            val ultimaFechaMood =
+                                prefs.getString(
+                                    "ultimaFechaMood",
+                                    ""
+                                )
+
+                            if (
+                                ultimaFechaMood != hoy
+                            ) {
+
+                                mostrarDialogoMood(userId)
+
+                                prefs.edit()
+                                    .putString(
+                                        "ultimaFechaMood",
+                                        hoy
+                                    )
+                                    .apply()
+                            }
                         }
                     }
 
