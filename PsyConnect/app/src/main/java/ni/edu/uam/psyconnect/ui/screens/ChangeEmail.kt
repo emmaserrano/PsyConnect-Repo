@@ -14,44 +14,24 @@ import ni.edu.uam.psyconnect.network.RetrofitClient
 
 class ChangeEmail : AppCompatActivity() {
 
+
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
 
         super.onCreate(savedInstanceState)
 
-        setContentView(
-            R.layout.activity_change_email
-        )
+        setContentView(R.layout.activity_change_email)
 
-        val etNewEmail =
-            findViewById<EditText>(
-                R.id.etNewEmail
-            )
+        val etNewEmail = findViewById<EditText>(R.id.etNewEmail)
 
-        val etCode =
-            findViewById<EditText>(
-                R.id.etCode
-            )
+        val etCode = findViewById<EditText>(R.id.etCode)
 
-        val btnSendCode =
-            findViewById<Button>(
-                R.id.btnSendCode
-            )
+        val btnSendCode = findViewById<Button>(R.id.btnSendCode)
 
-        val btnVerify =
-            findViewById<Button>(
-                R.id.btnVerify
-            )
+        val btnVerify = findViewById<Button>(R.id.btnVerify)
 
-        val userId =
-            getSharedPreferences(
-                "psyconnect",
-                MODE_PRIVATE
-            ).getLong(
-                "userId",
-                -1
-            )
+        val userId = getSharedPreferences("psyconnect", MODE_PRIVATE).getLong("userId", -1)
 
         btnSendCode.setOnClickListener {
 
