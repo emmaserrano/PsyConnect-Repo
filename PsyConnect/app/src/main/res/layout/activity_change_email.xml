@@ -2,8 +2,10 @@
 
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F8FAFC">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,45 +16,99 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="📧 Cambiar correo"
-            android:textSize="28sp"
-            android:textStyle="bold"/>
-
-        <EditText
-            android:id="@+id/etNewEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="Nuevo correo"/>
+            android:text="📧 Cambiar correo electrónico"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="#0F766E"/>
 
         <TextView
-            android:id="@+id/tvEmailStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:visibility="gone"
-            android:layout_marginTop="4dp"/>
+            android:text="Actualiza tu correo y protege tu cuenta verificando la nueva dirección."
+            android:textSize="15sp"
+            android:textColor="#64748B"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp"/>
 
-        <Button
-            android:id="@+id/btnSendCode"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enviar código"
-            android:layout_marginTop="12dp"/>
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp">
 
-        <EditText
-            android:id="@+id/etCode"
-            android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nuevo correo"
+                    android:textStyle="bold"
+                    android:textColor="#334155"/>
+
+                <EditText
+                    android:id="@+id/etNewEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="correo@ejemplo.com"
+                    android:inputType="textEmailAddress"/>
+
+                <TextView
+                    android:id="@+id/tvEmailStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    android:layout_marginTop="8dp"/>
+
+                <Button
+                    android:id="@+id/btnSendCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Enviar código de verificación"
+                    android:backgroundTint="#14B8A6"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Código recibido"
+                    android:textStyle="bold"
+                    android:textColor="#334155"
+                    android:layout_marginTop="24dp"/>
+
+                <EditText
+                    android:id="@+id/etCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="Ingresa el código"
+                    android:inputType="number"/>
+
+                <Button
+                    android:id="@+id/btnVerify"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:text="Verificar y actualizar correo"
+                    android:layout_marginTop="24dp"
+                    android:backgroundTint="#0F766E"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Código recibido"
+            android:text="🔒 Tu correo se utilizará para recuperar tu cuenta y recibir notificaciones importantes."
+            android:textColor="#64748B"
+            android:textStyle="italic"
             android:layout_marginTop="20dp"/>
-
-        <Button
-            android:id="@+id/btnVerify"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Verificar y actualizar"
-            android:layout_marginTop="12dp"/>
 
     </LinearLayout>
 

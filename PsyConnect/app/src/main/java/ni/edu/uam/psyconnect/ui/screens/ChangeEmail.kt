@@ -1,13 +1,14 @@
 package ni.edu.uam.psyconnect.ui.screens
 
-import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
 import android.graphics.Color
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ import ni.edu.uam.psyconnect.network.RetrofitClient
 
 class ChangeEmail : AppCompatActivity() {
 
+    private var emailDisponible = true
 
     override fun onCreate(
         savedInstanceState: Bundle?
@@ -25,18 +27,46 @@ class ChangeEmail : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_change_email)
+        setContentView(
+            R.layout.activity_change_email
+        )
 
-        val etNewEmail = findViewById<EditText>(R.id.etNewEmail)
-        val tvEmailStatus = findViewById<TextView>(R.id.tvEmailStatus)
+        val etNewEmail =
+            findViewById<EditText>(
+                R.id.etNewEmail
+            )
 
-        val etCode = findViewById<EditText>(R.id.etCode)
+        val tvEmailStatus =
+            findViewById<TextView>(
+                R.id.tvEmailStatus
+            )
 
-        val btnSendCode = findViewById<Button>(R.id.btnSendCode)
+        val etCode =
+            findViewById<EditText>(
+                R.id.etCode
+            )
 
-        val btnVerify = findViewById<Button>(R.id.btnVerify)
+        val btnSendCode =
+            findViewById<Button>(
+                R.id.btnSendCode
+            )
 
-        val userId = getSharedPreferences("psyconnect", MODE_PRIVATE).getLong("userId", -1)
+        val btnVerify =
+            findViewById<Button>(
+                R.id.btnVerify
+            )
+
+        btnSendCode.isEnabled = false
+        btnVerify.isEnabled = false
+
+        val userId =
+            getSharedPreferences(
+                "psyconnect",
+                MODE_PRIVATE
+            ).getLong(
+                "userId",
+                -1
+            )
 
         etNewEmail.addTextChangedListener(
 
@@ -60,10 +90,48 @@ class ChangeEmail : AppCompatActivity() {
                     val email =
                         s.toString().trim()
 
-                    if (email.isBlank()) {
+                    if (
+                        email.isBlank()
+                    ) {
 
                         tvEmailStatus.visibility =
-                            TextView.GONE
+                            View.GONE
+
+                        btnSendCode.isEnabled =
+                            false
+
+                        btnVerify.isEnabled =
+                            false
+
+                        return
+                    }
+
+                    if (
+                        !android.util.Patterns.EMAIL_ADDRESS
+                            .matcher(email)
+                            .matches()
+                    ) {
+
+                        tvEmailStatus.visibility =
+                            View.VISIBLE
+
+                        tvEmailStatus.text =
+                            "⚠ Correo inválido"
+
+                        tvEmailStatus.setTextColor(
+                            Color.parseColor(
+                                "#F57C00"
+                            )
+                        )
+
+                        emailDisponible =
+                            false
+
+                        btnSendCode.isEnabled =
+                            false
+
+                        btnVerify.isEnabled =
+                            false
 
                         return
                     }
@@ -84,7 +152,7 @@ class ChangeEmail : AppCompatActivity() {
                             ) {
 
                                 tvEmailStatus.visibility =
-                                    TextView.VISIBLE
+                                    View.VISIBLE
 
                                 tvEmailStatus.text =
                                     "❌ Correo ya registrado"
@@ -96,10 +164,16 @@ class ChangeEmail : AppCompatActivity() {
                                 emailDisponible =
                                     false
 
+                                btnSendCode.isEnabled =
+                                    false
+
+                                btnVerify.isEnabled =
+                                    false
+
                             } else {
 
                                 tvEmailStatus.visibility =
-                                    TextView.VISIBLE
+                                    View.VISIBLE
 
                                 tvEmailStatus.text =
                                     "✅ Correo disponible"
@@ -111,6 +185,12 @@ class ChangeEmail : AppCompatActivity() {
                                 )
 
                                 emailDisponible =
+                                    true
+
+                                btnSendCode.isEnabled =
+                                    true
+
+                                btnVerify.isEnabled =
                                     true
                             }
 
@@ -127,6 +207,7 @@ class ChangeEmail : AppCompatActivity() {
         )
 
         btnSendCode.setOnClickListener {
+
             if (
                 !emailDisponible
             ) {
@@ -171,18 +252,6 @@ class ChangeEmail : AppCompatActivity() {
         }
 
         btnVerify.setOnClickListener {
-            if (
-                !emailDisponible
-            ) {
-
-                Toast.makeText(
-                    this,
-                    "Debes ingresar un correo disponible",
-                    Toast.LENGTH_LONG
-                ).show()
-
-                return@setOnClickListener
-            }
 
             lifecycleScope.launch {
 
@@ -235,7 +304,7 @@ class ChangeEmail : AppCompatActivity() {
                             Toast.makeText(
                                 this@ChangeEmail,
                                 response.errorBody()?.string()
-                                    ?: "No se pudo actualizar el correo",
+                                    ?: "No se pudo actualizar",
                                 Toast.LENGTH_LONG
                             ).show()
                         }
