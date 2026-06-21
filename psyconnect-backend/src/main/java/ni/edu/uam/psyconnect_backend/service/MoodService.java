@@ -1,0 +1,35 @@
+package ni.edu.uam.psyconnect_backend.service;
+
+import ni.edu.uam.psyconnect_backend.model.Mood;
+import ni.edu.uam.psyconnect_backend.repository.MoodRepository;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+@Service
+public class MoodService {
+
+    private final MoodRepository moodRepository;
+
+    public MoodService(
+            MoodRepository moodRepository
+    ) {
+        this.moodRepository = moodRepository;
+    }
+
+    public Mood saveMood(
+            Mood mood
+    ) {
+        return moodRepository.save(mood);
+    }
+
+    public Optional<Mood> getTodayMood(
+            Long userId
+    ) {
+        return moodRepository.findByUserIdAndDate(
+                userId,
+                LocalDate.now()
+        );
+    }
+}
