@@ -33,6 +33,8 @@ class Register : AppCompatActivity() {
 
     private var emailVerificado = false
     private var countDownTimer: CountDownTimer? = null
+    private var usernameDisponible = false
+    private var emailDisponible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +42,9 @@ class Register : AppCompatActivity() {
 
         val etName = findViewById<EditText>(R.id.etName)
         val etUsername = findViewById<EditText>(R.id.etUsername)
+        val tvUsernameStatus = findViewById<TextView>(R.id.tvUsernameStatus)
         val etEmail = findViewById<EditText>(R.id.etEmail)
+        val tvEmailStatus = findViewById<TextView>(R.id.tvEmailStatus)
         val etVerificationCode = findViewById<EditText>(R.id.etVerificationCode)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val etBirthdate = findViewById<EditText>(R.id.etBirthdate)
@@ -89,10 +93,190 @@ class Register : AppCompatActivity() {
         tvPasswordStrength.text = ""
         tvPasswordRequirements.text = ""
 
+        etUsername.addTextChangedListener(
+
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {}
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+
+                    val username =
+                        s.toString()
+
+                    if (username.isBlank()) {
+
+                        tvUsernameStatus.visibility =
+                            TextView.GONE
+
+                        usernameDisponible = false
+
+                        return
+                    }
+
+                    lifecycleScope.launch {
+
+                        try {
+
+                            val response =
+                                RetrofitClient
+                                    .apiService
+                                    .existsUsername(
+                                        username
+                                    )
+
+                            if (
+                                response.body() == true
+                            ) {
+
+                                tvUsernameStatus.visibility =
+                                    TextView.VISIBLE
+
+                                tvUsernameStatus.text =
+                                    "❌ Nombre de usuario ocupado"
+
+                                tvUsernameStatus.setTextColor(
+                                    Color.RED
+                                )
+
+                                usernameDisponible = false
+
+                            } else {
+
+                                tvUsernameStatus.visibility =
+                                    TextView.VISIBLE
+
+                                tvUsernameStatus.text =
+                                    "✅ Nombre de usuario disponible"
+
+                                tvUsernameStatus.setTextColor(
+                                    Color.parseColor(
+                                        "#2E7D32"
+                                    )
+                                )
+
+                                usernameDisponible = true
+                            }
+
+                        } catch (_: Exception) {}
+                    }
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {}
+            }
+        )
+
+        etEmail.addTextChangedListener(
+
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {}
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+
+                    val email =
+                        s.toString()
+
+                    if (email.isBlank()) {
+
+                        tvEmailStatus.visibility =
+                            TextView.GONE
+
+                        emailDisponible = false
+
+                        return
+                    }
+
+                    lifecycleScope.launch {
+
+                        try {
+
+                            val response =
+                                RetrofitClient
+                                    .apiService
+                                    .existsEmail(
+                                        email
+                                    )
+
+                            if (
+                                response.body() == true
+                            ) {
+
+                                tvEmailStatus.visibility =
+                                    TextView.VISIBLE
+
+                                tvEmailStatus.text =
+                                    "❌ Correo ya registrado"
+
+                                tvEmailStatus.setTextColor(
+                                    Color.RED
+                                )
+
+                                emailDisponible = false
+
+                            } else {
+
+                                tvEmailStatus.visibility =
+                                    TextView.VISIBLE
+
+                                tvEmailStatus.text =
+                                    "✅ Correo disponible"
+
+                                tvEmailStatus.setTextColor(
+                                    Color.parseColor(
+                                        "#2E7D32"
+                                    )
+                                )
+
+                                emailDisponible = true
+                            }
+
+                        } catch (_: Exception) {}
+                    }
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {}
+            }
+        )
+
         btnSendCode.setOnClickListener {
             val email = etEmail.text.toString().trim()
             if (email.isEmpty()) {
                 mostrarAlerta("Campo requerido", "Por favor, ingresa un correo electrónico.")
+                return@setOnClickListener
+            }
+
+            if (!emailDisponible) {
+
+                mostrarAlerta(
+                    "Correo ocupado",
+                    "Debes ingresar un correo disponible."
+                )
+
                 return@setOnClickListener
             }
 
@@ -226,6 +410,16 @@ class Register : AppCompatActivity() {
 
             if (!cbTerms.isChecked) {
                 mostrarAlerta("Términos y condiciones", "Debes aceptar los términos para continuar.")
+                return@setOnClickListener
+            }
+
+            if (!usernameDisponible) {
+                mostrarAlerta("Usuario ocupado", "Selecciona otro nombre de usuario.")
+                return@setOnClickListener
+            }
+
+            if (!emailDisponible) {
+                mostrarAlerta("Correo ocupado", "Selecciona otro correo.")
                 return@setOnClickListener
             }
 
