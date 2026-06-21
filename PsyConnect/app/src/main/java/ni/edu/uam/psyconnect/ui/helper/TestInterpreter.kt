@@ -88,69 +88,44 @@ object TestInterpreter {
 
         return when {
 
-            percentage >= 90 ->
+            percentage >= 75 ->
 
                 EmotionalFeedback(
-                    "Excelente manejo del estrés",
-                    "Demuestras una gran capacidad para afrontar situaciones difíciles y mantener el equilibrio emocional.",
+                    "Estrés elevado",
+                    "Actualmente podrías estar experimentando altos niveles de estrés que están afectando tu bienestar emocional.",
                     listOf(
-                        "Continúa con tus hábitos saludables.",
-                        "Comparte tus estrategias con otras personas.",
-                        "Mantén espacios de descanso."
+                        "Practica ejercicios de respiración profunda.",
+                        "Reduce cargas innecesarias cuando sea posible.",
+                        "Programa momentos de descanso durante el día.",
+                        "Considera buscar apoyo profesional si el estrés persiste."
                     ),
-                    R.raw.happy
-                )
-
-            percentage >= 70 ->
-
-                EmotionalFeedback(
-                    "Estrés leve",
-                    "Presentas pequeñas señales de tensión que aún son manejables.",
-                    listOf(
-                        "Programa pausas activas.",
-                        "Mantén horarios organizados.",
-                        "Realiza actividad física."
-                    ),
-                    R.raw.calm
+                    R.raw.stress
                 )
 
             percentage >= 50 ->
 
                 EmotionalFeedback(
                     "Estrés moderado",
-                    "Las responsabilidades comienzan a afectar tu bienestar emocional.",
+                    "Se observan algunas señales de tensión emocional que conviene atender.",
                     listOf(
-                        "Aprende técnicas de respiración.",
-                        "Reduce actividades innecesarias.",
-                        "Dedica tiempo a descansar."
+                        "Organiza tus actividades por prioridades.",
+                        "Haz pausas breves durante tus jornadas.",
+                        "Dedica tiempo a actividades relajantes."
                     ),
                     R.raw.calm
-                )
-
-            percentage >= 30 ->
-
-                EmotionalFeedback(
-                    "Estrés alto",
-                    "El estrés está teniendo un impacto importante en tu bienestar.",
-                    listOf(
-                        "Habla con alguien de confianza.",
-                        "Evita sobrecargarte.",
-                        "Prioriza tu descanso."
-                    ),
-                    R.raw.stress
                 )
 
             else ->
 
                 EmotionalFeedback(
-                    "Estrés muy alto",
-                    "Existe una elevada carga emocional que merece atención.",
+                    "Buen manejo del estrés",
+                    "Actualmente manejas adecuadamente las situaciones de presión y tensión.",
                     listOf(
-                        "Busca apoyo psicológico.",
-                        "Reduce las fuentes de presión.",
-                        "No ignores estos síntomas."
+                        "Mantén tus hábitos saludables.",
+                        "Continúa equilibrando trabajo y descanso.",
+                        "Sigue practicando actividades que favorezcan tu bienestar."
                     ),
-                    R.raw.stress
+                    R.raw.happy
                 )
         }
     }

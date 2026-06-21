@@ -51,12 +51,42 @@ class Results : AppCompatActivity() {
         // =========================
         // COLOR SEGÚN RESULTADO
         // =========================
-        val color = when {
-            percentage >= 75 -> "#2E7D32" // verde
-            percentage >= 50 -> "#F9A825" // amarillo
-            percentage >= 30 -> "#EF6C00" // naranja
-            else -> "#C62828" // rojo
-        }
+        val color =
+
+            if (category == "STRESS") {
+
+                when {
+
+                    percentage >= 75 ->
+                        "#C62828"
+
+                    percentage >= 50 ->
+                        "#EF6C00"
+
+                    percentage >= 30 ->
+                        "#F9A825"
+
+                    else ->
+                        "#2E7D32"
+                }
+
+            } else {
+
+                when {
+
+                    percentage >= 75 ->
+                        "#2E7D32"
+
+                    percentage >= 50 ->
+                        "#F9A825"
+
+                    percentage >= 30 ->
+                        "#EF6C00"
+
+                    else ->
+                        "#C62828"
+                }
+            }
 
         tvScore.setTextColor(Color.parseColor(color))
         tvTitle.setTextColor(Color.parseColor(color))
