@@ -4,6 +4,10 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import android.graphics.Color
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -24,6 +28,7 @@ class ChangeEmail : AppCompatActivity() {
         setContentView(R.layout.activity_change_email)
 
         val etNewEmail = findViewById<EditText>(R.id.etNewEmail)
+        val tvEmailStatus = findViewById<TextView>(R.id.tvEmailStatus)
 
         val etCode = findViewById<EditText>(R.id.etCode)
 
@@ -33,6 +38,94 @@ class ChangeEmail : AppCompatActivity() {
 
         val userId = getSharedPreferences("psyconnect", MODE_PRIVATE).getLong("userId", -1)
 
+        etNewEmail.addTextChangedListener(
+
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+
+                    val email =
+                        s.toString().trim()
+
+                    if (email.isBlank()) {
+
+                        tvEmailStatus.visibility =
+                            TextView.GONE
+
+                        return
+                    }
+
+                    lifecycleScope.launch {
+
+                        try {
+
+                            val response =
+                                RetrofitClient
+                                    .apiService
+                                    .existsEmail(
+                                        email
+                                    )
+
+                            if (
+                                response.body() == true
+                            ) {
+
+                                tvEmailStatus.visibility =
+                                    TextView.VISIBLE
+
+                                tvEmailStatus.text =
+                                    "❌ Correo ya registrado"
+
+                                tvEmailStatus.setTextColor(
+                                    Color.RED
+                                )
+
+                                emailDisponible =
+                                    false
+
+                            } else {
+
+                                tvEmailStatus.visibility =
+                                    TextView.VISIBLE
+
+                                tvEmailStatus.text =
+                                    "✅ Correo disponible"
+
+                                tvEmailStatus.setTextColor(
+                                    Color.parseColor(
+                                        "#2E7D32"
+                                    )
+                                )
+
+                                emailDisponible =
+                                    true
+                            }
+
+                        } catch (_: Exception) {
+                        }
+                    }
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {
+                }
+            }
+        )
+        
         btnSendCode.setOnClickListener {
 
             lifecycleScope.launch {
