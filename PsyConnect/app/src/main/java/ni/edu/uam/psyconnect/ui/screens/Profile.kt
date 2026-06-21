@@ -3,10 +3,12 @@ package ni.edu.uam.psyconnect.ui.screens
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
@@ -14,9 +16,6 @@ import ni.edu.uam.psyconnect.network.RetrofitClient
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import android.widget.ImageView
-import com.bumptech.glide.Glide
-
 
 class Profile : AppCompatActivity() {
 
@@ -25,10 +24,9 @@ class Profile : AppCompatActivity() {
     private lateinit var tvWelcome: TextView
     private lateinit var tvAge: TextView
     private lateinit var tvUsername: TextView
-    private lateinit var btnMoodHistory: Button
-    private lateinit var btnAchievements: Button
     private lateinit var tvDescription: TextView
     private lateinit var imgProfile: ImageView
+    
     private var userId: Long = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,13 +41,15 @@ class Profile : AppCompatActivity() {
         tvUsername = findViewById(R.id.tvUsername)
         tvDescription = findViewById(R.id.tvDescription)
         imgProfile = findViewById(R.id.imgProfile)
-
+        
+        // Inicialización de botones (Ahora con 'val' para que sean variables locales correctas)
         val btnEdit = findViewById<Button>(R.id.btnEdit)
         val btnSettings = findViewById<Button>(R.id.btnSettings)
         val btnLogout = findViewById<Button>(R.id.btnLogout)
-        btnMoodHistory = findViewById(R.id.btnMoodHistory)
-        btnAchievements = findViewById(R.id.btnAchievements)
+        val btnMoodHistory = findViewById<Button>(R.id.btnMoodHistory)
+        val btnAchievements = findViewById<Button>(R.id.btnAchievements)
 
+        // Configuración de navegación inferior
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         bottomNav.selectedItemId = R.id.nav_profile
 
@@ -73,6 +73,7 @@ class Profile : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
         userId = sharedPreferences.getLong("userId", -1)
 
+        // Eventos de clic
         btnEdit.setOnClickListener {
             startActivity(Intent(this, EditProfile::class.java))
         }
@@ -85,20 +86,15 @@ class Profile : AppCompatActivity() {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
-        btnLogout.setOnClickListener {
-            sharedPreferences.edit().remove("userId").apply()
-            startActivity(Intent(this, Login::class.java))
-            finish()
+        btnAchievements.setOnClickListener {
+            // Corregido: El nombre de la clase es AchievementsActivity
+            startActivity(Intent(this, AchievementsActivity::class.java))
         }
 
-        btnAchievements.setOnClickListener {
-
-            startActivity(
-                Intent(
-                    this,
-                    AchievementsActivity::class.java
-                )
-            )
+        btnLogout.setOnClickListener {
+            sharedPreferences.edit { remove("userId") }
+            startActivity(Intent(this, Login::class.java))
+            finish()
         }
     }
 
@@ -109,21 +105,13 @@ class Profile : AppCompatActivity() {
 
     private fun calcularEdad(fechaNacimiento: String?): String {
         if (fechaNacimiento.isNullOrBlank()) return "No registrada"
-
         return try {
             val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val fecha = formato.parse(fechaNacimiento) ?: return "No registrada"
-
-            val nacimiento = Calendar.getInstance()
-            nacimiento.time = fecha
-
+            val nacimiento = Calendar.getInstance().apply { time = fecha }
             val hoy = Calendar.getInstance()
             var edad = hoy.get(Calendar.YEAR) - nacimiento.get(Calendar.YEAR)
-
-            if (hoy.get(Calendar.DAY_OF_YEAR) < nacimiento.get(Calendar.DAY_OF_YEAR)) {
-                edad--
-            }
-
+            if (hoy.get(Calendar.DAY_OF_YEAR) < nacimiento.get(Calendar.DAY_OF_YEAR)) edad--
             "$edad años"
         } catch (e: Exception) {
             "No registrada"
@@ -132,40 +120,32 @@ class Profile : AppCompatActivity() {
 
     private fun loadProfile() {
         if (userId == -1L) return
-
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.apiService.getUserById(userId)
-
                 if (response.isSuccessful) {
                     val user = response.body()
-                    if (user != null) {
-                        tvName.text = user.name
-                        tvUsernameHeader.text = "@${user.username}"
-                        tvWelcome.text = "Hola ${user.name}, gracias por cuidar de tu bienestar hoy."
-                        tvAge.text = "Edad: ${calcularEdad(user.birthdate)}"
-                        tvUsername.text = "Usuario: ${user.username}"
+                    user?.let {
+                        tvName.text = it.name
+                        tvUsernameHeader.text = "@${it.username}"
+                        tvWelcome.text = "Hola ${it.name}, gracias por cuidar de tu bienestar hoy."
+                        tvAge.text = "Edad: ${calcularEdad(it.birthdate)}"
+                        tvUsername.text = "Usuario: ${it.username}"
                         
-                        tvDescription.text = user.description.takeIf { it.isNotBlank() } 
-                            ?: "Aún no has agregado una descripción personal."
+                        tvDescription.text = it.description.takeIf { d -> d.isNotBlank() } 
+                            ?: "Aún no has agregado una descripción."
 
-                        if (!user.profileImage.isNullOrBlank()) {
+                        if (!it.profileImage.isNullOrBlank()) {
                             Glide.with(this@Profile)
-                                .load(user.profileImage)
+                                .load(it.profileImage)
                                 .placeholder(R.mipmap.ic_launcher_round)
-                                .error(R.mipmap.ic_launcher_round)
+                                .circleCrop()
                                 .into(imgProfile)
                         }
                     }
-                } else {
-                    Toast.makeText(
-                        this@Profile,
-                        "No pudimos cargar tu información. Intenta más tarde.",
-                        Toast.LENGTH_LONG
-                    ).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@Profile, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                e.printStackTrace()
             }
         }
     }

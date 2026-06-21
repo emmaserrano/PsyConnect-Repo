@@ -11,20 +11,19 @@ import java.util.List;
 @CrossOrigin("*")
 public class AchievementController {
 
-    private final AchievementService achievementService;
+    private final AchievementService service;
 
     public AchievementController(
-            AchievementService achievementService
+            AchievementService service
     ) {
-        this.achievementService = achievementService;
+        this.service = service;
     }
 
     @GetMapping("/{userId}")
     public List<Achievement> getAchievements(
             @PathVariable Long userId
     ) {
-
-        return achievementService.getAchievements(
+        return service.getAchievements(
                 userId
         );
     }

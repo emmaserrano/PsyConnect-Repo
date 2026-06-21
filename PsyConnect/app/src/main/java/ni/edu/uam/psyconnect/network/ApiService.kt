@@ -80,4 +80,5 @@ interface ApiService {
 
     @GET("api/achievements/{userId}")
     suspend fun getAchievements(@Path("userId") userId: Long): Response<List<Achievement>>
+
 }

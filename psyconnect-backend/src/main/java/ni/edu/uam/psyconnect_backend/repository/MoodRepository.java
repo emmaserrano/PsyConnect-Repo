@@ -15,7 +15,7 @@ public interface MoodRepository
             LocalDate date
     );
 
-    List<Mood> findByUserIdOrderByDateDesc(
+    List<Mood> findAllByUserIdOrderByDateAsc(
             Long userId
     );
 }

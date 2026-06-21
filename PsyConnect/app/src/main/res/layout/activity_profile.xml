@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,10 +7,11 @@
     android:orientation="vertical"
     android:background="@color/fondo_login">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,7 +19,6 @@
             android:orientation="vertical">
 
             <!-- ================= HEADER ================= -->
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="260dp"
@@ -63,19 +62,17 @@
                     android:textSize="15sp"
                     android:gravity="center"
                     android:paddingHorizontal="20dp"/>
-
             </LinearLayout>
 
-
             <!-- TARJETA BIENVENIDA -->
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 app:cardBackgroundColor="@color/blanco"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="24dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -98,22 +95,19 @@
                         android:textColor="@color/gris_texto"
                         android:textSize="16sp"
                         android:layout_marginTop="8dp"/>
-
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-
             <!-- INFORMACIÓN -->
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="20dp"
                 app:cardBackgroundColor="@color/blanco"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="24dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -162,37 +156,35 @@
                         android:textSize="15sp"
                         android:layout_marginTop="6dp"
                         android:textColor="@color/gris_texto"/>
-
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-
             <!-- ACCIONES -->
-
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="20dp"
                 app:cardBackgroundColor="@color/blanco"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="24dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp">
+                    android:padding="12dp">
 
                     <Button
                         android:id="@+id/btnEdit"
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
-                        android:text="Editar perfil"
+                        android:text="EDITAR PERFIL"
                         android:textColor="@color/turquesa_principal"
                         android:textAlignment="viewStart"
+                        android:textStyle="bold"
                         app:icon="@drawable/ic_edit"
                         app:iconPadding="12dp"
                         app:iconTint="@color/turquesa_principal"/>
@@ -202,11 +194,24 @@
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
-                        android:layout_marginTop="10dp"
-                        android:text="Ajustes"
+                        android:text="AJUSTES"
                         android:textColor="@color/turquesa_principal"
                         android:textAlignment="viewStart"
+                        android:textStyle="bold"
                         app:icon="@drawable/ic_settings"
+                        app:iconPadding="12dp"
+                        app:iconTint="@color/turquesa_principal"/>
+
+                    <Button
+                        android:id="@+id/btnMoodHistory"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:text="HISTORIAL EMOCIONAL"
+                        android:textColor="@color/turquesa_principal"
+                        android:textAlignment="viewStart"
+                        android:textStyle="bold"
+                        app:icon="@drawable/ic_history"
                         app:iconPadding="12dp"
                         app:iconTint="@color/turquesa_principal"/>
 
@@ -214,25 +219,14 @@
                         android:id="@+id/btnAchievements"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
-                        android:text="Mis Insignias"/>
-
-                    <Button
-                        android:id="@+id/btnMoodHistory"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="55dp"
                         android:layout_marginTop="10dp"
-                        android:text="Historial emocional"
-                        android:textColor="@color/turquesa_principal"
-                        android:textAlignment="viewStart"
-                        app:icon="@drawable/ic_history"
-                        app:iconPadding="12dp"
-                        app:iconTint="@color/turquesa_principal"/>
-
+                        android:text="MIS INSIGNIAS"
+                        android:textStyle="bold"
+                        app:cornerRadius="28dp"
+                        android:backgroundTint="@color/turquesa_principal"
+                        android:textColor="@android:color/white"/>
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
-
 
             <Button
                 android:id="@+id/btnLogout"
@@ -243,18 +237,19 @@
                 android:text="Cerrar sesión"
                 android:backgroundTint="#B00020"
                 android:textColor="@android:color/white"/>
-
         </LinearLayout>
-
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/blanco"
-        app:itemIconTint="@color/turquesa_principal"
-        app:itemTextColor="@color/turquesa_principal"
+        android:layout_height="80dp"
+        android:background="@color/fondo_login"
+        app:backgroundTint="@color/fondo_login"
+        app:elevation="0dp"
+        app:itemIconSize="26dp"
+        app:itemIconTint="@color/nav_item_selector"
+        app:itemTextColor="@color/nav_item_selector"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu"/>
-
 </LinearLayout>

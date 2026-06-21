@@ -21,7 +21,19 @@ public class MoodService {
     public Mood saveMood(
             Mood mood
     ) {
-        return moodRepository.save(mood);
+
+        if (
+                mood.getDate() == null
+        ) {
+
+            mood.setDate(
+                    LocalDate.now()
+            );
+        }
+
+        return moodRepository.save(
+                mood
+        );
     }
 
     public Optional<Mood> getTodayMood(
@@ -37,8 +49,9 @@ public class MoodService {
             Long userId
     ) {
         return moodRepository
-                .findByUserIdOrderByDateDesc(
+                .findAllByUserIdOrderByDateAsc(
                         userId
                 );
     }
+
 }
