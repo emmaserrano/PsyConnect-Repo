@@ -9,6 +9,9 @@ import android.widget.EditText
 import android.widget.TextView
 import android.os.Handler
 import android.os.Looper
+import android.net.Uri
+import android.widget.ImageView
+import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +29,7 @@ class EditProfile : AppCompatActivity() {
 
     private var usernameDisponible = true
     private var nombreValido = true
+    private var selectedImageUri: Uri? = null
     private var usernameOriginal = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +48,7 @@ class EditProfile : AppCompatActivity() {
         val lottieProfileSuccess =findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.lottieProfileSuccess)
         val tvDescriptionCounter = findViewById<TextView>(R.id.tvDescriptionCounter)
         val btnSave = findViewById<Button>(R.id.btnSave)
+        val imgProfile = findViewById<ImageView>(R.id.imgProfile)
 
         val userId =
             getSharedPreferences(
@@ -53,6 +58,28 @@ class EditProfile : AppCompatActivity() {
                 "userId",
                 -1
             )
+
+        val imagePicker =
+            registerForActivityResult(
+                ActivityResultContracts.GetContent()
+            ) { uri ->
+
+                if (uri != null) {
+
+                    selectedImageUri = uri
+
+                    imgProfile.setImageURI(
+                        uri
+                    )
+                }
+            }
+        imgProfile.setOnClickListener {
+
+            imagePicker.launch(
+                "image/*"
+            )
+        }
+
 
         var currentEmail = ""
 
@@ -136,6 +163,20 @@ class EditProfile : AppCompatActivity() {
                         originalBirthdate = user.birthdate
 
                         currentEmail = user.email
+
+                        if (
+                            !user.profileImage.isNullOrBlank()
+                        ) {
+
+                            selectedImageUri =
+                                Uri.parse(
+                                    user.profileImage
+                                )
+
+                            imgProfile.setImageURI(
+                                selectedImageUri
+                            )
+                        }
                     }
                 }
 
@@ -416,7 +457,8 @@ class EditProfile : AppCompatActivity() {
                             email = currentEmail,
                             password = "",
                             birthdate = etBirthdate.text.toString(),
-                            description = etDescription.text.toString()
+                            description = etDescription.text.toString(),
+                            profileImage = selectedImageUri?.toString()
                         )
 
                     val response =

@@ -14,5 +14,8 @@ data class User(
 
     val birthdate: String,
 
+    val profileImage: String? = null,
+
     val description: String = ""
+
 )
