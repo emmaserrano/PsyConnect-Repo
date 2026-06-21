@@ -95,6 +95,7 @@ class EditProfile : AppCompatActivity() {
 
                     response.body()?.let { user ->
 
+                        usernameOriginal = user.username
                         etName.setText(user.name)
                         etUsername.setText(user.username)
                         etDescription.setText(user.description)
