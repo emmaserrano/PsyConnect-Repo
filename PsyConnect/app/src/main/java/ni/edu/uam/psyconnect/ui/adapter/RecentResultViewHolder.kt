@@ -1,14 +1,23 @@
 package ni.edu.uam.psyconnect.ui.adapter
 
+import android.graphics.Color
 import android.view.View
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.TestResult
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class RecentResultViewHolder(
     itemView: View
 ) : RecyclerView.ViewHolder(itemView) {
+
+    private val card =
+        itemView.findViewById<CardView>(
+            R.id.cardResult
+        )
 
     private val tvCategory =
         itemView.findViewById<TextView>(
@@ -46,9 +55,56 @@ class RecentResultViewHolder(
             result.level
 
         tvDate.text =
-            result.createdAt
-                ?.substring(0, 10)
-                ?: "-"
+            formatearFecha(
+                result.createdAt
+            )
+
+        when {
+
+            result.percentage >= 80 -> {
+
+                card.setCardBackgroundColor(
+                    Color.parseColor("#ECFDF5")
+                )
+
+                tvLevel.setTextColor(
+                    Color.parseColor("#059669")
+                )
+            }
+
+            result.percentage >= 60 -> {
+
+                card.setCardBackgroundColor(
+                    Color.parseColor("#FEFCE8")
+                )
+
+                tvLevel.setTextColor(
+                    Color.parseColor("#CA8A04")
+                )
+            }
+
+            result.percentage >= 40 -> {
+
+                card.setCardBackgroundColor(
+                    Color.parseColor("#FFF7ED")
+                )
+
+                tvLevel.setTextColor(
+                    Color.parseColor("#EA580C")
+                )
+            }
+
+            else -> {
+
+                card.setCardBackgroundColor(
+                    Color.parseColor("#FEF2F2")
+                )
+
+                tvLevel.setTextColor(
+                    Color.parseColor("#DC2626")
+                )
+            }
+        }
     }
 
     private fun traducirCategoria(
@@ -57,17 +113,51 @@ class RecentResultViewHolder(
 
         return when (category) {
 
-            "WELLNESS" -> "🌿 Bienestar"
+            "WELLNESS" ->
+                "🌿 Bienestar"
 
-            "STRESS" -> "😌 Estrés"
+            "STRESS" ->
+                "😌 Estrés"
 
-            "SLEEP" -> "😴 Sueño"
+            "SLEEP" ->
+                "😴 Sueño"
 
-            "MOOD" -> "😊 Estado de ánimo"
+            "MOOD" ->
+                "😊 Estado de ánimo"
 
-            "SELF_ESTEEM" -> "💜 Autoestima"
+            "SELF_ESTEEM" ->
+                "💜 Autoestima"
 
-            else -> "🤝 Relaciones"
+            "RELATIONSHIPS" ->
+                "🤝 Relaciones"
+
+            else ->
+                "📊 General"
+        }
+    }
+
+    private fun formatearFecha(
+        fecha: String?
+    ): String {
+
+        return try {
+
+            fecha
+                ?.replace(
+                    "T",
+                    " "
+                )
+                ?.substring(
+                    0,
+                    16
+                )
+                ?: "-"
+
+        } catch (
+            e: Exception
+        ) {
+
+            "-"
         }
     }
 }

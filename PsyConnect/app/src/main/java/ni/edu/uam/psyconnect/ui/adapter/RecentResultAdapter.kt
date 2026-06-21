@@ -27,7 +27,7 @@ class RecentResultAdapter(
         )
     }
 
-    override fun getItemCount() =
+    override fun getItemCount(): Int =
         results.size
 
     override fun onBindViewHolder(
