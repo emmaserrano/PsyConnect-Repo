@@ -107,6 +107,25 @@ public class UserController {
         );
     }
 
+    @GetMapping(
+            "/exists-username/{username}"
+    )
+    public ResponseEntity<Boolean>
+    existsUsername(
+
+            @PathVariable
+            String username
+    ) {
+
+        return ResponseEntity.ok(
+
+                userService
+                        .existsByUsername(
+                                username
+                        )
+        );
+    }
+
     @PostMapping(
             "/change-password"
     )
