@@ -46,7 +46,7 @@ class SettingsActivity : AppCompatActivity() {
 
                 Intent(
                     this,
-                    ChangePassword::class.java
+                    SecurityActivity::class.java
                 )
             )
         }

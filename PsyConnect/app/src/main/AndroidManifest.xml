@@ -45,6 +45,7 @@
         <activity android:name=".ui.screens.SettingsActivity"/>
         <activity android:name=".ui.screens.AppearanceActivity"/>
         <activity android:name=".ui.screens.AboutActivity"/>
+        <activity android:name=".ui.screens.ChangeEmail" />
     </application>
 
 </manifest>
