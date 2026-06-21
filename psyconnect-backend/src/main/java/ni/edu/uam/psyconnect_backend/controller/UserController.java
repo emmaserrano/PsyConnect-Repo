@@ -1,13 +1,10 @@
 package ni.edu.uam.psyconnect_backend.controller;
 
-import ni.edu.uam.psyconnect_backend.dto.ChangePasswordRequest;
-import ni.edu.uam.psyconnect_backend.dto.LoginRequest;
-import ni.edu.uam.psyconnect_backend.dto.LoginResponse;
+import ni.edu.uam.psyconnect_backend.dto.*;
 import ni.edu.uam.psyconnect_backend.model.User;
 import ni.edu.uam.psyconnect_backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import ni.edu.uam.psyconnect_backend.dto.ResetPasswordRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -131,6 +128,28 @@ public class UserController {
 
         return ResponseEntity.ok(
                 "Contraseña actualizada"
+        );
+    }
+
+    @PostMapping(
+            "/change-email"
+    )
+    public ResponseEntity<String>
+    changeEmail(
+
+            @RequestBody
+            ChangeEmailRequest request
+    ) {
+
+        userService.changeEmail(
+
+                request.getUserId(),
+
+                request.getNewEmail()
+        );
+
+        return ResponseEntity.ok(
+                "Correo actualizado"
         );
     }
 }

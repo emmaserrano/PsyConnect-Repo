@@ -191,4 +191,38 @@ public class UserService {
         );
     }
 
+    public void changeEmail(
+            Long userId,
+            String newEmail
+    ) {
+
+        if (
+                userRepository.existsByEmail(
+                        newEmail
+                )
+        ) {
+
+            throw new RuntimeException(
+                    "El correo ya está registrado"
+            );
+        }
+
+        User user =
+                userRepository.findById(userId)
+                        .orElseThrow(
+                                () ->
+                                        new RuntimeException(
+                                                "Usuario no encontrado"
+                                        )
+                        );
+
+        user.setEmail(
+                newEmail
+        );
+
+        userRepository.save(
+                user
+        );
+    }
+
 }
