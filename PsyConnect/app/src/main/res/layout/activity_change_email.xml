@@ -66,6 +66,14 @@
                     android:visibility="gone"
                     android:layout_marginTop="8dp"/>
 
+                <ProgressBar
+                    android:id="@+id/progressEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"/>
+
                 <Button
                     android:id="@+id/btnSendCode"
                     android:layout_width="match_parent"
@@ -90,6 +98,15 @@
                     android:hint="Ingresa el código"
                     android:inputType="number"/>
 
+                <TextView
+                    android:id="@+id/tvCodeStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:layout_marginTop="8dp"/>
+
                 <Button
                     android:id="@+id/btnVerify"
                     android:layout_width="match_parent"
@@ -97,6 +114,16 @@
                     android:text="Verificar y actualizar correo"
                     android:layout_marginTop="24dp"
                     android:backgroundTint="#0F766E"/>
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/lottieSuccess"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/email_success"/>
 
             </LinearLayout>
 
