@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Color cuando está seleccionado (Turquesa) -->
     <item android:color="@color/turquesa_principal" android:state_checked="true"/>
-    <!-- Color cuando NO está seleccionado (Gris oscuro para que no brille tanto) -->
-    <item android:color="#2D2D2D"/>
+    <item android:color="#444444"/>
 </selector>

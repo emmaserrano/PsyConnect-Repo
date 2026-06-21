@@ -3,7 +3,7 @@ package ni.edu.uam.psyconnect_backend.service;
 import ni.edu.uam.psyconnect_backend.model.Mood;
 import ni.edu.uam.psyconnect_backend.repository.MoodRepository;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -31,5 +31,14 @@ public class MoodService {
                 userId,
                 LocalDate.now()
         );
+    }
+
+    public List<Mood> getMoodHistory(
+            Long userId
+    ) {
+        return moodRepository
+                .findByUserIdOrderByDateDesc(
+                        userId
+                );
     }
 }

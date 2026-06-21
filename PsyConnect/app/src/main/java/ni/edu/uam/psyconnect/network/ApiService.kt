@@ -73,4 +73,7 @@ interface ApiService {
 
     @GET("api/moods/today/{userId}")
     suspend fun hasMoodToday(@Path("userId") userId: Long): Response<Boolean>
+
+    @GET("api/moods/user/{userId}")
+    suspend fun getMoodHistory(@Path("userId") userId: Long): Response<List<Mood>>
 }

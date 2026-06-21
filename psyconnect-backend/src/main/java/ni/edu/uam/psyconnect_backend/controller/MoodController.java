@@ -4,7 +4,7 @@ import ni.edu.uam.psyconnect_backend.model.Mood;
 import ni.edu.uam.psyconnect_backend.service.MoodService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -42,5 +42,15 @@ public class MoodController {
         return ResponseEntity.ok(
                 mood.isPresent()
         );
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<Mood> getMoodHistory(
+            @PathVariable Long userId
+    ) {
+        return moodService
+                .getMoodHistory(
+                        userId
+                );
     }
 }
