@@ -22,6 +22,8 @@ public class User {
 
     private LocalDate birthdate;
 
+    private String profileImage;
+
     @Column(length = 500)
     private String description;
 
@@ -35,7 +37,8 @@ public class User {
             String email,
             String password,
             LocalDate birthdate,
-            String description
+            String description,
+            String profileImage
     ) {
         this.id = id;
         this.name = name;
@@ -44,6 +47,7 @@ public class User {
         this.password = password;
         this.birthdate = birthdate;
         this.description = description;
+        this.profileImage = profileImage;
     }
 
     public Long getId() {
@@ -94,9 +98,9 @@ public class User {
         return description;
     }
 
-    public void setDescription(
-            String description
-    ) {
-        this.description = description;
-    }
+    public void setDescription(String description) {this.description = description;}
+
+    public String getProfileImage() {return profileImage;}
+
+    public void setProfileImage(String profileImage) {this.profileImage = profileImage;}
 }
