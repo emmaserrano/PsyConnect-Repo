@@ -125,8 +125,20 @@ class ChangeEmail : AppCompatActivity() {
                 }
             }
         )
-        
+
         btnSendCode.setOnClickListener {
+            if (
+                !emailDisponible
+            ) {
+
+                Toast.makeText(
+                    this,
+                    "Debes ingresar un correo disponible",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                return@setOnClickListener
+            }
 
             lifecycleScope.launch {
 
