@@ -67,6 +67,18 @@ class ChangeEmail : AppCompatActivity() {
         btnSendCode.isEnabled = false
         btnVerify.isEnabled = false
 
+        // Validación de correo al perder el foco (mejor UX)
+        etNewEmail.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                val email = etNewEmail.text.toString().trim()
+                if (email.isNotEmpty() && !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    tvEmailStatus.visibility = View.VISIBLE
+                    tvEmailStatus.text = "⚠ Correo inválido"
+                    tvEmailStatus.setTextColor(Color.parseColor("#F57C00"))
+                }
+            }
+        }
+
         etNewEmail.addTextChangedListener(
 
             object : TextWatcher {
@@ -91,14 +103,12 @@ class ChangeEmail : AppCompatActivity() {
                     lottieSuccess.visibility =
                         View.GONE
 
+                    // Ocultamos el estado mientras escribe para no molestar
+                    tvEmailStatus.visibility = View.GONE
+
                     if (email.isBlank()) {
-
-                        tvEmailStatus.visibility =
-                            View.GONE
-
                         btnSendCode.isEnabled = false
                         btnVerify.isEnabled = false
-
                         return
                     }
 
@@ -107,22 +117,9 @@ class ChangeEmail : AppCompatActivity() {
                             .matcher(email)
                             .matches()
                     ) {
-
-                        tvEmailStatus.visibility =
-                            View.VISIBLE
-
-                        tvEmailStatus.text =
-                            "⚠ Correo inválido"
-
-                        tvEmailStatus.setTextColor(
-                            Color.parseColor("#F57C00")
-                        )
-
                         emailDisponible = false
-
                         btnSendCode.isEnabled = false
                         btnVerify.isEnabled = false
-
                         return
                     }
 
@@ -180,7 +177,7 @@ class ChangeEmail : AppCompatActivity() {
                                 emailDisponible = true
 
                                 btnSendCode.isEnabled = true
-                                btnVerify.isEnabled = true
+                                // btnVerify se habilitará cuando se ingrese el código
                             }
 
                         } catch (_: Exception) {
@@ -196,6 +193,17 @@ class ChangeEmail : AppCompatActivity() {
                 ) {}
             }
         )
+
+        // Limpiar mensaje de código incorrecto mientras se escribe el nuevo código
+        etCode.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                tvCodeStatus.visibility = View.GONE
+                // Habilitar botón de verificar si hay código y el correo ya se envió (etNewEmail deshabilitado)
+                btnVerify.isEnabled = s?.isNotEmpty() == true && !etNewEmail.isEnabled
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         btnSendCode.setOnClickListener {
 

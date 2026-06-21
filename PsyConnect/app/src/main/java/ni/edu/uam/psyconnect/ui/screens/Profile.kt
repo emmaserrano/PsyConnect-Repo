@@ -18,8 +18,8 @@ import java.util.Locale
 class Profile : AppCompatActivity() {
 
     private lateinit var tvName: TextView
+    private lateinit var tvUsernameHeader: TextView
     private lateinit var tvWelcome: TextView
-    private lateinit var tvEmail: TextView
     private lateinit var tvAge: TextView
     private lateinit var tvUsername: TextView
 
@@ -34,7 +34,7 @@ class Profile : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
 
         tvName = findViewById(R.id.tvName)
-        tvEmail = findViewById(R.id.tvEmail)
+        tvUsernameHeader = findViewById(R.id.tvUsernameHeader)
         tvWelcome = findViewById(R.id.tvWelcome)
         tvAge = findViewById(R.id.tvAge)
         tvUsername = findViewById(R.id.tvUsername)
@@ -217,8 +217,9 @@ class Profile : AppCompatActivity() {
                         tvName.text =
                             user.name
 
-                        tvEmail.text =
-                            user.email
+                        tvUsernameHeader.text =
+                            "@${user.username}"
+
 
                         tvWelcome.text =
                             "Hola ${user.name}, gracias por cuidar de tu bienestar hoy."
