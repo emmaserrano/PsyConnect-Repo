@@ -22,7 +22,7 @@ class Profile : AppCompatActivity() {
     private lateinit var tvWelcome: TextView
     private lateinit var tvAge: TextView
     private lateinit var tvUsername: TextView
-
+    private lateinit var btnMoodHistory: Button
     private lateinit var tvDescription: TextView
 
     private var userId: Long = -1
@@ -48,6 +48,9 @@ class Profile : AppCompatActivity() {
 
         val btnLogout =
             findViewById<Button>(R.id.btnLogout)
+
+        btnMoodHistory =
+            findViewById(R.id.btnMoodHistory)
 
         val bottomNav =
             findViewById<BottomNavigationView>(
@@ -116,6 +119,16 @@ class Profile : AppCompatActivity() {
                 Intent(
                     this,
                     EditProfile::class.java
+                )
+            )
+        }
+
+        btnMoodHistory.setOnClickListener {
+
+            startActivity(
+                Intent(
+                    this,
+                    MoodHistoryActivity::class.java
                 )
             )
         }

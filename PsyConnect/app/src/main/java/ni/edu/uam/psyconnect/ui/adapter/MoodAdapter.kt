@@ -13,16 +13,16 @@ class MoodAdapter(
 ) : RecyclerView.Adapter<MoodAdapter.ViewHolder>() {
 
     class ViewHolder(
-        view: View
-    ) : RecyclerView.ViewHolder(view) {
+        itemView: View
+    ) : RecyclerView.ViewHolder(itemView) {
 
         val tvMood: TextView =
-            view.findViewById(
+            itemView.findViewById(
                 R.id.tvMood
             )
 
         val tvDate: TextView =
-            view.findViewById(
+            itemView.findViewById(
                 R.id.tvDate
             )
     }
@@ -58,19 +58,19 @@ class MoodAdapter(
         val emoji =
             when (mood.mood) {
 
-                "EXCELENTE" -> "😄 Excelente"
+                "EXCELENTE" -> "😁"
 
-                "BIEN" -> "🙂 Bien"
+                "BIEN" -> "😊"
 
-                "NORMAL" -> "😐 Normal"
+                "NORMAL" -> "😐"
 
-                "TRISTE" -> "😔 Triste"
+                "TRISTE" -> "😔"
 
-                else -> "😢 Muy mal"
+                else -> "😭"
             }
 
         holder.tvMood.text =
-            emoji
+            "$emoji ${mood.mood}"
 
         holder.tvDate.text =
             mood.date ?: ""

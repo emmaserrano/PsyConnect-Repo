@@ -5,6 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.network.RetrofitClient
@@ -16,7 +20,9 @@ class MoodHistoryActivity : AppCompatActivity() {
         savedInstanceState: Bundle?
     ) {
 
-        super.onCreate(savedInstanceState)
+        super.onCreate(
+            savedInstanceState
+        )
 
         setContentView(
             R.layout.activity_mood_history
@@ -24,7 +30,12 @@ class MoodHistoryActivity : AppCompatActivity() {
 
         val recycler =
             findViewById<RecyclerView>(
-                R.id.recyclerMoodHistory
+                R.id.recyclerMoods
+            )
+
+        val chart =
+            findViewById<LineChart>(
+                R.id.lineChart
             )
 
         recycler.layoutManager =
@@ -54,11 +65,61 @@ class MoodHistoryActivity : AppCompatActivity() {
                     response.isSuccessful
                 ) {
 
+                    val moods =
+                        response.body()
+                            ?: emptyList()
+
                     recycler.adapter =
                         MoodAdapter(
-                            response.body()
-                                ?: emptyList()
+                            moods
                         )
+
+                    val entries =
+                        mutableListOf<Entry>()
+
+                    moods.forEachIndexed {
+                            index,
+                            mood ->
+
+                        val value =
+                            when (
+                                mood.mood
+                            ) {
+
+                                "EXCELENTE" -> 5f
+
+                                "BIEN" -> 4f
+
+                                "NORMAL" -> 3f
+
+                                "TRISTE" -> 2f
+
+                                else -> 1f
+                            }
+
+                        entries.add(
+                            Entry(
+                                index.toFloat(),
+                                value
+                            )
+                        )
+                    }
+
+                    val dataSet =
+                        LineDataSet(
+                            entries,
+                            "Estado emocional"
+                        )
+
+                    chart.data =
+                        LineData(
+                            dataSet
+                        )
+
+                    chart.description.text =
+                        "Evolución emocional"
+
+                    chart.invalidate()
                 }
 
             } catch (_: Exception) {
