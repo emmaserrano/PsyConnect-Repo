@@ -99,27 +99,22 @@ class EditProfile : AppCompatActivity() {
 
                     if (response.isSuccessful) {
 
-                        val user =
-                            response.body()
+                        Toast.makeText(
+                            this@EditProfile,
+                            "Perfil actualizado",
+                            Toast.LENGTH_LONG
+                        ).show()
 
-                        if (user != null) {
+                        finish()
 
-                            currentEmail = user.email
+                    } else {
 
-                            etName.setText(user.name)
-
-                            etUsername.setText(
-                                user.username
-                            )
-
-                            etBirthdate.setText(
-                                user.birthdate
-                            )
-
-                            etDescription.setText(
-                                user.description
-                            )
-                        }
+                        Toast.makeText(
+                            this@EditProfile,
+                            response.errorBody()?.string()
+                                ?: "No se pudo actualizar",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
 
                 } catch (e: Exception) {

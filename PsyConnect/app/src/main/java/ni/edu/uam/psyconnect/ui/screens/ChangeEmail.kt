@@ -111,22 +111,37 @@ class ChangeEmail : AppCompatActivity() {
                         valid.body() == true
                     ) {
 
-                        RetrofitClient
-                            .apiService
-                            .changeEmail(
-                                ChangeEmailRequest(
-                                    userId,
-                                    email
+                        val response =
+                            RetrofitClient
+                                .apiService
+                                .changeEmail(
+                                    ChangeEmailRequest(
+                                        userId,
+                                        email
+                                    )
                                 )
-                            )
 
-                        Toast.makeText(
-                            this@ChangeEmail,
-                            "Correo actualizado",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        if (
+                            response.isSuccessful
+                        ) {
 
-                        finish()
+                            Toast.makeText(
+                                this@ChangeEmail,
+                                "Correo actualizado correctamente",
+                                Toast.LENGTH_LONG
+                            ).show()
+
+                            finish()
+
+                        } else {
+
+                            Toast.makeText(
+                                this@ChangeEmail,
+                                response.errorBody()?.string()
+                                    ?: "No se pudo actualizar el correo",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
 
                     } else {
 

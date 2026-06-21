@@ -46,6 +46,7 @@
         <activity android:name=".ui.screens.AppearanceActivity"/>
         <activity android:name=".ui.screens.AboutActivity"/>
         <activity android:name=".ui.screens.ChangeEmail" />
+        <activity android:name=".ui.screens.SecurityActivity" />
     </application>
 
 </manifest>
