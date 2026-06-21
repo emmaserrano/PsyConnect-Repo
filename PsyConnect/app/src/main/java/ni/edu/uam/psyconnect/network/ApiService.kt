@@ -60,6 +60,14 @@ interface ApiService {
         @Path("email") email: String
     ): Response<Boolean>
 
+    @GET(
+        "api/users/exists-username/{username}"
+    )
+    suspend fun existsUsername(
+        @Path("username")
+        username: String
+    ): Response<Boolean>
+
     @POST("api/users/change-password")
     suspend fun changePassword(
         @Body request: ChangePasswordRequest
