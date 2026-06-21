@@ -1,8 +1,12 @@
 package ni.edu.uam.psyconnect.ui.screens
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -18,26 +22,32 @@ import java.util.TimeZone
 
 class EditProfile : AppCompatActivity() {
 
+    private var usernameDisponible = true
+    private var usernameOriginal = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_edit_profile)
 
-        val etName =
-            findViewById<EditText>(R.id.etName)
+        val etName = findViewById<EditText>(R.id.etName)
+        val etUsername = findViewById<EditText>(R.id.etUsername)
+        val etDescription = findViewById<EditText>(R.id.etDescription)
+        val etBirthdate = findViewById<EditText>(R.id.etBirthdate)
+        val tvUsernameStatus = findViewById<TextView>(R.id.tvUsernameStatus)
+        val btnSave = findViewById<Button>(R.id.btnSave)
 
-        val etUsername =
-            findViewById<EditText>(R.id.etUsername)
+        val userId =
+            getSharedPreferences(
+                "psyconnect",
+                MODE_PRIVATE
+            ).getLong(
+                "userId",
+                -1
+            )
 
-        val etDescription =
-            findViewById<EditText>(R.id.etDescription)
-
-        val etBirthdate =
-            findViewById<EditText>(R.id.etBirthdate)
-
-        val btnSave =
-            findViewById<Button>(R.id.btnSave)
+        var currentEmail = ""
 
         etBirthdate.setOnClickListener {
 
@@ -53,7 +63,7 @@ class EditProfile : AppCompatActivity() {
                 "DATE_PICKER"
             )
 
-            picker.addOnPositiveButtonClickListener { selection ->
+            picker.addOnPositiveButtonClickListener {
 
                 val formato =
                     SimpleDateFormat(
@@ -66,69 +76,157 @@ class EditProfile : AppCompatActivity() {
 
                 etBirthdate.setText(
                     formato.format(
-                        Date(selection)
+                        Date(it)
                     )
                 )
             }
         }
 
-        val sharedPreferences =
-            getSharedPreferences(
-                "psyconnect",
-                MODE_PRIVATE
-            )
+        lifecycleScope.launch {
 
-        val userId =
-            sharedPreferences.getLong(
-                "userId",
-                -1
-            )
+            try {
 
-        var currentEmail = ""
+                val response =
+                    RetrofitClient
+                        .apiService
+                        .getUserById(userId)
 
-        if (userId != -1L) {
+                if (response.isSuccessful) {
 
-            lifecycleScope.launch {
+                    response.body()?.let { user ->
 
-                try {
+                        etName.setText(user.name)
+                        etUsername.setText(user.username)
+                        etDescription.setText(user.description)
+                        etBirthdate.setText(user.birthdate)
 
-                    val response =
-                        RetrofitClient
-                            .apiService
-                            .getUserById(userId)
-
-                    if (response.isSuccessful) {
-
-                        Toast.makeText(
-                            this@EditProfile,
-                            "Perfil actualizado",
-                            Toast.LENGTH_LONG
-                        ).show()
-
-                        finish()
-
-                    } else {
-
-                        Toast.makeText(
-                            this@EditProfile,
-                            response.errorBody()?.string()
-                                ?: "No se pudo actualizar",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        currentEmail = user.email
+                        usernameOriginal = user.username
                     }
-
-                } catch (e: Exception) {
-
-                    Toast.makeText(
-                        this@EditProfile,
-                        e.message,
-                        Toast.LENGTH_LONG
-                    ).show()
                 }
+
+            } catch (_: Exception) {
             }
         }
 
+        etUsername.addTextChangedListener(
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+
+                    val username =
+                        s.toString()
+
+                    if (
+                        username.isBlank()
+                    ) {
+                        return
+                    }
+
+                    if (
+                        username == usernameOriginal
+                    ) {
+
+                        tvUsernameStatus.visibility =
+                            TextView.GONE
+
+                        usernameDisponible =
+                            true
+
+                        return
+                    }
+
+                    lifecycleScope.launch {
+
+                        try {
+
+                            val response =
+                                RetrofitClient
+                                    .apiService
+                                    .existsUsername(
+                                        username
+                                    )
+
+                            if (
+                                response.isSuccessful
+                            ) {
+
+                                val existe =
+                                    response.body() ?: false
+
+                                if (existe) {
+
+                                    tvUsernameStatus.visibility =
+                                        TextView.VISIBLE
+
+                                    tvUsernameStatus.text =
+                                        "❌ Nombre de usuario ocupado"
+
+                                    tvUsernameStatus.setTextColor(
+                                        Color.RED
+                                    )
+
+                                    usernameDisponible =
+                                        false
+
+                                } else {
+
+                                    tvUsernameStatus.visibility =
+                                        TextView.VISIBLE
+
+                                    tvUsernameStatus.text =
+                                        "✅ Nombre de usuario disponible"
+
+                                    tvUsernameStatus.setTextColor(
+                                        Color.parseColor(
+                                            "#2E7D32"
+                                        )
+                                    )
+
+                                    usernameDisponible =
+                                        true
+                                }
+                            }
+
+                        } catch (_: Exception) {
+                        }
+                    }
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {
+                }
+            }
+        )
+
         btnSave.setOnClickListener {
+
+            if (
+                !usernameDisponible
+            ) {
+
+                Toast.makeText(
+                    this,
+                    "Debes elegir otro nombre de usuario",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                return@setOnClickListener
+            }
 
             lifecycleScope.launch {
 
@@ -137,23 +235,12 @@ class EditProfile : AppCompatActivity() {
                     val updatedUser =
                         User(
                             id = userId,
-
-                            name =
-                                etName.text.toString(),
-
-                            username =
-                                etUsername.text.toString(),
-
-                            email =
-                                currentEmail,
-
+                            name = etName.text.toString(),
+                            username = etUsername.text.toString(),
+                            email = currentEmail,
                             password = "",
-
-                            birthdate =
-                                etBirthdate.text.toString(),
-
-                            description =
-                                etDescription.text.toString()
+                            birthdate = etBirthdate.text.toString(),
+                            description = etDescription.text.toString()
                         )
 
                     val response =
@@ -178,7 +265,8 @@ class EditProfile : AppCompatActivity() {
 
                         Toast.makeText(
                             this@EditProfile,
-                            "No se pudo actualizar",
+                            response.errorBody()?.string()
+                                ?: "No se pudo actualizar",
                             Toast.LENGTH_LONG
                         ).show()
                     }

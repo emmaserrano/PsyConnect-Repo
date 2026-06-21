@@ -60,6 +60,14 @@
                     android:layout_height="wrap_content"
                     android:hint="Usuario"/>
 
+                <TextView
+                    android:id="@+id/tvUsernameStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    android:layout_marginTop="4dp"/>
+
                 <EditText
                     android:id="@+id/etDescription"
                     android:layout_width="match_parent"
