@@ -37,6 +37,16 @@ class History : AppCompatActivity() {
 
     private fun cargarHistorial() {
 
+        val tvHeroAverage =
+            findViewById<TextView>(
+                R.id.tvHeroAverage
+            )
+
+        val tvHeroInsight =
+            findViewById<TextView>(
+                R.id.tvHeroInsight
+            )
+
         val tvAverage =
             findViewById<TextView>(
                 R.id.tvAverage
@@ -177,6 +187,9 @@ class History : AppCompatActivity() {
                         tvAverage.text =
                             "$average%"
 
+                        tvHeroAverage.text =
+                            "$average%"
+
                         tvBest.text =
                             "$best%"
 
@@ -189,6 +202,11 @@ class History : AppCompatActivity() {
                             )
 
                         tvInsight.text =
+                            generarInsight(
+                                average
+                            )
+
+                        tvHeroInsight.text =
                             generarInsight(
                                 average
                             )
