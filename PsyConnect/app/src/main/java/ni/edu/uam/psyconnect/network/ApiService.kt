@@ -1,9 +1,12 @@
 package ni.edu.uam.psyconnect.network
 
+import ni.edu.uam.psyconnect.data.model.Achievement
 import ni.edu.uam.psyconnect.data.model.AuthResponse
+import ni.edu.uam.psyconnect.data.model.ChangeEmailRequest
 import ni.edu.uam.psyconnect.data.model.ChangePasswordRequest
 import ni.edu.uam.psyconnect.data.model.LoginRequest
 import ni.edu.uam.psyconnect.data.model.Psychologist
+import ni.edu.uam.psyconnect.data.model.Mood
 import ni.edu.uam.psyconnect.data.model.RecoveryCodeRequest
 import ni.edu.uam.psyconnect.data.model.ResetPasswordRequest
 import ni.edu.uam.psyconnect.data.model.TestResult
@@ -55,12 +58,27 @@ interface ApiService {
     suspend fun validateRecoveryCode(@Body request: RecoveryCodeRequest): Response<Boolean>
 
     @GET("api/users/exists-email/{email}")
-    suspend fun existsEmail(
-        @Path("email") email: String
-    ): Response<Boolean>
+    suspend fun existsEmail(@Path("email") email: String): Response<Boolean>
+
+    @GET("api/users/exists-username/{username}")
+    suspend fun existsUsername(@Path("username") username: String): Response<Boolean>
 
     @POST("api/users/change-password")
-    suspend fun changePassword(
-        @Body request: ChangePasswordRequest
-    ): Response<ResponseBody>
+    suspend fun changePassword(@Body request: ChangePasswordRequest): Response<ResponseBody>
+
+    @POST("api/users/change-email")
+    suspend fun changeEmail(@Body request: ChangeEmailRequest): Response<ResponseBody>
+
+    @POST("api/moods")
+    suspend fun saveMood(@Body mood: Mood): Response<Mood>
+
+    @GET("api/moods/today/{userId}")
+    suspend fun hasMoodToday(@Path("userId") userId: Long): Response<Boolean>
+
+    @GET("api/moods/user/{userId}")
+    suspend fun getMoodHistory(@Path("userId") userId: Long): Response<List<Mood>>
+
+    @GET("api/achievements/{userId}")
+    suspend fun getAchievements(@Path("userId") userId: Long): Response<List<Achievement>>
+
 }

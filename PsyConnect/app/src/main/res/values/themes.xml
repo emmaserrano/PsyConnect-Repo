@@ -4,23 +4,23 @@
         parent="Theme.Material3.DayNight.NoActionBar">
 
         <item name="colorPrimary">@color/turquesa_principal</item>
-
         <item name="colorSecondary">@color/turquesa_oscuro</item>
-
         <item name="colorTertiary">@color/turquesa_oscuro</item>
 
-        <item name="android:statusBarColor">
-            @color/status_bar_color
-        </item>
+        <!-- Colores para Material 3 en modo claro -->
+        <item name="colorSecondaryContainer">@color/white</item> <!-- Color de la burbuja activa -->
+        <item name="colorOnSecondaryContainer">@color/turquesa_oscuro</item>
+        <item name="colorSurface">@color/fondo_login</item>
 
-        <item name="android:navigationBarColor">
-            @color/navigation_bar_color
-        </item>
+        <item name="android:statusBarColor">@color/status_bar_color</item>
+        <item name="android:navigationBarColor">@color/fondo_login</item>
 
     </style>
 
-    <style
-        name="Theme.PsyConnect"
-        parent="Base.Theme.PsyConnect" />
+    <style name="Theme.PsyConnect" parent="Base.Theme.PsyConnect" />
+
+    <style name="CircleImage" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
 
 </resources>

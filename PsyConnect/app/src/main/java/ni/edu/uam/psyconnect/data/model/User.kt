@@ -12,5 +12,10 @@ data class User(
 
     val password: String,
 
-    val age: Int
+    val birthdate: String,
+
+    val profileImage: String? = null,
+
+    val description: String = ""
+
 )

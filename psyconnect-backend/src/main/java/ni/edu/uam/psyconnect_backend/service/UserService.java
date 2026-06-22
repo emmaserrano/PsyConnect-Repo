@@ -58,6 +58,7 @@ public class UserService {
             return new LoginResponse(
                     false,
                     "Usuario no encontrado",
+                    null,
                     null
             );
         }
@@ -67,6 +68,7 @@ public class UserService {
             return new LoginResponse(
                     false,
                     "Contraseña incorrecta",
+                    null,
                     null
             );
         }
@@ -74,7 +76,8 @@ public class UserService {
         return new LoginResponse(
                 true,
                 "Inicio de sesión exitoso",
-                user.getId()
+                user.getId(),
+                user.getName()
         );
     }
     public User getUserById(Long id) {
@@ -97,17 +100,57 @@ public class UserService {
                         )
                 );
     }
-    public User updateUser(Long id, User updatedUser) {
+    public User updateUser(
+            Long id,
+            User updatedUser
+    ) {
 
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        User user =
+                userRepository.findById(id)
+                        .orElseThrow(
+                                () -> new RuntimeException(
+                                        "Usuario no encontrado"
+                                )
+                        );
 
-        user.setName(updatedUser.getName());
-        user.setUsername(updatedUser.getUsername());
-        user.setEmail(updatedUser.getEmail());
-        user.setAge(updatedUser.getAge());
+        if (
+                !user.getUsername().equals(
+                        updatedUser.getUsername()
+                )
+                        &&
+                        userRepository.existsByUsername(
+                                updatedUser.getUsername()
+                        )
+        ) {
 
-        return userRepository.save(user);
+            throw new RuntimeException(
+                    "El nombre de usuario ya está en uso"
+            );
+        }
+
+        user.setName(
+                updatedUser.getName()
+        );
+
+        user.setUsername(
+                updatedUser.getUsername()
+        );
+
+        user.setEmail(
+                updatedUser.getEmail()
+        );
+
+        user.setBirthdate(
+                updatedUser.getBirthdate()
+        );
+
+        user.setDescription(
+                updatedUser.getDescription()
+        );
+
+        return userRepository.save(
+                user
+        );
     }
 
     public void resetPassword(
@@ -185,6 +228,53 @@ public class UserService {
         userRepository.save(
                 user
         );
+    }
+
+    public void changeEmail(
+            Long userId,
+            String newEmail
+    ) {
+
+        User user =
+                userRepository.findById(userId)
+                        .orElseThrow(
+                                () -> new RuntimeException(
+                                        "Usuario no encontrado"
+                                )
+                        );
+
+        if (
+                userRepository.existsByEmail(
+                        newEmail
+                )
+                        &&
+                        !user.getEmail().equals(
+                                newEmail
+                        )
+        ) {
+
+            throw new RuntimeException(
+                    "El correo ya está registrado"
+            );
+        }
+
+        user.setEmail(
+                newEmail
+        );
+
+        userRepository.save(
+                user
+        );
+    }
+
+    public boolean existsByUsername(
+            String username
+    ) {
+
+        return userRepository
+                .existsByUsername(
+                        username
+                );
     }
 
 }

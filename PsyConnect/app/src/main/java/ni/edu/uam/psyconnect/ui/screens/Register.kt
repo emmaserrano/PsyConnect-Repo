@@ -5,6 +5,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
+import com.google.android.material.datepicker.MaterialDatePicker
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.TimeZone
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
@@ -29,6 +33,8 @@ class Register : AppCompatActivity() {
 
     private var emailVerificado = false
     private var countDownTimer: CountDownTimer? = null
+    private var usernameDisponible = false
+    private var emailDisponible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +42,12 @@ class Register : AppCompatActivity() {
 
         val etName = findViewById<EditText>(R.id.etName)
         val etUsername = findViewById<EditText>(R.id.etUsername)
+        val tvUsernameStatus = findViewById<TextView>(R.id.tvUsernameStatus)
         val etEmail = findViewById<EditText>(R.id.etEmail)
+        val tvEmailStatus = findViewById<TextView>(R.id.tvEmailStatus)
         val etVerificationCode = findViewById<EditText>(R.id.etVerificationCode)
         val etPassword = findViewById<EditText>(R.id.etPassword)
-        val etAge = findViewById<EditText>(R.id.etAge)
+        val etBirthdate = findViewById<EditText>(R.id.etBirthdate)
         val btnSendCode = findViewById<Button>(R.id.btnSendCode)
         val btnVerifyCode = findViewById<Button>(R.id.btnVerifyCode)
         val btnResendCode = findViewById<Button>(R.id.btnResendCode)
@@ -51,14 +59,224 @@ class Register : AppCompatActivity() {
         val tvPasswordStrength = findViewById<TextView>(R.id.tvPasswordStrength)
         val tvPasswordRequirements = findViewById<TextView>(R.id.tvPasswordRequirements)
 
-        // Limpieza inicial
+        etBirthdate.setOnClickListener {
+
+            val picker =
+                MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Selecciona tu fecha de nacimiento")
+                    .build()
+
+            picker.show(
+                supportFragmentManager,
+                "DATE_PICKER"
+            )
+
+            picker.addOnPositiveButtonClickListener { selection ->
+
+                val formato =
+                    SimpleDateFormat(
+                        "yyyy-MM-dd",
+                        Locale.getDefault()
+                    )
+
+                formato.timeZone =
+                    TimeZone.getTimeZone("UTC")
+
+                etBirthdate.setText(
+                    formato.format(
+                        Date(selection)
+                    )
+                )
+            }
+        }
+
         tvPasswordStrength.text = ""
         tvPasswordRequirements.text = ""
+
+        etUsername.addTextChangedListener(
+
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {}
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+
+                    val username =
+                        s.toString()
+
+                    if (username.isBlank()) {
+
+                        tvUsernameStatus.visibility =
+                            TextView.GONE
+
+                        usernameDisponible = false
+
+                        return
+                    }
+
+                    lifecycleScope.launch {
+
+                        try {
+
+                            val response =
+                                RetrofitClient
+                                    .apiService
+                                    .existsUsername(
+                                        username
+                                    )
+
+                            if (
+                                response.body() == true
+                            ) {
+
+                                tvUsernameStatus.visibility =
+                                    TextView.VISIBLE
+
+                                tvUsernameStatus.text =
+                                    "❌ Nombre de usuario ocupado"
+
+                                tvUsernameStatus.setTextColor(
+                                    Color.RED
+                                )
+
+                                usernameDisponible = false
+
+                            } else {
+
+                                tvUsernameStatus.visibility =
+                                    TextView.VISIBLE
+
+                                tvUsernameStatus.text =
+                                    "✅ Nombre de usuario disponible"
+
+                                tvUsernameStatus.setTextColor(
+                                    Color.parseColor(
+                                        "#2E7D32"
+                                    )
+                                )
+
+                                usernameDisponible = true
+                            }
+
+                        } catch (_: Exception) {}
+                    }
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {}
+            }
+        )
+
+        etEmail.addTextChangedListener(
+
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {}
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+
+                    val email =
+                        s.toString()
+
+                    if (email.isBlank()) {
+
+                        tvEmailStatus.visibility =
+                            TextView.GONE
+
+                        emailDisponible = false
+
+                        return
+                    }
+
+                    lifecycleScope.launch {
+
+                        try {
+
+                            val response =
+                                RetrofitClient
+                                    .apiService
+                                    .existsEmail(
+                                        email
+                                    )
+
+                            if (
+                                response.body() == true
+                            ) {
+
+                                tvEmailStatus.visibility =
+                                    TextView.VISIBLE
+
+                                tvEmailStatus.text =
+                                    "❌ Correo ya registrado"
+
+                                tvEmailStatus.setTextColor(
+                                    Color.RED
+                                )
+
+                                emailDisponible = false
+
+                            } else {
+
+                                tvEmailStatus.visibility =
+                                    TextView.VISIBLE
+
+                                tvEmailStatus.text =
+                                    "✅ Correo disponible"
+
+                                tvEmailStatus.setTextColor(
+                                    Color.parseColor(
+                                        "#2E7D32"
+                                    )
+                                )
+
+                                emailDisponible = true
+                            }
+
+                        } catch (_: Exception) {}
+                    }
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {}
+            }
+        )
 
         btnSendCode.setOnClickListener {
             val email = etEmail.text.toString().trim()
             if (email.isEmpty()) {
                 mostrarAlerta("Campo requerido", "Por favor, ingresa un correo electrónico.")
+                return@setOnClickListener
+            }
+
+            if (!emailDisponible) {
+
+                mostrarAlerta(
+                    "Correo ocupado",
+                    "Debes ingresar un correo disponible."
+                )
+
                 return@setOnClickListener
             }
 
@@ -71,10 +289,10 @@ class Register : AppCompatActivity() {
                         Toast.makeText(this@Register, "Código enviado correctamente", Toast.LENGTH_LONG).show()
                     } else {
                         val errorDetail = response.errorBody()?.string() ?: "Error desconocido"
-                        mostrarAlerta("Error de Envío", "No se pudo enviar el código.\n\nServidor: $errorDetail")
+                        mostrarAlerta("Error de Envío", "No se pudo enviar el código.")
                     }
                 } catch (e: Exception) {
-                    mostrarAlerta("Error de Conexión", "No se pudo conectar con el servidor.\n\n${e.message}")
+                    mostrarAlerta("Error de Conexión", "No se pudo conectar con el servidor.")
                 }
             }
         }
@@ -109,7 +327,7 @@ class Register : AppCompatActivity() {
                         mostrarAlerta("Código Incorrecto", "El código de verificación no es válido.")
                     }
                 } catch (e: Exception) {
-                    mostrarAlerta("Error", "Error al validar el código: ${e.message}")
+                    mostrarAlerta("Error", "Error al validar el código.")
                 }
             }
         }
@@ -118,7 +336,6 @@ class Register : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val password = s.toString()
-
                 if (password.isEmpty()) {
                     progressPassword.progress = 0
                     tvPasswordStrength.text = ""
@@ -163,17 +380,8 @@ class Register : AppCompatActivity() {
                         Color.parseColor("#2E7D32")
                     }
                 }
-                
                 progressPassword.progressTintList = ColorStateList.valueOf(color)
-
-                actualizarRequisitos(
-                    tvPasswordRequirements,
-                    tieneLongitud,
-                    tieneMayuscula,
-                    tieneMinuscula,
-                    tieneNumero,
-                    tieneEspecial
-                )
+                actualizarRequisitos(tvPasswordRequirements, tieneLongitud, tieneMayuscula, tieneMinuscula, tieneNumero, tieneEspecial)
             }
             override fun afterTextChanged(s: Editable?) {}
         })
@@ -183,10 +391,10 @@ class Register : AppCompatActivity() {
             val username = etUsername.text.toString().trim()
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString()
-            val age = etAge.text.toString()
+            val birthdate = etBirthdate.text.toString()
 
-            if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty() || age.isEmpty()) {
-                mostrarAlerta("Campos incompletos", "Por favor completa todos los campos del formulario.")
+            if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty() || birthdate.isEmpty()) {
+                mostrarAlerta("Campos incompletos", "Por favor completa todos los campos, el nombre de usuario es obligatorio.")
                 return@setOnClickListener
             }
 
@@ -196,7 +404,7 @@ class Register : AppCompatActivity() {
             }
 
             if (!validarPassword(password)) {
-                mostrarAlerta("Contraseña insegura", "La contraseña debe cumplir con todos los requisitos de seguridad mostrados en verde.")
+                mostrarAlerta("Contraseña insegura", "La contraseña debe cumplir con todos los requisitos.")
                 return@setOnClickListener
             }
 
@@ -205,7 +413,17 @@ class Register : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val user = User(name = name, username = username, email = email, password = password, age = age.toInt())
+            if (!usernameDisponible) {
+                mostrarAlerta("Usuario ocupado", "Selecciona otro nombre de usuario.")
+                return@setOnClickListener
+            }
+
+            if (!emailDisponible) {
+                mostrarAlerta("Correo ocupado", "Selecciona otro correo.")
+                return@setOnClickListener
+            }
+
+            val user = User(name = name, username = username, email = email, password = password, birthdate = birthdate)
             lifecycleScope.launch {
                 try {
                     val response = RetrofitClient.apiService.registerUser(user)
@@ -213,11 +431,10 @@ class Register : AppCompatActivity() {
                         Toast.makeText(this@Register, "¡Bienvenido! Usuario registrado.", Toast.LENGTH_LONG).show()
                         finish()
                     } else {
-                        val errorDetail = response.errorBody()?.string() ?: "Error al registrar"
-                        mostrarAlerta("Error de Registro", errorDetail)
+                        mostrarAlerta("Error de Registro", "No se pudo crear la cuenta.")
                     }
                 } catch (e: Exception) {
-                    mostrarAlerta("Error", "Ocurrió un error inesperado: ${e.message}")
+                    mostrarAlerta("Error", "Ocurrió un error inesperado.")
                 }
             }
         }
@@ -230,7 +447,6 @@ class Register : AppCompatActivity() {
             .setTitle(titulo)
             .setMessage(mensaje)
             .setPositiveButton("Entendido", null)
-            .setIcon(android.R.drawable.stat_notify_error)
             .show()
     }
 
@@ -239,33 +455,21 @@ class Register : AppCompatActivity() {
         return regex.matches(password)
     }
 
-    private fun actualizarRequisitos(
-        tv: TextView,
-        tieneLongitud: Boolean,
-        tieneMayuscula: Boolean,
-        tieneMinuscula: Boolean,
-        tieneNumero: Boolean,
-        tieneEspecial: Boolean
-    ) {
+    private fun actualizarRequisitos(tv: TextView, tieneLongitud: Boolean, tieneMayuscula: Boolean, tieneMinuscula: Boolean, tieneNumero: Boolean, tieneEspecial: Boolean) {
         val builder = SpannableStringBuilder()
-
         fun agregarLinea(cumplido: Boolean, texto: String) {
             val inicio = builder.length
             builder.append("${if (cumplido) "✔" else "✖"} $texto\n")
             builder.setSpan(
                 ForegroundColorSpan(if (cumplido) Color.parseColor("#2E7D32") else Color.parseColor("#D32F2F")),
-                inicio,
-                builder.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                inicio, builder.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
-
         agregarLinea(tieneLongitud, "Mínimo 8 caracteres")
         agregarLinea(tieneMayuscula, "Una mayúscula")
         agregarLinea(tieneMinuscula, "Una minúscula")
         agregarLinea(tieneNumero, "Un número")
         agregarLinea(tieneEspecial, "Un carácter especial")
-
         tv.text = builder
     }
 
@@ -273,14 +477,12 @@ class Register : AppCompatActivity() {
         btnSendCode.isEnabled = false
         btnResendCode.visibility = View.GONE
         countDownTimer?.cancel()
-
         countDownTimer = object : CountDownTimer(120000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val minutos = millisUntilFinished / 60000
                 val segundos = (millisUntilFinished % 60000) / 1000
                 tvCountdown.text = String.format(Locale.getDefault(), "Código válido por %02d:%02d", minutos, segundos)
             }
-
             override fun onFinish() {
                 tvCountdown.text = "Código expirado"
                 btnSendCode.isEnabled = true

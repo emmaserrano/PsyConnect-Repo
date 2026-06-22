@@ -2,6 +2,8 @@ package ni.edu.uam.psyconnect_backend.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -18,7 +20,12 @@ public class User {
 
     private String password;
 
-    private Integer age;
+    private LocalDate birthdate;
+
+    private String profileImage;
+
+    @Column(length = 500)
+    private String description;
 
     public User() {
     }
@@ -29,14 +36,18 @@ public class User {
             String username,
             String email,
             String password,
-            Integer age
+            LocalDate birthdate,
+            String description,
+            String profileImage
     ) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.age = age;
+        this.birthdate = birthdate;
+        this.description = description;
+        this.profileImage = profileImage;
     }
 
     public Long getId() {
@@ -47,9 +58,13 @@ public class User {
         return name;
     }
 
-    public String getUsername() {return username;}
+    public String getUsername() {
+        return username;
+    }
 
-    public void setUsername(String username) {this.username = username;}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -63,12 +78,12 @@ public class User {
         this.email = email;
     }
 
-    public Integer getAge() {
-        return age;
+    public LocalDate getBirthdate() {
+        return birthdate;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
     }
 
     public String getPassword() {
@@ -78,4 +93,14 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {this.description = description;}
+
+    public String getProfileImage() {return profileImage;}
+
+    public void setProfileImage(String profileImage) {this.profileImage = profileImage;}
 }

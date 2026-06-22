@@ -3,6 +3,7 @@ package ni.edu.uam.psyconnect.ui.screens
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ProgressBar
+import com.google.android.material.chip.Chip
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +18,8 @@ import ni.edu.uam.psyconnect.ui.adapter.RecentResultAdapter
 
 class History : AppCompatActivity() {
 
+    private var allResults: List<TestResult> = emptyList()
+
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
@@ -28,11 +31,21 @@ class History : AppCompatActivity() {
         )
 
         cargarHistorial()
-
+        configurarFiltros()
         configurarBottomNav()
     }
 
     private fun cargarHistorial() {
+
+        val tvHeroAverage =
+            findViewById<TextView>(
+                R.id.tvHeroAverage
+            )
+
+        val tvHeroInsight =
+            findViewById<TextView>(
+                R.id.tvHeroInsight
+            )
 
         val tvAverage =
             findViewById<TextView>(
@@ -143,17 +156,15 @@ class History : AppCompatActivity() {
                         response.body()
                             ?: emptyList()
 
+                    allResults = results
+
+
                     recycler.layoutManager =
                         LinearLayoutManager(
                             this@History
                         )
 
-                    recycler.adapter =
-                        RecentResultAdapter(
-                            results.sortedByDescending {
-                                it.id
-                            }
-                        )
+                    filtrarResultados(null)
 
                     if (results.isNotEmpty()) {
 
@@ -176,6 +187,9 @@ class History : AppCompatActivity() {
                         tvAverage.text =
                             "$average%"
 
+                        tvHeroAverage.text =
+                            "$average%"
+
                         tvBest.text =
                             "$best%"
 
@@ -188,6 +202,11 @@ class History : AppCompatActivity() {
                             )
 
                         tvInsight.text =
+                            generarInsight(
+                                average
+                            )
+
+                        tvHeroInsight.text =
                             generarInsight(
                                 average
                             )
@@ -217,6 +236,98 @@ class History : AppCompatActivity() {
 
                 e.printStackTrace()
             }
+        }
+    }
+
+    private fun filtrarResultados(
+        category: String?
+    ) {
+
+        val recycler =
+            findViewById<RecyclerView>(
+                R.id.recyclerResults
+            )
+
+        val filtered =
+
+            if (category == null) {
+
+                allResults
+                    .sortedByDescending {
+                        it.id
+                    }
+
+            } else {
+
+                allResults
+                    .filter {
+                        it.category == category
+                    }
+                    .sortedByDescending {
+                        it.id
+                    }
+            }
+
+        recycler.adapter =
+            RecentResultAdapter(
+                filtered
+            )
+    }
+
+    private fun configurarFiltros() {
+
+        findViewById<Chip>(
+            R.id.chipAll
+        ).setOnClickListener {
+
+            filtrarResultados(
+                null
+            )
+        }
+
+        findViewById<Chip>(
+            R.id.chipWellness
+        ).setOnClickListener {
+
+            filtrarResultados(
+                "WELLNESS"
+            )
+        }
+
+        findViewById<Chip>(
+            R.id.chipStress
+        ).setOnClickListener {
+
+            filtrarResultados(
+                "STRESS"
+            )
+        }
+
+        findViewById<Chip>(
+            R.id.chipSleep
+        ).setOnClickListener {
+
+            filtrarResultados(
+                "SLEEP"
+            )
+        }
+
+        findViewById<Chip>(
+            R.id.chipMood
+        ).setOnClickListener {
+
+            filtrarResultados(
+                "MOOD"
+            )
+        }
+
+        findViewById<Chip>(
+            R.id.chipRelationships
+        ).setOnClickListener {
+
+            filtrarResultados(
+                "RELATIONSHIPS"
+            )
         }
     }
 
@@ -287,7 +398,7 @@ class History : AppCompatActivity() {
             "🌿 Bienestar ($wellness%)"
 
         tvStress.text =
-            "😌 Estrés ($stress%)"
+            "😌 Manejo del estrés ($stress%)"
 
         tvSleep.text =
             "😴 Sueño ($sleep%)"
@@ -380,7 +491,7 @@ class History : AppCompatActivity() {
                 "Bienestar"
 
             "STRESS" ->
-                "Estrés"
+                "Manejo del estrés"
 
             "SLEEP" ->
                 "Sueño"

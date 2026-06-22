@@ -26,11 +26,41 @@ class ForgotPassword : AppCompatActivity() {
         setContentView(R.layout.activity_forgot_password)
 
         val etEmail = findViewById<EditText>(R.id.etEmailRecovery)
+        val tvRecoveryMessage = findViewById<TextView>(R.id.tvRecoveryMessage)
+        val tvDescription = findViewById<TextView>(R.id.tvDescription)
+
+        val emailRecibido = intent.getStringExtra("email")
+
+        val esCorreoValido =
+            !emailRecibido.isNullOrBlank() &&
+                    android.util.Patterns.EMAIL_ADDRESS
+                        .matcher(emailRecibido)
+                        .matches()
+
+        if (esCorreoValido) {
+
+            etEmail.setText(emailRecibido)
+
+            etEmail.isEnabled = false
+
+            tvDescription.text =
+                "Te enviaremos un código de verificación al correo mostrado a continuación."
+
+        } else {
+
+            etEmail.setText("")
+
+            etEmail.isEnabled = true
+
+            tvDescription.text =
+                "Ingresa el correo asociado a tu cuenta para enviarte un código de recuperación."
+
+        }
+
         val btnSend = findViewById<Button>(R.id.btnSendRecovery)
         val etCode = findViewById<EditText>(R.id.etRecoveryCode)
         val btnVerify = findViewById<Button>(R.id.btnVerifyRecovery)
         val btnBackLogin = findViewById<Button>(R.id.btnBackLogin)
-        val tvRecoveryMessage = findViewById<TextView>(R.id.tvRecoveryMessage)
         val tvRecoveryCountdown = findViewById<TextView>(R.id.tvRecoveryCountdown)
 
         btnBackLogin.setOnClickListener {
@@ -56,6 +86,8 @@ class ForgotPassword : AppCompatActivity() {
             lifecycleScope.launch {
 
                 try {
+                    // Deshabilitamos el botón para evitar múltiples clics durante la petición
+                    btnSend.isEnabled = false
 
                     val existsResponse =
                         RetrofitClient
@@ -65,7 +97,7 @@ class ForgotPassword : AppCompatActivity() {
                     if (
                         existsResponse.body() != true
                     ) {
-
+                        btnSend.isEnabled = true
                         Toast.makeText(
                             this@ForgotPassword,
                             "No existe ninguna cuenta asociada a este correo",
@@ -81,15 +113,30 @@ class ForgotPassword : AppCompatActivity() {
                             .sendVerificationCode(email)
 
                     if (response.isSuccessful) {
-
                         Toast.makeText(
                             this@ForgotPassword,
                             "Código enviado correctamente",
                             Toast.LENGTH_LONG
                         ).show()
 
-                    } else {
+                        tvRecoveryMessage.visibility = View.VISIBLE
 
+                        if (esCorreoValido) {
+
+                            tvRecoveryMessage.text =
+                                "✓ Se ha enviado un código de verificación al correo mostrado."
+
+                        } else {
+
+                            tvRecoveryMessage.text =
+                                "✓ Se ha enviado un código de verificación al correo ingresado."
+
+                        }
+
+                        iniciarTemporizador(tvRecoveryCountdown, btnSend)
+
+                    } else {
+                        btnSend.isEnabled = true
                         Toast.makeText(
                             this@ForgotPassword,
                             "No se pudo enviar el código",
@@ -98,7 +145,7 @@ class ForgotPassword : AppCompatActivity() {
                     }
 
                 } catch (e: Exception) {
-
+                    btnSend.isEnabled = true
                     Toast.makeText(
                         this@ForgotPassword,
                         e.message,
@@ -149,12 +196,13 @@ class ForgotPassword : AppCompatActivity() {
         val dialog = builder.create()
         dialog.show()
 
-        // Opcional: Centrar el texto del mensaje para que se vea más profesional
         val messageView = dialog.findViewById<TextView>(android.R.id.message)
         messageView?.gravity = android.view.Gravity.CENTER
     }
 
     private fun iniciarTemporizador(tvCountdown: TextView, btnSend: Button) {
+        tvCountdown.visibility = View.VISIBLE
+        btnSend.isEnabled = false
         countDownTimer?.cancel()
         countDownTimer = object : CountDownTimer(120000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -175,4 +223,5 @@ class ForgotPassword : AppCompatActivity() {
         super.onDestroy()
         countDownTimer?.cancel()
     }
+
 }
