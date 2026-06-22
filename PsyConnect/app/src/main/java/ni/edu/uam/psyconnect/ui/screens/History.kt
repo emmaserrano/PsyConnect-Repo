@@ -238,9 +238,6 @@ class History : AppCompatActivity() {
                     .sortedByDescending {
                         it.id
                     }
-                    .distinctBy {
-                        it.category
-                    }
 
             } else {
 
@@ -253,34 +250,9 @@ class History : AppCompatActivity() {
                     }
             }
 
-        val resultadosConTendencia =
-
-            filtered.map { actual ->
-
-                val anterior =
-
-                    allResults
-                        .filter {
-                            it.category == actual.category &&
-                                    it.id != actual.id
-                        }
-                        .sortedByDescending {
-                            it.id
-                        }
-                        .firstOrNull()
-
-                actual.copy(
-                    trend =
-                        if (anterior != null)
-                            actual.percentage - anterior.percentage
-                        else
-                            0
-                )
-            }
-
         recycler.adapter =
             RecentResultAdapter(
-                resultadosConTendencia
+                filtered
             )
     }
 

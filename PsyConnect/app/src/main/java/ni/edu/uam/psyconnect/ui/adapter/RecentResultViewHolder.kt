@@ -43,7 +43,8 @@ class RecentResultViewHolder(
         )
 
     fun bind(
-        result: TestResult
+        result: TestResult,
+        allResults: List<TestResult>
     ) {
 
         tvCategory.text =
@@ -62,36 +63,76 @@ class RecentResultViewHolder(
                 result.createdAt
             )
 
-        when {
+        val resultadosMismaCategoria =
 
-            result.trend > 0 -> {
+            allResults
+                .filter {
+                    it.category == result.category
+                }
+                .sortedByDescending {
+                    it.id ?: 0
+                }
 
-                tvTrend.text =
-                    "🟢 Mejorando +${result.trend}%"
+        val posicionActual =
+            resultadosMismaCategoria.indexOfFirst {
 
-                tvTrend.setTextColor(
-                    Color.parseColor("#16A34A")
-                )
+                it.id == result.id
             }
 
-            result.trend < 0 -> {
+        if (
+            posicionActual == resultadosMismaCategoria.lastIndex
+            || posicionActual == -1
+        ) {
 
-                tvTrend.text =
-                    "🔴 Bajó ${result.trend}%"
+            tvTrend.text =
+                "🌱 Primer registro"
 
-                tvTrend.setTextColor(
-                    Color.parseColor("#DC2626")
-                )
-            }
+            tvTrend.setTextColor(
+                Color.parseColor("#6B7280")
+            )
 
-            else -> {
+        } else {
 
-                tvTrend.text =
-                    "⚪ Sin cambios"
+            val resultadoAnterior =
+                resultadosMismaCategoria[
+                    posicionActual + 1
+                ]
 
-                tvTrend.setTextColor(
-                    Color.parseColor("#6B7280")
-                )
+            val diferencia =
+                result.percentage -
+                        resultadoAnterior.percentage
+
+            when {
+
+                diferencia > 0 -> {
+
+                    tvTrend.text =
+                        "🟢 Mejorando +${diferencia}%"
+
+                    tvTrend.setTextColor(
+                        Color.parseColor("#16A34A")
+                    )
+                }
+
+                diferencia < 0 -> {
+
+                    tvTrend.text =
+                        "🔴 Bajó ${kotlin.math.abs(diferencia)}%"
+
+                    tvTrend.setTextColor(
+                        Color.parseColor("#DC2626")
+                    )
+                }
+
+                else -> {
+
+                    tvTrend.text =
+                        "⚪ Sin cambios"
+
+                    tvTrend.setTextColor(
+                        Color.parseColor("#6B7280")
+                    )
+                }
             }
         }
 

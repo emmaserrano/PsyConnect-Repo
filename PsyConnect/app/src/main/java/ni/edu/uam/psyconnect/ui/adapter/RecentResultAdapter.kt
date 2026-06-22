@@ -36,7 +36,8 @@ class RecentResultAdapter(
     ) {
 
         holder.bind(
-            results[position]
+            result = results[position],
+            allResults = results
         )
     }
 }
