@@ -251,6 +251,36 @@ object TestRepository {
                 Question(
                     "Recibo apoyo cuando lo necesito.",
                     defaultOptions
+                ),
+
+                Question(
+                    "Me siento valorado por las personas importantes para mí.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Tengo personas en quienes puedo confiar.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Resuelvo los conflictos de manera respetuosa.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Disfruto compartir tiempo con familiares o amigos.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Siento que pertenezco a un grupo o comunidad.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Mantengo una comunicación abierta con las personas cercanas.",
+                    defaultOptions
                 )
             )
 
