@@ -18,7 +18,6 @@ class RecentResultAdapter(
     ): RecentResultViewHolder {
 
         return RecentResultViewHolder(
-
             LayoutInflater
                 .from(parent.context)
                 .inflate(
@@ -50,40 +49,75 @@ class RecentResultAdapter(
             val context =
                 holder.itemView.context
 
-            val detailIntent =
+            val trend =
+                calcularTrend(
+                    result
+                )
+
+            val intent =
                 Intent(
                     context,
                     ResultDetailActivity::class.java
                 )
 
-            detailIntent.putExtra(
+            intent.putExtra(
                 "category",
                 result.category
             )
 
-            detailIntent.putExtra(
+            intent.putExtra(
                 "percentage",
                 result.percentage
             )
 
-            detailIntent.putExtra(
+            intent.putExtra(
                 "level",
                 result.level
             )
 
-            detailIntent.putExtra(
+            intent.putExtra(
                 "date",
                 result.createdAt
             )
 
-            detailIntent.putExtra(
+            intent.putExtra(
                 "trend",
-                result.trend
+                trend
             )
 
             context.startActivity(
-                detailIntent
+                intent
             )
         }
+    }
+
+    private fun calcularTrend(
+        current: TestResult
+    ): Int {
+
+        val sameCategory =
+            results
+                .filter {
+                    it.category ==
+                            current.category
+                }
+                .sortedBy {
+                    it.id ?: 0
+                }
+
+        val index =
+            sameCategory.indexOfFirst {
+                it.id == current.id
+            }
+
+        if (index <= 0) {
+            return 0
+        }
+
+        val previous =
+            sameCategory[index - 1]
+
+        return current.percentage -
+                previous.percentage
     }
 }
