@@ -92,6 +92,36 @@ object TestRepository {
                 Question(
                     "Puedo controlar mis preocupaciones adecuadamente.",
                     defaultOptions
+                ),
+
+                Question(
+                    "Me recupero rápidamente después de situaciones estresantes.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Puedo organizar mis actividades sin sentirme abrumado.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Mantengo una actitud positiva frente a los problemas.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Dispongo de tiempo suficiente para descansar.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Logro equilibrar mis responsabilidades y mi tiempo personal.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Me siento en control de las situaciones importantes de mi vida.",
+                    defaultOptions
                 )
             )
 
