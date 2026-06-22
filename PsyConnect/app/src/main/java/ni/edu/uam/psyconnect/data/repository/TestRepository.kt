@@ -39,6 +39,36 @@ object TestRepository {
                 Question(
                     "Tengo energía para afrontar mis responsabilidades.",
                     defaultOptions
+                ),
+
+                Question(
+                    "Me siento motivado para alcanzar mis metas.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Puedo disfrutar los momentos positivos de mi día.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Me siento en paz conmigo mismo.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Mantengo hábitos que favorecen mi bienestar.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Tengo esperanza respecto a mi futuro.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Considero que mi calidad de vida es buena.",
+                    defaultOptions
                 )
             )
 
