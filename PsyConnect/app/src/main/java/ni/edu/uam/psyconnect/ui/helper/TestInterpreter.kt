@@ -91,26 +91,25 @@ object TestInterpreter {
             percentage >= 75 ->
 
                 EmotionalFeedback(
-                    "Estrés elevado",
-                    "Actualmente podrías estar experimentando altos niveles de estrés que están afectando tu bienestar emocional.",
+                    "Buen manejo del estrés",
+                    "Actualmente manejas adecuadamente las situaciones de tensión.",
                     listOf(
-                        "Practica ejercicios de respiración profunda.",
-                        "Reduce cargas innecesarias cuando sea posible.",
-                        "Programa momentos de descanso durante el día.",
-                        "Considera buscar apoyo profesional si el estrés persiste."
+                        "Continúa con tus hábitos saludables.",
+                        "Mantén momentos de descanso.",
+                        "Dedica tiempo al ocio."
                     ),
-                    R.raw.stress
+                    R.raw.happy
                 )
 
             percentage >= 50 ->
 
                 EmotionalFeedback(
                     "Estrés moderado",
-                    "Se observan algunas señales de tensión emocional que conviene atender.",
+                    "Existen señales de tensión que sería conveniente atender.",
                     listOf(
-                        "Organiza tus actividades por prioridades.",
-                        "Haz pausas breves durante tus jornadas.",
-                        "Dedica tiempo a actividades relajantes."
+                        "Organiza tus actividades.",
+                        "Haz pausas durante el día.",
+                        "Evita sobrecargarte."
                     ),
                     R.raw.calm
                 )
@@ -118,14 +117,14 @@ object TestInterpreter {
             else ->
 
                 EmotionalFeedback(
-                    "Buen manejo del estrés",
-                    "Actualmente manejas adecuadamente las situaciones de presión y tensión.",
+                    "Estrés elevado",
+                    "Actualmente podrías estar experimentando altos niveles de estrés.",
                     listOf(
-                        "Mantén tus hábitos saludables.",
-                        "Continúa equilibrando trabajo y descanso.",
-                        "Sigue practicando actividades que favorezcan tu bienestar."
+                        "Practica respiración profunda.",
+                        "Reduce cargas innecesarias.",
+                        "Descansa adecuadamente."
                     ),
-                    R.raw.happy
+                    R.raw.stress
                 )
         }
     }

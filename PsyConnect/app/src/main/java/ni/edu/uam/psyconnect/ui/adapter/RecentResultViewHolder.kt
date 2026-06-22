@@ -116,8 +116,7 @@ class RecentResultViewHolder(
             "WELLNESS" ->
                 "🌿 Bienestar"
 
-            "STRESS" ->
-                "😌 Estrés"
+            "STRESS" -> "😌 Manejo del estrés"
 
             "SLEEP" ->
                 "😴 Sueño"

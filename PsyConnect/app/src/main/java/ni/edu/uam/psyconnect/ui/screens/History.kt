@@ -383,7 +383,7 @@ class History : AppCompatActivity() {
             "🌿 Bienestar ($wellness%)"
 
         tvStress.text =
-            "😌 Estrés ($stress%)"
+            "😌 Manejo del estrés ($stress%)"
 
         tvSleep.text =
             "😴 Sueño ($sleep%)"
@@ -476,7 +476,7 @@ class History : AppCompatActivity() {
                 "Bienestar"
 
             "STRESS" ->
-                "Estrés"
+                "Manejo del estrés"
 
             "SLEEP" ->
                 "Sueño"

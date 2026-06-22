@@ -38,7 +38,26 @@ class Results : AppCompatActivity() {
         // =========================
         // UI BASE
         // =========================
-        tvScore.text = "Resultado: $percentage%"
+        tvScore.text = when(category){
+
+            "STRESS" ->
+                "Manejo del estrés: $percentage%"
+
+            "SLEEP" ->
+                "Calidad del sueño: $percentage%"
+
+            "SELF_ESTEEM" ->
+                "Nivel de autoestima: $percentage%"
+
+            "RELATIONSHIPS" ->
+                "Calidad de relaciones: $percentage%"
+
+            "MOOD" ->
+                "Estado de ánimo positivo: $percentage%"
+
+            else ->
+                "Salud emocional: $percentage%"
+        }
 
         tvTitle.text = feedback.title
         tvDescription.text = feedback.description
@@ -51,42 +70,20 @@ class Results : AppCompatActivity() {
         // =========================
         // COLOR SEGÚN RESULTADO
         // =========================
-        val color =
+        val color = when {
 
-            if (category == "STRESS") {
+            percentage >= 75 ->
+                "#2E7D32"
 
-                when {
+            percentage >= 50 ->
+                "#F9A825"
 
-                    percentage >= 75 ->
-                        "#C62828"
+            percentage >= 30 ->
+                "#EF6C00"
 
-                    percentage >= 50 ->
-                        "#EF6C00"
-
-                    percentage >= 30 ->
-                        "#F9A825"
-
-                    else ->
-                        "#2E7D32"
-                }
-
-            } else {
-
-                when {
-
-                    percentage >= 75 ->
-                        "#2E7D32"
-
-                    percentage >= 50 ->
-                        "#F9A825"
-
-                    percentage >= 30 ->
-                        "#EF6C00"
-
-                    else ->
-                        "#C62828"
-                }
-            }
+            else ->
+                "#C62828"
+        }
 
         tvScore.setTextColor(Color.parseColor(color))
         tvTitle.setTextColor(Color.parseColor(color))
