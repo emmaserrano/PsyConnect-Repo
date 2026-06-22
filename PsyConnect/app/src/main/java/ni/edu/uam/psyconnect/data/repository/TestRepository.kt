@@ -198,6 +198,36 @@ object TestRepository {
                 Question(
                     "Reconozco mis cualidades y fortalezas.",
                     defaultOptions
+                ),
+
+                Question(
+                    "Acepto mis errores sin desvalorizarme.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Me siento capaz de alcanzar mis objetivos.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Expreso mis opiniones con seguridad.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Reconozco mis logros y esfuerzos.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Me trato con respeto y comprensión.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Considero que tengo cualidades positivas importantes.",
+                    defaultOptions
                 )
             )
 
