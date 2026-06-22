@@ -56,11 +56,6 @@ class DetailPsychologist : AppCompatActivity() {
 
         val email =
             intent.getStringExtra("email") ?: ""
-        Toast.makeText(
-            this,
-            "Email recibido: $email",
-            Toast.LENGTH_LONG
-        ).show()
 
         val phone =
             intent.getStringExtra("phone") ?: ""
