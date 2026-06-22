@@ -145,6 +145,36 @@ object TestRepository {
                 Question(
                     "Mi sueño suele ser reparador.",
                     defaultOptions
+                ),
+
+                Question(
+                    "Mantengo horarios regulares para dormir.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Rara vez me despierto durante la noche.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Me siento con energía al comenzar el día.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Puedo descansar sin interrupciones importantes.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Evito actividades que afectan negativamente mi sueño antes de dormir.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Considero que mi calidad de sueño es buena.",
+                    defaultOptions
                 )
             )
 
