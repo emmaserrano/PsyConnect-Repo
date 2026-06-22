@@ -8,6 +8,9 @@ import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.button.MaterialButton
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.ui.helper.TestInterpreter
+import ni.edu.uam.psyconnect.network.RetrofitClient
+import kotlinx.coroutines.launch
+import androidx.lifecycle.lifecycleScope
 
 class ResultDetailActivity : AppCompatActivity() {
 
@@ -30,6 +33,11 @@ class ResultDetailActivity : AppCompatActivity() {
                 "percentage",
                 0
             )
+
+        calcularTendencia(
+            category,
+            percentage
+        )
 
         val trend =
             intent.getIntExtra(
@@ -158,6 +166,102 @@ class ResultDetailActivity : AppCompatActivity() {
 
         btnBack.setOnClickListener {
             finish()
+        }
+    }
+
+    private fun calcularTendencia(
+        category: String,
+        percentage: Int
+    ) {
+
+        val tvTrend =
+            findViewById<TextView>(
+                R.id.tvTrend
+            )
+
+        lifecycleScope.launch {
+
+            try {
+
+                val userId =
+                    getSharedPreferences(
+                        "psyconnect",
+                        MODE_PRIVATE
+                    ).getLong(
+                        "userId",
+                        1L
+                    )
+
+                val response =
+                    RetrofitClient
+                        .apiService
+                        .getHistory(
+                            userId
+                        )
+
+                if (response.isSuccessful) {
+
+                    val results =
+                        response.body()
+                            ?: emptyList()
+
+                    val sameCategory =
+                        results
+                            .filter {
+                                it.category == category
+                            }
+                            .sortedByDescending {
+                                it.id
+                            }
+
+                    if (
+                        sameCategory.size < 2
+                    ) {
+
+                        tvTrend.text =
+                            "✨ Primer resultado registrado"
+
+                        return@launch
+                    }
+
+                    val current =
+                        sameCategory[0]
+
+                    val previous =
+                        sameCategory[1]
+
+                    val difference =
+                        current.percentage -
+                                previous.percentage
+
+                    when {
+
+                        difference > 0 -> {
+
+                            tvTrend.text =
+                                "📈 Mejoraste $difference% respecto al test anterior"
+                        }
+
+                        difference < 0 -> {
+
+                            tvTrend.text =
+                                "📉 Disminuyó ${kotlin.math.abs(difference)}% respecto al test anterior"
+                        }
+
+                        else -> {
+
+                            tvTrend.text =
+                                "➖ Sin cambios respecto al test anterior"
+                        }
+                    }
+                }
+
+            } catch (
+                e: Exception
+            ) {
+
+                e.printStackTrace()
+            }
         }
     }
 
