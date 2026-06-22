@@ -304,6 +304,36 @@ object TestRepository {
                 Question(
                     "Tengo pensamientos positivos acerca de mí mismo.",
                     defaultOptions
+                ),
+
+                Question(
+                    "Me siento emocionalmente estable.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Encuentro motivos para sentirme agradecido(a).",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Disfruto las actividades que realizo diariamente.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Me siento capaz de afrontar los desafíos cotidianos.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Suelo experimentar emociones agradables durante la semana.",
+                    defaultOptions
+                ),
+
+                Question(
+                    "Me siento satisfecho(a) con la forma en que transcurre mi vida actualmente.",
+                    defaultOptions
                 )
             )
         }
