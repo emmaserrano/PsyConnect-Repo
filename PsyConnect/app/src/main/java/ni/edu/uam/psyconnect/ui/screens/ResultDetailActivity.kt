@@ -2,11 +2,16 @@ package ni.edu.uam.psyconnect.ui.screens
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.R
+import ni.edu.uam.psyconnect.network.RetrofitClient
 import ni.edu.uam.psyconnect.ui.helper.TestInterpreter
 import kotlin.math.abs
 
@@ -23,9 +28,8 @@ class ResultDetailActivity : AppCompatActivity() {
         )
 
         val category =
-            intent.getStringExtra(
-                "category"
-            ) ?: "WELLNESS"
+            intent.getStringExtra("category")
+                ?: "WELLNESS"
 
         val percentage =
             intent.getIntExtra(
@@ -95,10 +99,28 @@ class ResultDetailActivity : AppCompatActivity() {
                 R.id.btnBack
             )
 
-        tvCategory.text =
-            traducirCategoria(
-                category
+        val layoutEvolution =
+            findViewById<LinearLayout>(
+                R.id.layoutEvolution
             )
+
+        val tvBest =
+            findViewById<TextView>(
+                R.id.tvBest
+            )
+
+        val tvAverage =
+            findViewById<TextView>(
+                R.id.tvAverage
+            )
+
+        val tvTests =
+            findViewById<TextView>(
+                R.id.tvTests
+            )
+
+        tvCategory.text =
+            traducirCategoria(category)
 
         tvPercentage.text =
             "$percentage%"
@@ -180,9 +202,120 @@ class ResultDetailActivity : AppCompatActivity() {
             Color.parseColor(color)
         )
 
+        cargarEvolucion(
+            category,
+            layoutEvolution,
+            tvBest,
+            tvAverage,
+            tvTests
+        )
+
         btnBack.setOnClickListener {
 
             finish()
+        }
+    }
+
+    private fun cargarEvolucion(
+        category: String,
+        container: LinearLayout,
+        tvBest: TextView,
+        tvAverage: TextView,
+        tvTests: TextView
+    ) {
+
+        lifecycleScope.launch {
+
+            try {
+
+                val userId =
+                    getSharedPreferences(
+                        "psyconnect",
+                        MODE_PRIVATE
+                    ).getLong(
+                        "userId",
+                        1L
+                    )
+
+                val response =
+                    RetrofitClient
+                        .apiService
+                        .getHistory(userId)
+
+                if (!response.isSuccessful)
+                    return@launch
+
+                val results =
+                    response.body()
+                        ?.filter { result ->
+                            result.category == category
+                        }
+                        ?.sortedBy { result ->
+                            result.id
+                        }
+                        ?: emptyList()
+
+                tvTests.text =
+                    results.size.toString()
+
+                if (results.isNotEmpty()) {
+
+                    tvBest.text =
+                        "${results.maxOf { it.percentage }}%"
+
+                    tvAverage.text =
+                        "${results.map { it.percentage }.average().toInt()}%"
+                }
+
+                container.removeAllViews()
+
+                results.forEach { result ->
+
+                    val card =
+                        CardView(
+                            this@ResultDetailActivity
+                        )
+
+                    card.radius = 40f
+
+                    val params =
+                        LinearLayout.LayoutParams(
+                            180,
+                            180
+                        )
+
+                    params.marginEnd = 16
+
+                    card.layoutParams =
+                        params
+
+                    val text =
+                        TextView(
+                            this@ResultDetailActivity
+                        )
+
+                    text.text =
+                        "${result.percentage}%"
+
+                    text.textSize = 22f
+
+                    text.setPadding(
+                        20,
+                        50,
+                        20,
+                        20
+                    )
+
+                    card.addView(text)
+
+                    container.addView(card)
+                }
+            }
+
+            catch (e: Exception) {
+
+                e.printStackTrace()
+            }
         }
     }
 
