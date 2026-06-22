@@ -18,6 +18,7 @@ class RecentResultAdapter(
     ): RecentResultViewHolder {
 
         return RecentResultViewHolder(
+
             LayoutInflater
                 .from(parent.context)
                 .inflate(
@@ -28,7 +29,7 @@ class RecentResultAdapter(
         )
     }
 
-    override fun getItemCount() =
+    override fun getItemCount(): Int =
         results.size
 
     override fun onBindViewHolder(
@@ -40,40 +41,49 @@ class RecentResultAdapter(
             results[position]
 
         holder.bind(
-            result,
-            results
+            result = result,
+            allResults = results
         )
 
         holder.itemView.setOnClickListener {
 
-            val intent =
+            val context =
+                holder.itemView.context
+
+            val detailIntent =
                 Intent(
-                    holder.itemView.context,
+                    context,
                     ResultDetailActivity::class.java
                 )
 
-            intent.putExtra(
+            detailIntent.putExtra(
                 "category",
                 result.category
             )
 
-            intent.putExtra(
+            detailIntent.putExtra(
                 "percentage",
                 result.percentage
             )
 
-            intent.putExtra(
-                "trend",
-                result.trend
+            detailIntent.putExtra(
+                "level",
+                result.level
             )
 
-            intent.putExtra(
+            detailIntent.putExtra(
                 "date",
                 result.createdAt
             )
 
-            holder.itemView.context
-                .startActivity(intent)
+            detailIntent.putExtra(
+                "trend",
+                result.trend
+            )
+
+            context.startActivity(
+                detailIntent
+            )
         }
     }
 }
