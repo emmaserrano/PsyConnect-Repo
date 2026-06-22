@@ -7,8 +7,6 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.TestResult
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class RecentResultViewHolder(
     itemView: View
@@ -32,6 +30,11 @@ class RecentResultViewHolder(
     private val tvLevel =
         itemView.findViewById<TextView>(
             R.id.tvLevel
+        )
+
+    private val tvTrend =
+        itemView.findViewById<TextView>(
+            R.id.tvTrend
         )
 
     private val tvDate =
@@ -58,6 +61,39 @@ class RecentResultViewHolder(
             formatearFecha(
                 result.createdAt
             )
+
+        when {
+
+            result.trend > 0 -> {
+
+                tvTrend.text =
+                    "🟢 Mejorando +${result.trend}%"
+
+                tvTrend.setTextColor(
+                    Color.parseColor("#16A34A")
+                )
+            }
+
+            result.trend < 0 -> {
+
+                tvTrend.text =
+                    "🔴 Bajó ${result.trend}%"
+
+                tvTrend.setTextColor(
+                    Color.parseColor("#DC2626")
+                )
+            }
+
+            else -> {
+
+                tvTrend.text =
+                    "⚪ Sin cambios"
+
+                tvTrend.setTextColor(
+                    Color.parseColor("#6B7280")
+                )
+            }
+        }
 
         when {
 
@@ -116,7 +152,8 @@ class RecentResultViewHolder(
             "WELLNESS" ->
                 "🌿 Bienestar"
 
-            "STRESS" -> "😌 Manejo del estrés"
+            "STRESS" ->
+                "😌 Manejo del estrés"
 
             "SLEEP" ->
                 "😴 Sueño"
@@ -142,14 +179,8 @@ class RecentResultViewHolder(
         return try {
 
             fecha
-                ?.replace(
-                    "T",
-                    " "
-                )
-                ?.substring(
-                    0,
-                    16
-                )
+                ?.replace("T", " ")
+                ?.substring(0, 16)
                 ?: "-"
 
         } catch (

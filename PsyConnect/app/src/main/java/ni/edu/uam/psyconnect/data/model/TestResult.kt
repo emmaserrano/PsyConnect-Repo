@@ -12,5 +12,7 @@ data class TestResult(
 
     val level: String,
 
-    val createdAt: String? = null
+    val createdAt: String? = null,
+
+    var trend: Int = 0
 )
