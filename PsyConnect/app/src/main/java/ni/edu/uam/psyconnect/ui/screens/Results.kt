@@ -1,6 +1,7 @@
 package ni.edu.uam.psyconnect.ui.screens
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -15,181 +16,126 @@ import ni.edu.uam.psyconnect.ui.helper.TestInterpreter
 
 class Results : AppCompatActivity() {
 
-    override fun onCreate(
-        savedInstanceState: Bundle?
-    ) {
+    override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_results)
 
-        setContentView(
-            R.layout.activity_results
-        )
+        val tvScore = findViewById<TextView>(R.id.tvScore)
+        val tvTitle = findViewById<TextView>(R.id.tvTitle)
+        val tvDescription = findViewById<TextView>(R.id.tvDescription)
+        val tvRecommendations = findViewById<TextView>(R.id.tvRecommendations)
+        val animation = findViewById<LottieAnimationView>(R.id.lottieResult)
 
-        val tvScore =
-            findViewById<TextView>(
-                R.id.tvScore
-            )
+        val btnHistory = findViewById<Button>(R.id.btnHistory)
+        val btnHome = findViewById<Button>(R.id.btnHome)
 
-        val tvTitle =
-            findViewById<TextView>(
-                R.id.tvTitle
-            )
+        val percentage = intent.getIntExtra("percentage", 0)
+        val category = intent.getStringExtra("category") ?: "WELLNESS"
 
-        val tvDescription =
-            findViewById<TextView>(
-                R.id.tvDescription
-            )
+        val feedback = TestInterpreter.generate(category, percentage)
 
-        val tvRecommendations =
-            findViewById<TextView>(
-                R.id.tvRecommendations
-            )
+        // =========================
+        // UI BASE
+        // =========================
+        tvScore.text = when(category){
 
-        val animation =
-            findViewById<LottieAnimationView>(
-                R.id.lottieResult
-            )
+            "STRESS" ->
+                "Manejo del estrés: $percentage%"
 
-        val btnHistory =
-            findViewById<Button>(
-                R.id.btnHistory
-            )
+            "SLEEP" ->
+                "Calidad del sueño: $percentage%"
 
-        val btnHome =
-            findViewById<Button>(
-                R.id.btnHome
-            )
+            "SELF_ESTEEM" ->
+                "Nivel de autoestima: $percentage%"
 
-        val percentage =
-            intent.getIntExtra(
-                "percentage",
-                0
-            )
+            "RELATIONSHIPS" ->
+                "Calidad de relaciones: $percentage%"
 
-        val category =
-            intent.getStringExtra(
-                "category"
-            ) ?: "WELLNESS"
+            "MOOD" ->
+                "Estado de ánimo positivo: $percentage%"
 
-        val feedback =
-            TestInterpreter.generate(
-                category,
-                percentage
-            )
+            else ->
+                "Salud emocional: $percentage%"
+        }
 
-        tvScore.text =
-            "Resultado obtenido: $percentage %"
-
-        tvTitle.text =
-            feedback.title
-
-        tvDescription.text =
-            feedback.description
-
+        tvTitle.text = feedback.title
+        tvDescription.text = feedback.description
         tvRecommendations.text =
-            feedback.recommendations.joinToString(
-                "\n\n"
-            ) {
-                "✔ $it"
-            }
+            feedback.recommendations.joinToString("\n\n") { "✔ $it" }
 
-        animation.setAnimation(
-            feedback.animation
-        )
-
+        animation.setAnimation(feedback.animation)
         animation.playAnimation()
 
-        guardarResultado(
-            category,
-            percentage,
-            feedback.title
-        )
+        // =========================
+        // COLOR SEGÚN RESULTADO
+        // =========================
+        val color = when {
+
+            percentage >= 75 ->
+                "#2E7D32"
+
+            percentage >= 50 ->
+                "#F9A825"
+
+            percentage >= 30 ->
+                "#EF6C00"
+
+            else ->
+                "#C62828"
+        }
+
+        tvScore.setTextColor(Color.parseColor(color))
+        tvTitle.setTextColor(Color.parseColor(color))
+
+        // =========================
+        // GUARDAR RESULTADO
+        // =========================
+        guardarResultado(category, percentage, feedback.title)
 
         btnHistory.setOnClickListener {
-
-            startActivity(
-                Intent(
-                    this,
-                    History::class.java
-                )
-            )
+            startActivity(Intent(this, History::class.java))
         }
 
         btnHome.setOnClickListener {
-
-            startActivity(
-                Intent(
-                    this,
-                    Home::class.java
-                )
-            )
-
+            startActivity(Intent(this, Home::class.java))
             finish()
         }
     }
 
     private fun guardarResultado(
-
         category: String,
         percentage: Int,
         level: String
-
     ) {
 
         val sharedPreferences =
-            getSharedPreferences(
-                "psyconnect",
-                MODE_PRIVATE
-            )
+            getSharedPreferences("psyconnect", MODE_PRIVATE)
 
         val userId =
-            sharedPreferences.getLong(
-                "userId",
-                1L
-            )
+            sharedPreferences.getLong("userId", 1L)
 
-        val result =
-            TestResult(
-
-                userId = userId,
-
-                category = category,
-
-                percentage = percentage,
-
-                level = level
-            )
+        val result = TestResult(
+            userId = userId,
+            category = category,
+            percentage = percentage,
+            level = level
+        )
 
         lifecycleScope.launch {
 
             try {
 
                 val response =
-                    RetrofitClient
-                        .apiService
-                        .saveResult(
-                            result
-                        )
+                    RetrofitClient.apiService.saveResult(result)
 
-                if (
-                    response.isSuccessful
-                ) {
-
-                    println(
-                        "Resultado guardado correctamente"
-                    )
-
+                if (response.isSuccessful) {
+                    println("Resultado guardado correctamente")
                 } else {
-
-                    println(
-                        "Error al guardar resultado"
-                    )
+                    println("Error al guardar resultado")
                 }
 
-            } catch (
-                e: Exception
-            ) {
-
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }

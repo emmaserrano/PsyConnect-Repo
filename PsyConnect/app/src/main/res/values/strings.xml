@@ -31,4 +31,29 @@
     <string name="achievement_unlocked_placeholder">Logro completado</string>
     <string name="achievement_keep_going">¡Sigue esforzándote!</string>
     <string name="error_loading_achievements">No pudimos cargar tus logros.</string>
+    <string name="reset_password_title">Restablecer contraseña</string>
+
+    <string name="reset_password_subtitle">
+    Ingresa una nueva contraseña segura para continuar.
+</string>
+
+    <string name="hint_new_password">Nueva contraseña</string>
+
+    <string name="hint_confirm_password">Confirmar contraseña</string>
+
+    <string name="password_requirements_title">
+    La contraseña debe contener:
+</string>
+
+    <string name="password_requirements_list">
+• Al menos 8 caracteres
+&#10;• Una letra mayúscula
+&#10;• Una letra minúscula
+&#10;• Un número
+</string>
+
+    <string name="btn_update_password">
+Actualizar contraseña
+</string>
+
 </resources>

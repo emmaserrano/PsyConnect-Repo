@@ -37,6 +37,16 @@ class History : AppCompatActivity() {
 
     private fun cargarHistorial() {
 
+        val tvHeroAverage =
+            findViewById<TextView>(
+                R.id.tvHeroAverage
+            )
+
+        val tvHeroInsight =
+            findViewById<TextView>(
+                R.id.tvHeroInsight
+            )
+
         val tvAverage =
             findViewById<TextView>(
                 R.id.tvAverage
@@ -177,6 +187,9 @@ class History : AppCompatActivity() {
                         tvAverage.text =
                             "$average%"
 
+                        tvHeroAverage.text =
+                            "$average%"
+
                         tvBest.text =
                             "$best%"
 
@@ -189,6 +202,11 @@ class History : AppCompatActivity() {
                             )
 
                         tvInsight.text =
+                            generarInsight(
+                                average
+                            )
+
+                        tvHeroInsight.text =
                             generarInsight(
                                 average
                             )
@@ -237,9 +255,6 @@ class History : AppCompatActivity() {
                 allResults
                     .sortedByDescending {
                         it.id
-                    }
-                    .distinctBy {
-                        it.category
                     }
 
             } else {
@@ -383,7 +398,7 @@ class History : AppCompatActivity() {
             "🌿 Bienestar ($wellness%)"
 
         tvStress.text =
-            "😌 Estrés ($stress%)"
+            "😌 Manejo del estrés ($stress%)"
 
         tvSleep.text =
             "😴 Sueño ($sleep%)"
@@ -476,7 +491,7 @@ class History : AppCompatActivity() {
                 "Bienestar"
 
             "STRESS" ->
-                "Estrés"
+                "Manejo del estrés"
 
             "SLEEP" ->
                 "Sueño"

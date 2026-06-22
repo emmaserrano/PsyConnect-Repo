@@ -22,10 +22,62 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Resumen de Progreso"
+                android:text="Tu progreso emocional"
                 android:textColor="@color/turquesa_oscuro"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textSize="30sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Observa cómo evoluciona tu bienestar con el tiempo 🌿"
+                android:textColor="@color/gris_texto"
+                android:textSize="15sp"
+                android:layout_marginTop="4dp"/>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="30dp"
+                app:cardElevation="8dp"
+                app:cardBackgroundColor="@color/turquesa_principal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌿 Bienestar general"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="18sp"/>
+
+                    <TextView
+                        android:id="@+id/tvHeroAverage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="52sp"
+                        android:layout_marginTop="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvHeroInsight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cargando progreso..."
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:layout_marginTop="4dp"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
             <GridLayout
                 android:layout_width="match_parent"
@@ -177,16 +229,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Promedio por categoría"
+                android:text="Áreas de bienestar"
                 android:textColor="@color/turquesa_oscuro"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
             <!-- Categorías con sus barras de progreso (IDs vinculados a History.kt) -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="28dp"
+                app:cardElevation="4dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:padding="20dp"
                 android:orientation="vertical">
 
                 <TextView android:id="@+id/tvWellness" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/gris_texto" android:layout_marginTop="8dp"/>
@@ -205,6 +264,8 @@
                 <ProgressBar android:id="@+id/progressSocial" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:progressTint="@color/turquesa_principal"/>
             </LinearLayout>
 
+                </androidx.cardview.widget.CardView>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -216,7 +277,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="Resultados recientes"
+                android:text="Historial de evaluaciones"
                 android:textColor="@color/turquesa_oscuro"
                 android:textSize="22sp"
                 android:textStyle="bold" />

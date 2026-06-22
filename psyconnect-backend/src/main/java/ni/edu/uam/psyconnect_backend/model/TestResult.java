@@ -16,6 +16,12 @@ public class TestResult {
 
     private String category;
 
+    private Integer score;
+
+    private Integer maxScore;
+
+    private Integer totalQuestions;
+
     private Integer percentage;
 
     private String level;
@@ -28,12 +34,18 @@ public class TestResult {
     public TestResult(
             Long userId,
             String category,
+            Integer score,
+            Integer maxScore,
+            Integer totalQuestions,
             Integer percentage,
             String level,
             LocalDateTime createdAt
     ) {
         this.userId = userId;
         this.category = category;
+        this.score = score;
+        this.maxScore = maxScore;
+        this.totalQuestions = totalQuestions;
         this.percentage = percentage;
         this.level = level;
         this.createdAt = createdAt;
@@ -49,6 +61,18 @@ public class TestResult {
 
     public String getCategory() {
         return category;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public Integer getMaxScore() {
+        return maxScore;
+    }
+
+    public Integer getTotalQuestions() {
+        return totalQuestions;
     }
 
     public Integer getPercentage() {
@@ -73,6 +97,18 @@ public class TestResult {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+    public void setMaxScore(Integer maxScore) {
+        this.maxScore = maxScore;
+    }
+
+    public void setTotalQuestions(Integer totalQuestions) {
+        this.totalQuestions = totalQuestions;
     }
 
     public void setPercentage(Integer percentage) {
