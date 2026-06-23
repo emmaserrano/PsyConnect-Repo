@@ -1,10 +1,10 @@
 package ni.edu.uam.psyconnect.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
@@ -35,6 +35,7 @@ fun ResetPasswordScreen(
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isConfirmPasswordVisible by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
@@ -50,24 +51,25 @@ fun ResetPasswordScreen(
         },
         containerColor = TurquesaFondo
     ) { padding ->
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(horizontal = 24.dp)
         ) {
-            item { Spacer(Modifier.height(24.dp)) }
+            // Área de contenido scrolleable
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(Modifier.height(32.dp))
 
-            item {
-                Text(
-                    text = "🔑",
-                    fontSize = 64.sp
-                )
-            }
+                Text(text = "🔑", fontSize = 64.sp)
 
-            item {
+                Spacer(Modifier.height(24.dp))
+
                 Text(
                     text = "Crea tu nueva contraseña",
                     fontSize = 22.sp,
@@ -75,21 +77,19 @@ fun ResetPasswordScreen(
                     color = TurquesaOscuro,
                     textAlign = TextAlign.Center
                 )
-            }
 
-            item {
+                Spacer(Modifier.height(12.dp))
+
                 Text(
                     text = "Asegúrate de que sea segura y fácil de recordar para ti.",
                     fontSize = 14.sp,
                     color = GrisTexto,
                     textAlign = TextAlign.Center
                 )
-            }
 
-            item { Spacer(Modifier.height(16.dp)) }
+                Spacer(Modifier.height(40.dp))
 
-            // Nueva Contraseña
-            item {
+                // Campo Nueva Contraseña
                 Column {
                     OutlinedTextField(
                         value = state.password,
@@ -109,10 +109,10 @@ fun ResetPasswordScreen(
                     )
                     PasswordStrengthIndicator(state.password)
                 }
-            }
 
-            // Confirmar Contraseña
-            item {
+                Spacer(Modifier.height(16.dp))
+
+                // Campo Confirmar Contraseña
                 OutlinedTextField(
                     value = state.confirmPassword,
                     onValueChange = onConfirmPasswordChange,
@@ -129,33 +129,30 @@ fun ResetPasswordScreen(
                     colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = TurquesaPrincipal),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
+                
+                Spacer(Modifier.height(32.dp))
             }
 
-            item { Spacer(Modifier.weight(1f)) }
-
-            // Botón de Guardar
-            item {
-                Button(
-                    onClick = onSave,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = TurquesaPrincipal),
-                    enabled = !state.isLoading && 
-                             state.password.isNotBlank() && 
-                             state.password == state.confirmPassword &&
-                             calculatePasswordStrength(state.password) >= 0.8f
-                ) {
-                    if (state.isLoading) {
-                        CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
-                    } else {
-                        Text("Actualizar Contraseña", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                    }
+            // Botón fijo abajo
+            Button(
+                onClick = onSave,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 24.dp)
+                    .height(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = TurquesaPrincipal),
+                enabled = !state.isLoading && 
+                         state.password.isNotBlank() && 
+                         state.password == state.confirmPassword &&
+                         calculatePasswordStrength(state.password) >= 0.8f
+            ) {
+                if (state.isLoading) {
+                    CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+                } else {
+                    Text("Actualizar Contraseña", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }
             }
-            
-            item { Spacer(Modifier.height(24.dp)) }
         }
     }
 }
