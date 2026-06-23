@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -22,6 +23,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ni.edu.uam.psyconnect.ui.viewmodel.RegisterUiState
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +53,7 @@ fun RegisterScreen(
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let {
-                        val date = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date(it))
+                        val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(it))
                         onBirthdateChange(date)
                     }
                     showDatePicker.value = false
@@ -93,7 +97,7 @@ fun RegisterScreen(
                 )
             }
 
-            // Nombre de Usuario con Validación
+            // Nombre de Usuario
             item {
                 Column {
                     RegisterTextField(
@@ -102,18 +106,20 @@ fun RegisterScreen(
                         label = "Nombre de Usuario",
                         icon = Icons.Default.AccountCircle
                     )
-                    state.isUsernameAvailable?.let { available ->
-                        Text(
-                            text = if (available) "✅ Usuario disponible" else "❌ Usuario ocupado",
-                            color = if (available) Color(0xFF2E7D32) else Color.Red,
-                            fontSize = 12.sp,
-                            modifier = Modifier.padding(start = 8.dp, top = 4.dp)
-                        )
+                    if (state.username.isNotEmpty()) {
+                        state.isUsernameAvailable?.let { available ->
+                            Text(
+                                text = if (available) "✅ Usuario disponible" else "❌ Usuario ocupado",
+                                color = if (available) Color(0xFF2E7D32) else Color.Red,
+                                fontSize = 12.sp,
+                                modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                            )
+                        }
                     }
                 }
             }
 
-            // Correo con Validación y Verificación
+            // Email
             item {
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -131,13 +137,15 @@ fun RegisterScreen(
                             }
                         }
                     }
-                    state.isEmailAvailable?.let { available ->
-                        Text(
-                            text = if (available) "✅ Correo disponible" else "❌ Correo ya registrado",
-                            color = if (available) Color(0xFF2E7D32) else Color.Red,
-                            fontSize = 12.sp,
-                            modifier = Modifier.padding(start = 8.dp, top = 4.dp)
-                        )
+                    if (state.email.isNotEmpty()) {
+                        state.isEmailAvailable?.let { available ->
+                            Text(
+                                text = if (available) "✅ Correo disponible" else "❌ Correo ya registrado",
+                                color = if (available) Color(0xFF2E7D32) else Color.Red,
+                                fontSize = 12.sp,
+                                modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -185,7 +193,7 @@ fun RegisterScreen(
                 )
             }
 
-            // Contraseña con Indicador de Fuerza
+            // Contraseña con Requisitos
             item {
                 Column {
                     OutlinedTextField(
@@ -203,11 +211,13 @@ fun RegisterScreen(
                         shape = RoundedCornerShape(16.dp),
                         colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = TurquesaPrincipal)
                     )
-                    PasswordStrengthIndicator(state.password)
+                    
+                    if (state.password.isNotEmpty()) {
+                        PasswordRequirementsView(state.password)
+                    }
                 }
             }
 
-            // Términos y Condiciones
             item {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
@@ -219,7 +229,6 @@ fun RegisterScreen(
                 }
             }
 
-            // Botón de Registro
             item {
                 Button(
                     onClick = onRegister,
@@ -242,11 +251,45 @@ fun RegisterScreen(
 }
 
 @Composable
+fun PasswordRequirementsView(password: String) {
+    val requirements = listOf(
+        "Mínimo 8 caracteres" to (password.length >= 8),
+        "Una mayúscula" to password.any { it.isUpperCase() },
+        "Una minúscula" to password.any { it.isLowerCase() },
+        "Un número" to password.any { it.isDigit() },
+        "Un carácter especial" to password.any { !it.isLetterOrDigit() }
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 12.dp, start = 8.dp)
+    ) {
+        requirements.forEach { (text, met) ->
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 2.dp)) {
+                Text(
+                    text = if (met) "✔" else "✖",
+                    color = if (met) Color(0xFF2E7D32) else Color.Red,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = text,
+                    color = if (met) Color(0xFF2E7D32) else Color.Red,
+                    fontSize = 12.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun RegisterTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: ImageVector,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     keyboardType: KeyboardType = KeyboardType.Text
@@ -267,59 +310,20 @@ fun RegisterTextField(
     )
 }
 
-@Composable
-fun PasswordStrengthIndicator(password: String) {
-    if (password.isEmpty()) return
-    
-    val strength = calculatePasswordStrength(password)
-    val color = when {
-        strength <= 0.2f -> Color.Red
-        strength <= 0.4f -> Color(0xFFFF9800)
-        strength <= 0.6f -> Color(0xFFFBC02D)
-        strength <= 0.8f -> Color(0xFF4CAF50)
-        else -> Color(0xFF2E7D32)
-    }
-    
-    Column(modifier = Modifier.padding(top = 8.dp)) {
-        LinearProgressIndicator(
-            progress = { strength },
-            modifier = Modifier.fillMaxWidth().height(4.dp),
-            color = color,
-            trackColor = Color.LightGray.copy(alpha = 0.3f)
-        )
-        Text(
-            text = when {
-                strength <= 0.2f -> "Muy débil"
-                strength <= 0.4f -> "Débil"
-                strength <= 0.6f -> "Aceptable"
-                strength <= 0.8f -> "Fuerte"
-                else -> "Muy fuerte"
-            },
-            color = color,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-fun calculatePasswordStrength(password: String): Float {
-    var score = 0f
-    if (password.length >= 8) score += 0.2f
-    if (password.any { it.isUpperCase() }) score += 0.2f
-    if (password.any { it.isLowerCase() }) score += 0.2f
-    if (password.any { it.isDigit() }) score += 0.2f
-    if (password.any { !it.isLetterOrDigit() }) score += 0.2f
-    return score
-}
-
 fun isRegisterEnabled(state: RegisterUiState): Boolean {
+    val passwordMet = state.password.length >= 8 &&
+            state.password.any { it.isUpperCase() } &&
+            state.password.any { it.isLowerCase() } &&
+            state.password.any { it.isDigit() } &&
+            state.password.any { !it.isLetterOrDigit() }
+
     return state.name.isNotBlank() &&
             state.username.isNotBlank() &&
             state.isUsernameAvailable == true &&
             state.email.isNotBlank() &&
             state.isEmailAvailable == true &&
             state.isEmailVerified &&
-            state.password.length >= 8 &&
+            passwordMet &&
             state.birthdate.isNotBlank() &&
             state.termsAccepted &&
             !state.isLoading

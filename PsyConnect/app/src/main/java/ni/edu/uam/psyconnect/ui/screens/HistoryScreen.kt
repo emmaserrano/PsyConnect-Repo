@@ -72,6 +72,36 @@ fun HistoryScreen(
                 )
             }
 
+            // SECCIÓN: GRÁFICOS DE PROGRESO POR CATEGORÍA
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                ) {
+                    Column(modifier = Modifier.padding(20.dp)) {
+                        Text("Promedio por área", fontWeight = FontWeight.Bold, color = TurquesaOscuro)
+                        Spacer(Modifier.height(16.dp))
+                        
+                        categories.forEach { (code, label) ->
+                            val avg = calculateAverage(results, code)
+                            CategoryProgressRow(label, avg)
+                            Spacer(Modifier.height(12.dp))
+                        }
+                    }
+                }
+            }
+
+            item {
+                Text(
+                    "Resultados Recientes",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+            }
+
             // Filtros
             item {
                 LazyRow(
@@ -158,4 +188,30 @@ fun ResultCard(result: TestResultEntity) {
             }
         }
     }
+}
+
+@Composable
+fun CategoryProgressRow(label: String, progress: Int) {
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(label, fontSize = 13.sp, color = GrisTexto)
+            Text("$progress%", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = TurquesaPrincipal)
+        }
+        Spacer(Modifier.height(4.dp))
+        LinearProgressIndicator(
+            progress = { progress / 100f },
+            modifier = Modifier.fillMaxWidth().height(6.dp).background(TurquesaFondo, RoundedCornerShape(3.dp)),
+            color = if (progress >= 70) TurquesaPrincipal else if (progress >= 40) Color(0xFFFACC15) else Color.Red,
+            trackColor = TurquesaFondo
+        )
+    }
+}
+
+fun calculateAverage(results: List<TestResultEntity>, category: String): Int {
+    val categoryResults = results.filter { it.category == category }
+    if (categoryResults.isEmpty()) return 0
+    return categoryResults.map { it.percentage }.average().toInt()
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
+import com.airbnb.lottie.compose.*
 import ni.edu.uam.psyconnect.data.model.WellnessItem
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.Psychologist
@@ -44,11 +45,11 @@ fun HomeScreen(
     onNavigateToMoodJournal: () -> Unit
 ) {
     val wellnessItems = listOf(
-        WellnessItem("🌿 Bienestar emocional", "Evalúa tu equilibrio emocional general.", R.raw.wellbeing, "WELLNESS"),
-        WellnessItem("🌊 Estrés", "Conoce tu nivel actual de estrés.", R.raw.stress, "STRESS"),
-        WellnessItem("☀️ Estado de ánimo", "Descubre cómo te has sentido últimamente.", R.raw.happy, "MOOD"),
-        WellnessItem("🌙 Sueño y descanso", "Analiza la calidad de tu descanso.", R.raw.sleep, "SLEEP"),
-        WellnessItem("🤝 Relaciones sociales", "Reflexiona sobre tu interacción social.", R.raw.social, "RELATIONSHIPS")
+        WellnessItem("Bienestar emocional", "Evalúa tu equilibrio emocional general.", R.raw.wellbeing, "WELLNESS"),
+        WellnessItem("Estrés", "Conoce tu nivel de tensión.", R.raw.stress, "STRESS"),
+        WellnessItem("Estado de ánimo", "Tus emociones recientes.", R.raw.happy, "MOOD"),
+        WellnessItem("Sueño y descanso", "Calidad de tu descanso.", R.raw.sleep, "SLEEP"),
+        WellnessItem("Relaciones sociales", "Tu interacción social.", R.raw.social, "RELATIONSHIPS")
     )
 
     if (showMoodDialog) {
@@ -91,6 +92,7 @@ fun HomeScreen(
                 .padding(padding)
                 .padding(horizontal = 20.dp)
         ) {
+            // Header
             item {
                 Spacer(Modifier.height(24.dp))
                 Row(
@@ -112,20 +114,10 @@ fun HomeScreen(
                         Text("📔", fontSize = 20.sp)
                     }
                 }
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(32.dp))
             }
 
-            item {
-                Text("Especialistas para ti", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = TurquesaOscuro)
-                Spacer(Modifier.height(12.dp))
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    items(psychologists) { psych ->
-                        PsychologistCard(psych, onPsychologistClick)
-                    }
-                }
-                Spacer(Modifier.height(24.dp))
-            }
-
+            // EVALUACIONES (Arriba)
             item {
                 Text("Evaluaciones de bienestar", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = TurquesaOscuro)
                 Spacer(Modifier.height(12.dp))
@@ -135,8 +127,84 @@ fun HomeScreen(
                 WellnessCard(item, onTestClick)
                 Spacer(Modifier.height(12.dp))
             }
-            
-            item { Spacer(Modifier.height(24.dp)) }
+
+            // ESPECIALISTAS (Debajo)
+            item {
+                Spacer(Modifier.height(24.dp))
+                Text("Especialistas para ti", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = TurquesaOscuro)
+                Spacer(Modifier.height(12.dp))
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    items(psychologists) { psych ->
+                        PsychologistCard(psych, onPsychologistClick)
+                    }
+                }
+                Spacer(Modifier.height(32.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun WellnessCard(item: WellnessItem, onClick: (String) -> Unit) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(item.animation))
+    val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick(item.category) },
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(1.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(60.dp)
+                    .background(TurquesaPrincipal.copy(alpha = 0.05f), RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                LottieAnimation(
+                    composition = composition,
+                    progress = { progress },
+                    modifier = Modifier.size(50.dp)
+                )
+            }
+            Spacer(Modifier.width(16.dp))
+            Column {
+                Text(item.title, fontWeight = FontWeight.Bold, color = TurquesaOscuro, fontSize = 16.sp)
+                Text(item.description, fontSize = 12.sp, color = GrisTexto)
+            }
+        }
+    }
+}
+
+@Composable
+fun PsychologistCard(psych: Psychologist, onClick: (Psychologist) -> Unit) {
+    Card(
+        modifier = Modifier
+            .width(160.dp)
+            .clickable { onClick(psych) },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(2.dp)
+    ) {
+        Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            AsyncImage(
+                model = "http://10.0.2.2:8080/uploads/${psych.photo}",
+                contentDescription = null,
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(CircleShape)
+                    .background(TurquesaFondo, CircleShape),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(psych.name, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TurquesaOscuro, maxLines = 1, textAlign = TextAlign.Center)
+            Text(psych.specialty, fontSize = 11.sp, color = TurquesaPrincipal, maxLines = 1)
         }
     }
 }
@@ -187,63 +255,6 @@ fun MoodSelectionDialog(onMoodSelected: (String) -> Unit, onDismiss: () -> Unit)
                 TextButton(onClick = onDismiss) {
                     Text("Más tarde", color = GrisTexto)
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun PsychologistCard(psych: Psychologist, onClick: (Psychologist) -> Unit) {
-    Card(
-        modifier = Modifier
-            .width(160.dp)
-            .clickable { onClick(psych) },
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(2.dp)
-    ) {
-        Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            AsyncImage(
-                model = psych.photo,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(70.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(psych.name, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TurquesaOscuro, maxLines = 1)
-            Text(psych.specialty, fontSize = 11.sp, color = TurquesaPrincipal, maxLines = 1)
-        }
-    }
-}
-
-@Composable
-fun WellnessCard(item: WellnessItem, onClick: (String) -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick(item.category) },
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(1.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(50.dp)
-                    .background(TurquesaPrincipal.copy(alpha = 0.1f), RoundedCornerShape(12.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(item.title.take(2), fontSize = 24.sp)
-            }
-            Spacer(Modifier.width(16.dp))
-            Column {
-                Text(item.title, fontWeight = FontWeight.Bold, color = TurquesaOscuro)
-                Text(item.description, fontSize = 12.sp, color = GrisTexto)
             }
         }
     }

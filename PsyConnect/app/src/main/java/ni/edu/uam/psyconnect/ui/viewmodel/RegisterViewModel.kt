@@ -3,6 +3,8 @@ package ni.edu.uam.psyconnect.ui.viewmodel
 import android.os.CountDownTimer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,24 +19,24 @@ class RegisterViewModel : ViewModel() {
     val uiState: StateFlow<RegisterUiState> = _uiState
 
     private var countDownTimer: CountDownTimer? = null
+    private var checkUsernameJob: Job? = null
+    private var checkEmailJob: Job? = null
 
     fun onNameChange(name: String) {
         _uiState.value = _uiState.value.copy(name = name)
     }
 
     fun onUsernameChange(username: String) {
-        _uiState.value = _uiState.value.copy(username = username)
-        if (username.isNotBlank()) {
-            checkUsernameAvailability(username)
-        } else {
-            _uiState.value = _uiState.value.copy(isUsernameAvailable = null)
-        }
-    }
-
-    private fun checkUsernameAvailability(username: String) {
-        viewModelScope.launch {
+        _uiState.value = _uiState.value.copy(username = username, isUsernameAvailable = null)
+        if (username.isBlank()) return
+        
+        // Debounce: Espera 500ms antes de consultar a la API para evitar errores de red y estados falsos
+        checkUsernameJob?.cancel()
+        checkUsernameJob = viewModelScope.launch {
+            delay(500)
             try {
                 val response = RetrofitClient.apiService.existsUsername(username)
+                // Si la API dice true (existe), disponible = false
                 _uiState.value = _uiState.value.copy(isUsernameAvailable = response.body() == false)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(isUsernameAvailable = null)
@@ -43,16 +45,12 @@ class RegisterViewModel : ViewModel() {
     }
 
     fun onEmailChange(email: String) {
-        _uiState.value = _uiState.value.copy(email = email)
-        if (email.isNotBlank()) {
-            checkEmailAvailability(email)
-        } else {
-            _uiState.value = _uiState.value.copy(isEmailAvailable = null)
-        }
-    }
+        _uiState.value = _uiState.value.copy(email = email, isEmailAvailable = null)
+        if (email.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) return
 
-    private fun checkEmailAvailability(email: String) {
-        viewModelScope.launch {
+        checkEmailJob?.cancel()
+        checkEmailJob = viewModelScope.launch {
+            delay(500)
             try {
                 val response = RetrofitClient.apiService.existsEmail(email)
                 _uiState.value = _uiState.value.copy(isEmailAvailable = response.body() == false)

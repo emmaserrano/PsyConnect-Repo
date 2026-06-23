@@ -4,8 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -35,22 +37,31 @@ fun LoginScreen(
     var identifier by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(TurquesaFondo)
-            .padding(24.dp),
+            .padding(horizontal = 24.dp)
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Logo o Icono de la App
-        Icon(
-            painter = painterResource(id = R.mipmap.ic_launcher_round),
-            contentDescription = "Logo",
-            modifier = Modifier.size(100.dp),
-            tint = Color.Unspecified
-        )
+        Spacer(modifier = Modifier.height(48.dp))
+
+        Box(
+            modifier = Modifier
+                .size(120.dp)
+                .background(TurquesaPrincipal.copy(alpha = 0.1f), RoundedCornerShape(24.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = "Logo",
+                modifier = Modifier.fillMaxSize()
+            )
+        }
         
         Spacer(modifier = Modifier.height(32.dp))
         
@@ -70,9 +81,8 @@ fun LoginScreen(
             modifier = Modifier.padding(top = 8.dp)
         )
 
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
-        // Campo de Correo / Usuario
         OutlinedTextField(
             value = identifier,
             onValueChange = { identifier = it },
@@ -82,15 +92,13 @@ fun LoginScreen(
             shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = TurquesaPrincipal,
-                unfocusedBorderColor = GrisSuave.copy(alpha = 0.5f),
-                focusedLabelColor = TurquesaPrincipal
+                unfocusedBorderColor = GrisSuave.copy(alpha = 0.5f)
             ),
             singleLine = true
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Campo de Contraseña
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
@@ -111,13 +119,16 @@ fun LoginScreen(
             shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = TurquesaPrincipal,
-                unfocusedBorderColor = GrisSuave.copy(alpha = 0.5f),
-                focusedLabelColor = TurquesaPrincipal
+                unfocusedBorderColor = GrisSuave.copy(alpha = 0.5f)
             ),
             singleLine = true
         )
 
-        // Olvidé mi contraseña
+        // REQUISITOS DE CONTRASEÑA (NUEVO)
+        if (password.isNotEmpty()) {
+            PasswordRequirementsView(password)
+        }
+
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
             Text(
                 text = "¿Olvidaste tu contraseña?",
@@ -132,7 +143,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Botón de Inicio de Sesión
         Button(
             onClick = { onLoginClick(identifier, password) },
             modifier = Modifier
@@ -147,7 +157,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Registro
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text("¿No tienes una cuenta?", color = GrisTexto, fontSize = 14.sp)
             Text(
@@ -157,6 +166,41 @@ fun LoginScreen(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable { onRegisterClick() }
             )
+        }
+        Spacer(modifier = Modifier.height(32.dp))
+    }
+}
+
+@Composable
+fun PasswordRequirementsView(password: String) {
+    val requirements = listOf(
+        "Mínimo 8 caracteres" to (password.length >= 8),
+        "Una mayúscula" to password.any { it.isUpperCase() },
+        "Una minúscula" to password.any { it.isLowerCase() },
+        "Un número" to password.any { it.isDigit() },
+        "Un carácter especial" to password.any { !it.isLetterOrDigit() }
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 12.dp, start = 8.dp)
+    ) {
+        requirements.forEach { (text, met) ->
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 2.dp)) {
+                Text(
+                    text = if (met) "✔" else "✖",
+                    color = if (met) Color(0xFF2E7D32) else Color.Red,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = text,
+                    color = if (met) Color(0xFF2E7D32) else Color.Red,
+                    fontSize = 12.sp
+                )
+            }
         }
     }
 }
