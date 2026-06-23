@@ -135,15 +135,28 @@ object TestInterpreter {
 
         return when {
 
-            percentage >= 75 ->
+            percentage >= 90 ->
+
+                EmotionalFeedback(
+                    "Descanso excelente",
+                    "Tu calidad de sueño favorece tu bienestar físico y emocional.",
+                    listOf(
+                        "Mantén tus horarios.",
+                        "Continúa cuidando tu higiene del sueño.",
+                        "Evita cambios bruscos de rutina."
+                    ),
+                    R.raw.sleep
+                )
+
+            percentage >= 70 ->
 
                 EmotionalFeedback(
                     "Buen descanso",
-                    "Tu calidad de sueño es favorable.",
+                    "En general duermes adecuadamente.",
                     listOf(
-                        "Mantén horarios regulares.",
-                        "Conserva una rutina saludable.",
-                        "Continúa priorizando tu descanso."
+                        "Mantén una rutina estable.",
+                        "Evita cafeína antes de dormir.",
+                        "Realiza ejercicio regularmente."
                     ),
                     R.raw.sleep
                 )
@@ -151,25 +164,38 @@ object TestInterpreter {
             percentage >= 50 ->
 
                 EmotionalFeedback(
-                    "Sueño moderado",
-                    "Hay aspectos que podrían mejorar tu descanso.",
+                    "Sueño regular",
+                    "Existen algunos hábitos que podrían mejorar tu descanso.",
                     listOf(
-                        "Evita cafeína en la noche.",
-                        "Procura dormir más horas.",
-                        "Reduce el estrés diario."
+                        "Reduce el uso del celular antes de dormir.",
+                        "Respeta horarios.",
+                        "Evita cenas pesadas."
                     ),
                     R.raw.calm
+                )
+
+            percentage >= 30 ->
+
+                EmotionalFeedback(
+                    "Sueño deficiente",
+                    "La calidad de tu descanso podría afectar tu estado de ánimo.",
+                    listOf(
+                        "Implementa una rutina nocturna.",
+                        "Evita pantallas.",
+                        "Consulta a un especialista si continúa."
+                    ),
+                    R.raw.sad
                 )
 
             else ->
 
                 EmotionalFeedback(
-                    "Problemas de sueño",
-                    "Tu descanso podría estar afectando tu bienestar.",
+                    "Alteración importante del sueño",
+                    "Los resultados indican dificultades significativas para descansar.",
                     listOf(
-                        "Establece horarios fijos.",
-                        "Evita pantallas antes de dormir.",
-                        "Consulta con un especialista si el problema persiste."
+                        "Busca orientación profesional.",
+                        "No normalices el cansancio constante.",
+                        "Prioriza el descanso."
                     ),
                     R.raw.sad
                 )
@@ -229,15 +255,28 @@ object TestInterpreter {
 
         return when {
 
-            percentage >= 75 ->
+            percentage >= 90 ->
 
                 EmotionalFeedback(
-                    "Autoestima saludable",
-                    "Tienes una percepción positiva de ti mismo y de tus capacidades.",
+                    "Autoestima muy saludable",
+                    "Confías en tus capacidades y mantienes una imagen positiva de ti.",
                     listOf(
-                        "Continúa reconociendo tus logros.",
-                        "Mantén pensamientos positivos sobre ti.",
-                        "Sigue fortaleciendo tu confianza."
+                        "Sigue fortaleciendo tus fortalezas.",
+                        "Mantén una actitud positiva.",
+                        "Apoya también a quienes te rodean."
+                    ),
+                    R.raw.happy
+                )
+
+            percentage >= 70 ->
+
+                EmotionalFeedback(
+                    "Buena autoestima",
+                    "Generalmente tienes confianza en ti mismo.",
+                    listOf(
+                        "Reconoce tus logros.",
+                        "Acepta los errores como aprendizaje.",
+                        "Continúa creciendo."
                     ),
                     R.raw.happy
                 )
@@ -245,25 +284,38 @@ object TestInterpreter {
             percentage >= 50 ->
 
                 EmotionalFeedback(
-                    "Autoestima moderada",
-                    "Existen aspectos de tu autoconfianza que podrían fortalecerse.",
+                    "Autoestima media",
+                    "Existen momentos en los que dudas de tus capacidades.",
                     listOf(
-                        "Reconoce tus fortalezas.",
-                        "Evita compararte constantemente.",
-                        "Celebra tus pequeños logros."
+                        "Celebra pequeños logros.",
+                        "Evita compararte.",
+                        "Practica pensamientos positivos."
                     ),
                     R.raw.calm
+                )
+
+            percentage >= 30 ->
+
+                EmotionalFeedback(
+                    "Autoestima baja",
+                    "Tu percepción personal podría estar afectando tu bienestar.",
+                    listOf(
+                        "Practica la autocompasión.",
+                        "Reconoce tus fortalezas.",
+                        "Busca apoyo si lo necesitas."
+                    ),
+                    R.raw.sad
                 )
 
             else ->
 
                 EmotionalFeedback(
-                    "Autoestima baja",
-                    "Podrías estar teniendo dificultades para valorar tus capacidades.",
+                    "Autoestima muy baja",
+                    "Es recomendable trabajar activamente en fortalecer tu confianza personal.",
                     listOf(
-                        "Practica la autocompasión.",
-                        "Identifica pensamientos negativos frecuentes.",
-                        "Busca apoyo emocional si lo necesitas."
+                        "Habla con un profesional.",
+                        "No enfrentes esto en soledad.",
+                        "Recuerda que tu valor no depende de tus errores."
                     ),
                     R.raw.sad
                 )

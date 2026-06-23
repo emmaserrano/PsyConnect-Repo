@@ -36,6 +36,11 @@ class Home : AppCompatActivity() {
                 R.id.tvGreeting
             )
 
+        val btnMoodJournal =
+            findViewById<Button>(
+                R.id.btnMoodJournal
+            )
+
         val sharedPreferences =
             getSharedPreferences(
                 "psyconnect",
@@ -279,6 +284,16 @@ class Home : AppCompatActivity() {
             }
         }
 
+        btnMoodJournal.setOnClickListener {
+
+            startActivity(
+                Intent(
+                    this,
+                    MoodJournalActivity::class.java
+                )
+            )
+        }
+
         /*
          * BOTTOM NAVIGATION
          */
@@ -328,6 +343,8 @@ class Home : AppCompatActivity() {
             }
         }
     }
+
+
 
     private fun mostrarDialogoMood(userId: Long) {
 
@@ -415,4 +432,6 @@ class Home : AppCompatActivity() {
 
         dialog.show()
     }
+
+
 }
