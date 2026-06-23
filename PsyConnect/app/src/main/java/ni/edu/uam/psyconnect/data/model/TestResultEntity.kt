@@ -9,7 +9,7 @@ data class TestResultEntity(
     val id: Int = 0,
     val category: String,
     val percentage: Int,
-    val date: String,
-    val insight: String,
+    val createdAt: String,
+    val level: String,
     val userId: Long
 )
