@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.data.moodjournal.MoodJournalEntry
-import ni.edu.uam.psyconnect.data.moodjournal.MoodJournalRepository
+import ni.edu.uam.psyconnect.ui.viewmodel.MoodJournalViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -63,7 +63,7 @@ val activitiesList = listOf(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoodJournalScreen(
-    repository: MoodJournalRepository,
+    viewModel: MoodJournalViewModel,
     onBack: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -71,16 +71,13 @@ fun MoodJournalScreen(
     var selectedMood by remember { mutableStateOf<MoodType?>(null) }
     val selectedActivities = remember { mutableStateListOf<String>() }
     
-    // Estado para rastrear si estamos editando
     var editingEntry by remember { mutableStateOf<MoodJournalEntry?>(null) }
     
-    var entries by remember { mutableStateOf(emptyList<MoodJournalEntry>()) }
+    // Observamos las entradas desde el ViewModel (se actualiza solo)
+    val entries by viewModel.entries.collectAsState()
+    
     var isSheetOpen by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
-
-    LaunchedEffect(Unit) {
-        entries = repository.getAll()
-    }
 
     Scaffold(
         topBar = {
@@ -109,7 +106,7 @@ fun MoodJournalScreen(
                         reflection = ""
                         selectedMood = null
                         selectedActivities.clear()
-                        editingEntry = null // Resetear estado de edición
+                        editingEntry = null
                         isSheetOpen = true 
                     },
                     containerColor = TurquesaPrincipal,
@@ -145,7 +142,6 @@ fun MoodJournalScreen(
                     
                     Spacer(Modifier.height(24.dp))
 
-                    // Selector de Ánimo Estilo Premium
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -179,7 +175,6 @@ fun MoodJournalScreen(
                     Text("¿Qué has estado haciendo?", fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = TurquesaOscuro)
                     Spacer(Modifier.height(12.dp))
 
-                    // Selector de Actividades (Chips)
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         items(activitiesList) { act ->
                             val isSelected = selectedActivities.contains(act.label)
@@ -216,29 +211,24 @@ fun MoodJournalScreen(
                     Button(
                         onClick = {
                             if (selectedMood == null) return@Button
-                            scope.launch {
-                                if (editingEntry == null) {
-                                    // Crear nueva entrada
-                                    val entry = MoodJournalEntry(
-                                        mood = selectedMood?.name ?: "NORMAL",
-                                        reflection = reflection,
-                                        activities = selectedActivities.joinToString(","),
-                                        date = SimpleDateFormat("EEEE, d MMMM", Locale("es")).format(Date()).replaceFirstChar { it.uppercase() },
-                                        timestamp = System.currentTimeMillis()
-                                    )
-                                    repository.insert(entry)
-                                } else {
-                                    // Actualizar entrada existente
-                                    val updatedEntry = editingEntry!!.copy(
-                                        mood = selectedMood?.name ?: "NORMAL",
-                                        reflection = reflection,
-                                        activities = selectedActivities.joinToString(",")
-                                    )
-                                    repository.update(updatedEntry)
-                                }
-                                entries = repository.getAll()
-                                isSheetOpen = false
+                            if (editingEntry == null) {
+                                val entry = MoodJournalEntry(
+                                    mood = selectedMood?.name ?: "NORMAL",
+                                    reflection = reflection,
+                                    activities = selectedActivities.joinToString(","),
+                                    date = SimpleDateFormat("EEEE, d MMMM", Locale("es")).format(Date()).replaceFirstChar { it.uppercase() },
+                                    timestamp = System.currentTimeMillis()
+                                )
+                                viewModel.insertEntry(entry)
+                            } else {
+                                val updatedEntry = editingEntry!!.copy(
+                                    mood = selectedMood?.name ?: "NORMAL",
+                                    reflection = reflection,
+                                    activities = selectedActivities.joinToString(",")
+                                )
+                                viewModel.updateEntry(updatedEntry)
                             }
+                            isSheetOpen = false
                         },
                         modifier = Modifier.fillMaxWidth().height(56.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = TurquesaPrincipal),
@@ -343,7 +333,6 @@ fun MoodJournalScreen(
                             }
                         }
                         
-                        // Botón Editar
                         IconButton(
                             onClick = { 
                                 editingEntry = entry
@@ -365,11 +354,8 @@ fun MoodJournalScreen(
                             )
                         }
 
-                        // Botón Eliminar
                         IconButton(
-                            onClick = { 
-                                scope.launch { repository.delete(entry); entries = repository.getAll() } 
-                            },
+                            onClick = { viewModel.deleteEntry(entry) },
                             modifier = Modifier.size(32.dp)
                         ) {
                             Icon(
