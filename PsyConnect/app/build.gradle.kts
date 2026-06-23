@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.coil.compose)
+    implementation(libs.lottie.compose)
 
     // Room
     implementation(libs.androidx.room.runtime)
