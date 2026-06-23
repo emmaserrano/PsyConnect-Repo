@@ -4,17 +4,19 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import ni.edu.uam.psyconnect.data.model.AchievementEntity
 import ni.edu.uam.psyconnect.data.model.TestResultEntity
 
 @Database(
-    entities = [MoodJournalEntry::class, TestResultEntity::class],
-    version = 3,
+    entities = [MoodJournalEntry::class, TestResultEntity::class, AchievementEntity::class],
+    version = 4,
     exportSchema = false
 )
 abstract class MoodJournalDatabase : RoomDatabase() {
 
     abstract fun moodJournalDao(): MoodJournalDao
     abstract fun testResultDao(): TestResultDao
+    abstract fun achievementDao(): AchievementDao
 
     companion object {
         @Volatile
