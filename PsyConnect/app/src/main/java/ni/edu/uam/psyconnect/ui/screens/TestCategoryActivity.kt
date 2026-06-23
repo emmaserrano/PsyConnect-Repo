@@ -2,83 +2,24 @@ package ni.edu.uam.psyconnect.ui.screens
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
-import ni.edu.uam.psyconnect.R
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 
-class TestCategoryActivity : AppCompatActivity() {
+class TestCategoryActivity : ComponentActivity() {
 
-    override fun onCreate(
-        savedInstanceState: Bundle?
-    ) {
-
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(
-            R.layout.activity_test_category
-        )
-
-        findViewById<LinearLayout>(
-            R.id.cardWellness
-        ).setOnClickListener {
-
-            openCategory(
-                "WELLNESS"
+        setContent {
+            TestCategoryScreen(
+                onCategoryClick = { category ->
+                    val intent = Intent(this, DynamicTestActivity::class.java).apply {
+                        putExtra("category", category)
+                    }
+                    startActivity(intent)
+                },
+                onBack = { finish() }
             )
         }
-
-        findViewById<LinearLayout>(
-            R.id.cardStress
-        ).setOnClickListener {
-
-            openCategory(
-                "STRESS"
-            )
-        }
-
-        findViewById<LinearLayout>(
-            R.id.cardMood
-        ).setOnClickListener {
-
-            openCategory(
-                "MOOD"
-            )
-        }
-
-        findViewById<LinearLayout>(
-            R.id.cardSleep
-        ).setOnClickListener {
-
-            openCategory(
-                "SLEEP"
-            )
-        }
-
-        findViewById<LinearLayout>(
-            R.id.cardSocial
-        ).setOnClickListener {
-
-            openCategory(
-                "SOCIAL"
-            )
-        }
-    }
-
-    private fun openCategory(
-        category: String
-    ) {
-
-        val intent =
-            Intent(
-                this,
-                DynamicTestActivity::class.java
-            )
-
-        intent.putExtra(
-            "category",
-            category
-        )
-
-        startActivity(intent)
     }
 }
