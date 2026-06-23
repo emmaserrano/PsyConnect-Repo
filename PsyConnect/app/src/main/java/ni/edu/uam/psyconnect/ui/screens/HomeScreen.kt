@@ -20,8 +20,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import ni.edu.uam.psyconnect.data.model.WellnessItem
 import ni.edu.uam.psyconnect.R
@@ -32,6 +34,9 @@ import ni.edu.uam.psyconnect.data.model.Psychologist
 fun HomeScreen(
     userName: String,
     psychologists: List<Psychologist>,
+    showMoodDialog: Boolean,
+    onMoodSelected: (String) -> Unit,
+    onDismissMoodDialog: () -> Unit,
     onTestClick: (String) -> Unit,
     onPsychologistClick: (Psychologist) -> Unit,
     onNavigateToHistory: () -> Unit,
@@ -46,15 +51,23 @@ fun HomeScreen(
         WellnessItem("🤝 Relaciones sociales", "Reflexiona sobre tu interacción social.", R.raw.social, "RELATIONSHIPS")
     )
 
+    if (showMoodDialog) {
+        MoodSelectionDialog(onMoodSelected, onDismissMoodDialog)
+    }
+
     Scaffold(
         bottomBar = {
-            NavigationBar(containerColor = Color.White, toneElevation = 8.dp) {
+            NavigationBar(containerColor = Color.White, tonalElevation = 8.dp) {
                 NavigationBarItem(
                     selected = true,
                     onClick = { },
                     icon = { Icon(Icons.Default.Home, null) },
                     label = { Text("Inicio") },
-                    colors = NavigationBarItemDefaults.colors(selectedIconColor = TurquesaPrincipal, selectedTextColor = TurquesaPrincipal, indicatorColor = TurquesaPrincipal.copy(alpha = 0.1f))
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = TurquesaPrincipal, 
+                        selectedTextColor = TurquesaPrincipal, 
+                        indicatorColor = TurquesaPrincipal.copy(alpha = 0.1f)
+                    )
                 )
                 NavigationBarItem(
                     selected = false,
@@ -78,7 +91,6 @@ fun HomeScreen(
                 .padding(padding)
                 .padding(horizontal = 20.dp)
         ) {
-            // Header
             item {
                 Spacer(Modifier.height(24.dp))
                 Row(
@@ -103,7 +115,6 @@ fun HomeScreen(
                 Spacer(Modifier.height(24.dp))
             }
 
-            // Sección Psicólogos
             item {
                 Text("Especialistas para ti", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = TurquesaOscuro)
                 Spacer(Modifier.height(12.dp))
@@ -115,7 +126,6 @@ fun HomeScreen(
                 Spacer(Modifier.height(24.dp))
             }
 
-            // Sección Evaluaciones
             item {
                 Text("Evaluaciones de bienestar", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = TurquesaOscuro)
                 Spacer(Modifier.height(12.dp))
@@ -127,6 +137,57 @@ fun HomeScreen(
             }
             
             item { Spacer(Modifier.height(24.dp)) }
+        }
+    }
+}
+
+@Composable
+fun MoodSelectionDialog(onMoodSelected: (String) -> Unit, onDismiss: () -> Unit) {
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "¿Cómo te sientes hoy?",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TurquesaOscuro,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(Modifier.height(24.dp))
+                
+                val moods = listOf(
+                    "EXCELENTE" to "🤩",
+                    "BIEN" to "😊",
+                    "NORMAL" to "😐",
+                    "TRISTE" to "😔",
+                    "MUY_MAL" to "😫"
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    moods.forEach { (name, emoji) ->
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.clickable { onMoodSelected(name) }
+                        ) {
+                            Text(emoji, fontSize = 32.sp)
+                        }
+                    }
+                }
+                Spacer(Modifier.height(24.dp))
+                TextButton(onClick = onDismiss) {
+                    Text("Más tarde", color = GrisTexto)
+                }
+            }
         }
     }
 }
@@ -177,7 +238,6 @@ fun WellnessCard(item: WellnessItem, onClick: (String) -> Unit) {
                     .background(TurquesaPrincipal.copy(alpha = 0.1f), RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                // Aquí podrías usar Lottie, pero por ahora un emoji descriptivo
                 Text(item.title.take(2), fontSize = 24.sp)
             }
             Spacer(Modifier.width(16.dp))
