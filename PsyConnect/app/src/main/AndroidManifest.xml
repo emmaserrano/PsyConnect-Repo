@@ -50,6 +50,7 @@
         <activity android:name=".ui.screens.MoodHistoryActivity" />
         <activity android:name=".ui.screens.AchievementsActivity" />
         <activity android:name=".ui.screens.ResultDetailActivity"/>
+        <activity android:name=".ui.screens.MoodJournalActivity" />
     </application>
 
 </manifest>
