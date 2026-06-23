@@ -4,15 +4,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import ni.edu.uam.psyconnect.data.model.TestResultEntity
 
 @Database(
-    entities = [MoodJournalEntry::class],
-    version = 2,
+    entities = [MoodJournalEntry::class, TestResultEntity::class],
+    version = 3,
     exportSchema = false
 )
 abstract class MoodJournalDatabase : RoomDatabase() {
 
     abstract fun moodJournalDao(): MoodJournalDao
+    abstract fun testResultDao(): TestResultDao
 
     companion object {
         @Volatile
@@ -25,7 +27,7 @@ abstract class MoodJournalDatabase : RoomDatabase() {
                     MoodJournalDatabase::class.java,
                     "mood_journal_db"
                 )
-                .fallbackToDestructiveMigration() // Para facilitar el desarrollo ante cambios de esquema
+                .fallbackToDestructiveMigration()
                 .build()
                 INSTANCE = instance
                 instance
