@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import ni.edu.uam.psyconnect.data.moodjournal.AchievementRepository
 import ni.edu.uam.psyconnect.data.moodjournal.MoodJournalDatabase
+import ni.edu.uam.psyconnect.ui.theme.PsyConnectTheme
 import ni.edu.uam.psyconnect.ui.viewmodel.AchievementViewModel
 
 class AchievementsActivity : ComponentActivity() {
@@ -14,11 +15,9 @@ class AchievementsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Inicializar Base de Datos y Repositorio
         val database = MoodJournalDatabase.getDatabase(this)
         val repository = AchievementRepository(database.achievementDao())
 
-        // Crear el ViewModel con Factoría
         val viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -26,17 +25,21 @@ class AchievementsActivity : ComponentActivity() {
             }
         })[AchievementViewModel::class.java]
 
-        // Obtener el ID del usuario actual
-        val userId = getSharedPreferences("psyconnect", MODE_PRIVATE).getLong("userId", -1L)
+        val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
+        val userId = sharedPreferences.getLong("userId", -1L)
+        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
+
         if (userId != -1L) {
             viewModel.setUserId(userId)
         }
 
         setContent {
-            AchievementScreen(
-                viewModel = viewModel,
-                onBack = { finish() }
-            )
+            PsyConnectTheme(darkTheme = isDarkMode) {
+                AchievementScreen(
+                    viewModel = viewModel,
+                    onBack = { finish() }
+                )
+            }
         }
     }
 }

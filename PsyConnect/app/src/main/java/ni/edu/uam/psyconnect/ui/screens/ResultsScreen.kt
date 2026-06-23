@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
 import ni.edu.uam.psyconnect.ui.helper.TestInterpreter
+import ni.edu.uam.psyconnect.ui.theme.*
 
 @Composable
 fun ResultsScreen(
@@ -47,7 +48,7 @@ fun ResultsScreen(
     val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
 
     Scaffold(
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -90,14 +91,14 @@ fun ResultsScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(2.dp)
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
                         Text(
                             text = feedback.description,
                             fontSize = 16.sp,
-                            color = TurquesaOscuro,
+                            color = MaterialTheme.colorScheme.onSurface,
                             lineHeight = 24.sp,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
@@ -109,7 +110,7 @@ fun ResultsScreen(
                             text = "Recomendaciones",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
-                            color = TurquesaPrincipal
+                            color = MaterialTheme.colorScheme.primary
                         )
                         
                         Spacer(Modifier.height(12.dp))
@@ -119,11 +120,11 @@ fun ResultsScreen(
                                 modifier = Modifier.padding(vertical = 4.dp),
                                 verticalAlignment = Alignment.Top
                             ) {
-                                Text("✔", color = TurquesaPrincipal, modifier = Modifier.padding(end = 8.dp))
+                                Text("✔", color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(end = 8.dp))
                                 Text(
                                     text = recommendation,
                                     fontSize = 14.sp,
-                                    color = GrisTexto
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
@@ -136,9 +137,9 @@ fun ResultsScreen(
                     onClick = onNavigateToHistory,
                     modifier = Modifier.fillMaxWidth().height(56.dp),
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = TurquesaPrincipal)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text("Ver Historial", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text("Ver Historial", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = MaterialTheme.colorScheme.onPrimary)
                 }
 
                 Spacer(Modifier.height(12.dp))
@@ -147,8 +148,8 @@ fun ResultsScreen(
                     onClick = onNavigateToHome,
                     modifier = Modifier.fillMaxWidth().height(56.dp),
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = TurquesaPrincipal),
-                    border = androidx.compose.foundation.BorderStroke(2.dp, TurquesaPrincipal)
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary),
+                    border = androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
                 ) {
                     Text("Volver al Inicio", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }

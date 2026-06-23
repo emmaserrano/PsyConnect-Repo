@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import ni.edu.uam.psyconnect.data.moodjournal.MoodJournalDatabase
 import ni.edu.uam.psyconnect.data.moodjournal.TestResultRepository
+import ni.edu.uam.psyconnect.ui.theme.PsyConnectTheme
 import ni.edu.uam.psyconnect.ui.viewmodel.TestResultViewModel
 
 class History : ComponentActivity() {
@@ -14,7 +15,6 @@ class History : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Configuración de la base de datos y el ViewModel
         val database = MoodJournalDatabase.getDatabase(this)
         val repository = TestResultRepository(database.testResultDao())
         
@@ -25,16 +25,19 @@ class History : ComponentActivity() {
             }
         })[TestResultViewModel::class.java]
 
-        // Obtener el ID del usuario para filtrar los datos
-        val userId = getSharedPreferences("psyconnect", MODE_PRIVATE).getLong("userId", 1L)
+        val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
+        val userId = sharedPreferences.getLong("userId", 1L)
+        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
+        
         viewModel.setUserId(userId)
 
         setContent {
-            // Llamamos a la nueva pantalla de Compose
-            HistoryScreen(
-                viewModel = viewModel,
-                onBack = { finish() }
-            )
+            PsyConnectTheme(darkTheme = isDarkMode) {
+                HistoryScreen(
+                    viewModel = viewModel,
+                    onBack = { finish() }
+                )
+            }
         }
     }
 }

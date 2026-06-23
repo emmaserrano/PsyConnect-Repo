@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
 import ni.edu.uam.psyconnect.R
+import ni.edu.uam.psyconnect.ui.theme.*
 import kotlinx.coroutines.launch
 
 data class OnboardingPage(
@@ -51,7 +52,7 @@ fun OnboardingScreen(
     val scope = rememberCoroutineScope()
 
     Scaffold(
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
@@ -78,7 +79,10 @@ fun OnboardingScreen(
                 // Indicadores
                 Row {
                     repeat(pages.size) { index ->
-                        val color = if (pagerState.currentPage == index) TurquesaPrincipal else GrisSuave.copy(alpha = 0.3f)
+                        val color = if (pagerState.currentPage == index) 
+                            MaterialTheme.colorScheme.primary 
+                        else 
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
                         Box(
                             modifier = Modifier
                                 .padding(4.dp)
@@ -98,7 +102,10 @@ fun OnboardingScreen(
                             onFinished()
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = TurquesaPrincipal),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    ),
                     shape = RoundedCornerShape(16.dp),
                     contentPadding = PaddingValues(horizontal = 32.dp, vertical = 12.dp)
                 ) {
@@ -139,7 +146,7 @@ fun OnboardingPagerItem(page: OnboardingPage) {
             text = page.title,
             fontSize = 26.sp,
             fontWeight = FontWeight.ExtraBold,
-            color = TurquesaOscuro,
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
         
@@ -148,7 +155,7 @@ fun OnboardingPagerItem(page: OnboardingPage) {
         Text(
             text = page.description,
             fontSize = 16.sp,
-            color = GrisTexto,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
             lineHeight = 24.sp
         )

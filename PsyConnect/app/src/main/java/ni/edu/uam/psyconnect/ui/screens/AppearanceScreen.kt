@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ni.edu.uam.psyconnect.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,18 +32,24 @@ fun AppearanceScreen(
                     Text(
                         "Apariencia", 
                         fontWeight = FontWeight.Bold, 
-                        color = TurquesaOscuro 
+                        color = MaterialTheme.colorScheme.primary // Dinámico
                     ) 
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = TurquesaOscuro)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack, 
+                            "Atrás", 
+                            tint = MaterialTheme.colorScheme.primary // Dinámico
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface // Cambia a DarkSurface en modo oscuro
+                )
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background // Cambia a DarkBackground en modo oscuro
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -56,7 +63,7 @@ fun AppearanceScreen(
                 Text(
                     text = "Personaliza tu experiencia visual en PsyConnect.",
                     fontSize = 14.sp,
-                    color = GrisTexto,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
@@ -65,7 +72,9 @@ fun AppearanceScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(20.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface // Dinámico
+                    ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                 ) {
                     Row(
@@ -79,22 +88,29 @@ fun AppearanceScreen(
                             Box(
                                 modifier = Modifier
                                     .size(40.dp)
-                                    .background(TurquesaPrincipal.copy(alpha = 0.1f), CircleShape),
+                                    .background(
+                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), 
+                                        CircleShape
+                                    ),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(Icons.Default.DarkMode, null, tint = TurquesaPrincipal)
+                                Icon(
+                                    Icons.Default.DarkMode, 
+                                    null, 
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
                             }
                             Spacer(Modifier.width(16.dp))
                             Column {
                                 Text(
                                     "Modo Oscuro",
                                     fontWeight = FontWeight.Bold,
-                                    color = TurquesaOscuro
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
                                     "Reduce el brillo de la pantalla",
                                     fontSize = 12.sp,
-                                    color = GrisTexto
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
@@ -103,9 +119,9 @@ fun AppearanceScreen(
                             onCheckedChange = onDarkModeChange,
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.White,
-                                checkedTrackColor = TurquesaPrincipal,
+                                checkedTrackColor = MaterialTheme.colorScheme.primary,
                                 uncheckedThumbColor = GrisSuave,
-                                uncheckedTrackColor = TurquesaFondo
+                                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
                             )
                         )
                     }

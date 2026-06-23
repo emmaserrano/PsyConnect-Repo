@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import ni.edu.uam.psyconnect.ui.theme.PsyConnectTheme
 
 class DetailPsychologist : ComponentActivity() {
 
@@ -20,21 +21,26 @@ class DetailPsychologist : ComponentActivity() {
         val description = intent.getStringExtra("description") ?: ""
         val photo = intent.getStringExtra("photo") ?: ""
 
+        val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
+        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
+
         setContent {
-            DetailPsychologistScreen(
-                name = name,
-                specialty = specialty,
-                city = city,
-                email = email,
-                phone = phone,
-                description = description,
-                photo = photo,
-                onWhatsappClick = {
-                    val url = "https://wa.me/505$phone?text=Hola,%20vi%20tu%20perfil%20en%20PsyConnect%20y%20me%20gustaría%20más%20información."
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                },
-                onBack = { finish() }
-            )
+            PsyConnectTheme(darkTheme = isDarkMode) {
+                DetailPsychologistScreen(
+                    name = name,
+                    specialty = specialty,
+                    city = city,
+                    email = email,
+                    phone = phone,
+                    description = description,
+                    photo = photo,
+                    onWhatsappClick = {
+                        val url = "https://wa.me/505$phone?text=Hola,%20vi%20tu%20perfil%20en%20PsyConnect%20y%20me%20gustaría%20más%20información."
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                    },
+                    onBack = { finish() }
+                )
+            }
         }
     }
 }

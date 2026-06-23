@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ni.edu.uam.psyconnect.ui.viewmodel.DynamicTestUiState
+import ni.edu.uam.psyconnect.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +34,7 @@ fun DynamicTestScreen(
     )
 
     Scaffold(
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
@@ -47,7 +48,7 @@ fun DynamicTestScreen(
                 text = "Pregunta ${state.currentIndex + 1} de ${state.totalQuestions}",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = TurquesaPrincipal
+                color = MaterialTheme.colorScheme.primary
             )
             
             Spacer(Modifier.height(12.dp))
@@ -56,15 +57,14 @@ fun DynamicTestScreen(
                 progress = { progress },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(8.dp)
-                    .background(Color.White, RoundedCornerShape(4.dp)),
-                color = TurquesaPrincipal,
-                trackColor = Color.LightGray.copy(alpha = 0.2f)
+                    .height(8.dp),
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
             )
 
             Spacer(Modifier.height(40.dp))
 
-            // Emoji de categoría (Simulado, puedes pasarlo por el estado)
             Text(
                 text = "💭",
                 fontSize = 64.sp
@@ -77,7 +77,7 @@ fun DynamicTestScreen(
                 text = state.currentQuestion?.text ?: "",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.ExtraBold,
-                color = TurquesaOscuro,
+                color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -109,8 +109,8 @@ fun DynamicTestScreen(
                     .height(56.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = TurquesaPrincipal,
-                    disabledContainerColor = GrisSuave.copy(alpha = 0.3f)
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
                 ),
                 enabled = state.selectedOptionIndex != null
             ) {
@@ -135,8 +135,8 @@ fun OptionItem(
             .fillMaxWidth()
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
-        color = if (isSelected) TurquesaPrincipal else Color.White,
-        border = if (isSelected) null else BorderStroke(2.dp, TurquesaFondo.copy(alpha = 0.8f))
+        color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+        border = if (isSelected) null else BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
     ) {
         Text(
             text = text,
@@ -144,7 +144,7 @@ fun OptionItem(
             textAlign = TextAlign.Center,
             fontSize = 16.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-            color = if (isSelected) Color.White else TurquesaOscuro
+            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
         )
     }
 }

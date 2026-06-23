@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModelProvider
+import ni.edu.uam.psyconnect.ui.theme.PsyConnectTheme
 import ni.edu.uam.psyconnect.ui.viewmodel.ForgotPasswordViewModel
 
 class ForgotPassword : ComponentActivity() {
@@ -17,43 +18,44 @@ class ForgotPassword : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val viewModel = ViewModelProvider(this)[ForgotPasswordViewModel::class.java]
+        val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
+        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
         
-        // Recuperar email del intent si existe
         val emailRecibido = intent.getStringExtra("email")
         if (!emailRecibido.isNullOrBlank()) {
             viewModel.onEmailChange(emailRecibido)
         }
 
         setContent {
-            val state by viewModel.uiState.collectAsState()
+            PsyConnectTheme(darkTheme = isDarkMode) {
+                val state by viewModel.uiState.collectAsState()
 
-            // Manejo de navegación al verificar el código
-            LaunchedEffect(state.isCodeVerified) {
-                if (state.isCodeVerified) {
-                    val intent = Intent(this@ForgotPassword, ResetPassword::class.java).apply {
-                        putExtra("email", state.email)
+                LaunchedEffect(state.isCodeVerified) {
+                    if (state.isCodeVerified) {
+                        val intent = Intent(this@ForgotPassword, ResetPassword::class.java).apply {
+                            putExtra("email", state.email)
+                        }
+                        startActivity(intent)
+                        finish()
                     }
-                    startActivity(intent)
-                    finish()
                 }
-            }
 
-            // Manejo de errores
-            LaunchedEffect(state.error) {
-                state.error?.let {
-                    Toast.makeText(this@ForgotPassword, it, Toast.LENGTH_LONG).show()
-                    viewModel.clearError()
+                LaunchedEffect(state.error) {
+                    state.error?.let {
+                        Toast.makeText(this@ForgotPassword, it, Toast.LENGTH_LONG).show()
+                        viewModel.clearError()
+                    }
                 }
-            }
 
-            ForgotPasswordScreen(
-                state = state,
-                onEmailChange = viewModel::onEmailChange,
-                onCodeChange = viewModel::onCodeChange,
-                onSendCode = viewModel::sendRecoveryCode,
-                onVerifyCode = viewModel::verifyCode,
-                onBack = { finish() }
-            )
+                ForgotPasswordScreen(
+                    state = state,
+                    onEmailChange = viewModel::onEmailChange,
+                    onCodeChange = viewModel::onCodeChange,
+                    onSendCode = viewModel::sendRecoveryCode,
+                    onVerifyCode = viewModel::verifyCode,
+                    onBack = { finish() }
+                )
+            }
         }
     }
 }

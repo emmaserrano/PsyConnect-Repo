@@ -30,13 +30,13 @@ class RegisterViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(username = username, isUsernameAvailable = null)
         if (username.isBlank()) return
         
-        // Debounce: Espera 500ms antes de consultar a la API para evitar errores de red y estados falsos
+        // Debounce: Espera 500ms antes de consultar a la API para evitar estados falsos
         checkUsernameJob?.cancel()
         checkUsernameJob = viewModelScope.launch {
             delay(500)
             try {
                 val response = RetrofitClient.apiService.existsUsername(username)
-                // Si la API dice true (existe), disponible = false
+                // Si la API dice true (existe), entonces disponible = false
                 _uiState.value = _uiState.value.copy(isUsernameAvailable = response.body() == false)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(isUsernameAvailable = null)

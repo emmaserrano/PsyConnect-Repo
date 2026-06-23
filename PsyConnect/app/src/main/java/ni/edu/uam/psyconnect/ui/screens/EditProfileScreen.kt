@@ -66,16 +66,28 @@ fun EditProfileScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Editar Perfil", fontWeight = FontWeight.Bold, color = TurquesaOscuro) },
+                title = { 
+                    Text(
+                        "Editar Perfil", 
+                        fontWeight = FontWeight.Bold, 
+                        color = MaterialTheme.colorScheme.primary 
+                    ) 
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = TurquesaOscuro)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack, 
+                            "Atrás", 
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -96,7 +108,7 @@ fun EditProfileScreen(
                         modifier = Modifier
                             .size(120.dp)
                             .clip(CircleShape)
-                            .background(Color.White, CircleShape)
+                            .background(MaterialTheme.colorScheme.surface, CircleShape)
                             .padding(4.dp)
                             .clip(CircleShape)
                             .clickable { imageLauncher.launch("image/*") },
@@ -105,11 +117,16 @@ fun EditProfileScreen(
                     Box(
                         modifier = Modifier
                             .size(36.dp)
-                            .background(TurquesaPrincipal, CircleShape)
+                            .background(MaterialTheme.colorScheme.primary, CircleShape)
                             .padding(8.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(Icons.Default.CameraAlt, null, tint = Color.White, modifier = Modifier.size(18.dp))
+                        Icon(
+                            Icons.Default.CameraAlt, 
+                            null, 
+                            tint = MaterialTheme.colorScheme.onPrimary, 
+                            modifier = Modifier.size(18.dp)
+                        )
                     }
                 }
             }
@@ -120,10 +137,20 @@ fun EditProfileScreen(
                     value = state.name,
                     onValueChange = onNameChange,
                     label = { Text("Nombre Completo") },
-                    leadingIcon = { Icon(Icons.Default.Person, null, tint = TurquesaPrincipal) },
+                    leadingIcon = { 
+                        Icon(
+                            Icons.Default.Person, 
+                            null, 
+                            tint = MaterialTheme.colorScheme.primary
+                        ) 
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = TurquesaPrincipal)
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                        focusedLabelColor = MaterialTheme.colorScheme.primary
+                    )
                 )
             }
 
@@ -134,15 +161,25 @@ fun EditProfileScreen(
                         value = state.username,
                         onValueChange = onUsernameChange,
                         label = { Text("Nombre de Usuario") },
-                        leadingIcon = { Icon(Icons.Default.AccountCircle, null, tint = TurquesaPrincipal) },
+                        leadingIcon = { 
+                            Icon(
+                                Icons.Default.AccountCircle, 
+                                null, 
+                                tint = MaterialTheme.colorScheme.primary
+                            ) 
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
-                        colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = TurquesaPrincipal)
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                            focusedLabelColor = MaterialTheme.colorScheme.primary
+                        )
                     )
                     state.isUsernameAvailable?.let { available ->
                         Text(
                             text = if (available) "✅ Disponible" else "❌ Ocupado",
-                            color = if (available) Color(0xFF2E7D32) else Color.Red,
+                            color = if (available) Color(0xFF4CAF50) else Color.Red,
                             fontSize = 12.sp,
                             modifier = Modifier.padding(start = 8.dp, top = 4.dp)
                         )
@@ -159,13 +196,17 @@ fun EditProfileScreen(
                         label = { Text("Descripción") },
                         modifier = Modifier.fillMaxWidth().height(120.dp),
                         shape = RoundedCornerShape(16.dp),
-                        colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = TurquesaPrincipal),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                            focusedLabelColor = MaterialTheme.colorScheme.primary
+                        ),
                         maxLines = 4
                     )
                     Text(
                         text = "${state.description.length}/100",
                         fontSize = 12.sp,
-                        color = GrisTexto,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                         textAlign = TextAlign.End
                     )
@@ -178,14 +219,21 @@ fun EditProfileScreen(
                     value = state.birthdate,
                     onValueChange = {},
                     label = { Text("Fecha de Nacimiento") },
-                    leadingIcon = { Icon(Icons.Default.DateRange, null, tint = TurquesaPrincipal) },
+                    leadingIcon = { 
+                        Icon(
+                            Icons.Default.DateRange, 
+                            null, 
+                            tint = MaterialTheme.colorScheme.primary
+                        ) 
+                    },
                     modifier = Modifier.fillMaxWidth().clickable { showDatePicker.value = true },
                     enabled = false,
                     shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        disabledBorderColor = GrisSuave.copy(alpha = 0.5f),
-                        disabledLabelColor = GrisTexto,
-                        disabledTextColor = Color.Black
+                        disabledBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                        disabledLeadingIconColor = MaterialTheme.colorScheme.primary
                     )
                 )
             }
@@ -197,11 +245,17 @@ fun EditProfileScreen(
                     onClick = onSave,
                     modifier = Modifier.fillMaxWidth().height(56.dp),
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = TurquesaPrincipal),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    ),
                     enabled = state.isSaveEnabled && !state.isLoading
                 ) {
                     if (state.isLoading) {
-                        CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.onPrimary, 
+                            modifier = Modifier.size(24.dp)
+                        )
                     } else {
                         Text("Guardar Cambios", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     }

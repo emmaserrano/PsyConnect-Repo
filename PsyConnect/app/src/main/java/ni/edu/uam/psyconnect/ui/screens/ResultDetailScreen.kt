@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import ni.edu.uam.psyconnect.ui.theme.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
@@ -56,16 +57,16 @@ fun ResultDetailScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Detalle de Evaluación", fontWeight = FontWeight.Bold, color = TurquesaOscuro) },
+                title = { Text("Detalle de Evaluación", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = TurquesaOscuro)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = MaterialTheme.colorScheme.primary)
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -89,7 +90,7 @@ fun ResultDetailScreen(
                     text = categoryName,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TurquesaPrincipal
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 Text(
@@ -125,22 +126,22 @@ fun ResultDetailScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     elevation = CardDefaults.cardElevation(1.dp)
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
                         Text(
                             text = "Recomendaciones para ti",
                             fontWeight = FontWeight.Bold,
-                            color = TurquesaOscuro,
+                            color = MaterialTheme.colorScheme.primary,
                             fontSize = 16.sp
                         )
                         Spacer(Modifier.height(16.dp))
                         feedback.recommendations.forEach { rec ->
                             Row(modifier = Modifier.padding(vertical = 4.dp)) {
-                                Text("•", color = TurquesaPrincipal, fontWeight = FontWeight.Bold)
+                                Text("•", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                                 Spacer(Modifier.width(8.dp))
-                                Text(text = rec, fontSize = 14.sp, color = GrisTexto, lineHeight = 20.sp)
+                                Text(text = rec, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, lineHeight = 20.sp)
                             }
                         }
                     }

@@ -1,7 +1,6 @@
 package ni.edu.uam.psyconnect.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,7 +12,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.VpnKey
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,16 +38,28 @@ fun ChangeEmailScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Cambiar Correo", fontWeight = FontWeight.Bold, color = TurquesaOscuro) },
+                title = { 
+                    Text(
+                        "Cambiar Correo", 
+                        fontWeight = FontWeight.Bold, 
+                        color = MaterialTheme.colorScheme.primary 
+                    ) 
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = TurquesaOscuro)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack, 
+                            "Atrás", 
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
@@ -75,7 +86,7 @@ fun ChangeEmailScreen(
                     text = "¿Quieres cambiar tu correo?",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = TurquesaOscuro,
+                    color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center
                 )
 
@@ -84,7 +95,7 @@ fun ChangeEmailScreen(
                 Text(
                     text = "Te enviaremos un código de seguridad a tu nueva dirección para confirmar el cambio.",
                     fontSize = 14.sp,
-                    color = GrisTexto,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center,
                     lineHeight = 20.sp
                 )
@@ -97,18 +108,29 @@ fun ChangeEmailScreen(
                         value = state.email,
                         onValueChange = onEmailChange,
                         label = { Text("Nuevo Correo Electrónico") },
-                        leadingIcon = { Icon(Icons.Default.Email, null, tint = TurquesaPrincipal) },
+                        leadingIcon = { 
+                            Icon(
+                                Icons.Default.Email, 
+                                null, 
+                                tint = MaterialTheme.colorScheme.primary
+                            ) 
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         enabled = !state.isCodeSent,
                         shape = RoundedCornerShape(16.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                        colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = TurquesaPrincipal)
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            cursorColor = MaterialTheme.colorScheme.primary
+                        )
                     )
                     
                     state.isEmailAvailable?.let { available ->
                         Text(
                             text = if (available) "✅ Correo disponible" else "❌ Correo ya registrado",
-                            color = if (available) Color(0xFF2E7D32) else Color.Red,
+                            color = if (available) Color(0xFF4CAF50) else Color.Red,
                             fontSize = 12.sp,
                             modifier = Modifier.padding(start = 8.dp, top = 4.dp)
                         )
@@ -124,11 +146,21 @@ fun ChangeEmailScreen(
                             value = state.code,
                             onValueChange = onCodeChange,
                             label = { Text("Código de Verificación") },
-                            leadingIcon = { Icon(Icons.Default.VpnKey, null, tint = TurquesaPrincipal) },
+                            leadingIcon = { 
+                                Icon(
+                                    Icons.Default.VpnKey, 
+                                    null, 
+                                    tint = MaterialTheme.colorScheme.primary
+                                ) 
+                            },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(16.dp),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = TurquesaPrincipal)
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                                focusedLabelColor = MaterialTheme.colorScheme.primary
+                            )
                         )
                         
                         Row(
@@ -136,10 +168,14 @@ fun ChangeEmailScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            val timerColor = if (state.isTimerActive) 
+                                MaterialTheme.colorScheme.primary 
+                            else Color.Red
+
                             Text(
                                 text = if (state.isTimerActive) "Reenviar en: ${state.timerText}" else "Código expirado",
                                 fontSize = 12.sp,
-                                color = if (state.isTimerActive) TurquesaPrincipal else Color.Red,
+                                color = timerColor,
                                 fontWeight = FontWeight.Bold
                             )
                             
@@ -147,7 +183,7 @@ fun ChangeEmailScreen(
                                 Text(
                                     text = "Reenviar ahora",
                                     fontSize = 12.sp,
-                                    color = TurquesaPrincipal,
+                                    color = MaterialTheme.colorScheme.primary,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.clickable { onSendCode() }
                                 )
@@ -167,14 +203,20 @@ fun ChangeEmailScreen(
                     .padding(vertical = 24.dp)
                     .height(56.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = TurquesaPrincipal),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 enabled = !state.isLoading && (
                     (!state.isCodeSent && state.isEmailAvailable == true) || 
                     (state.isCodeSent && state.code.isNotBlank())
                 )
             ) {
                 if (state.isLoading) {
-                    CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.onPrimary, 
+                        modifier = Modifier.size(24.dp)
+                    )
                 } else {
                     Text(
                         text = if (!state.isCodeSent) "Enviar Código" else "Confirmar Cambio",

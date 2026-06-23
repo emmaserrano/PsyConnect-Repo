@@ -9,6 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.delay
+import ni.edu.uam.psyconnect.ui.theme.PsyConnectTheme
 import ni.edu.uam.psyconnect.ui.viewmodel.EditProfileViewModel
 
 class EditProfile : ComponentActivity() {
@@ -18,40 +19,43 @@ class EditProfile : ComponentActivity() {
 
         val viewModel = ViewModelProvider(this)[EditProfileViewModel::class.java]
         
-        val userId = getSharedPreferences("psyconnect", MODE_PRIVATE)
-            .getLong("userId", -1L)
+        val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
+        val userId = sharedPreferences.getLong("userId", -1L)
+        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
 
         viewModel.loadUserData(userId)
 
         setContent {
-            val state by viewModel.uiState.collectAsState()
+            PsyConnectTheme(darkTheme = isDarkMode) {
+                val state by viewModel.uiState.collectAsState()
 
-            // Manejo de efectos secundarios
-            LaunchedEffect(state.isUpdateSuccess) {
-                if (state.isUpdateSuccess) {
-                    Toast.makeText(this@EditProfile, "Perfil actualizado correctamente", Toast.LENGTH_SHORT).show()
-                    delay(1500) // Tiempo para que se vea la animación si decides poner una
-                    finish()
+                // Manejo de efectos secundarios
+                LaunchedEffect(state.isUpdateSuccess) {
+                    if (state.isUpdateSuccess) {
+                        Toast.makeText(this@EditProfile, "Perfil actualizado correctamente", Toast.LENGTH_SHORT).show()
+                        delay(1500)
+                        finish()
+                    }
                 }
-            }
 
-            LaunchedEffect(state.error) {
-                state.error?.let {
-                    Toast.makeText(this@EditProfile, it, Toast.LENGTH_LONG).show()
-                    viewModel.clearError()
+                LaunchedEffect(state.error) {
+                    state.error?.let {
+                        Toast.makeText(this@EditProfile, it, Toast.LENGTH_LONG).show()
+                        viewModel.clearError()
+                    }
                 }
-            }
 
-            EditProfileScreen(
-                state = state,
-                onNameChange = viewModel::onNameChange,
-                onUsernameChange = viewModel::onUsernameChange,
-                onDescriptionChange = viewModel::onDescriptionChange,
-                onBirthdateChange = viewModel::onBirthdateChange,
-                onImageChange = viewModel::onImageChange,
-                onSave = { viewModel.saveChanges(userId) },
-                onBack = { finish() }
-            )
+                EditProfileScreen(
+                    state = state,
+                    onNameChange = viewModel::onNameChange,
+                    onUsernameChange = viewModel::onUsernameChange,
+                    onDescriptionChange = viewModel::onDescriptionChange,
+                    onBirthdateChange = viewModel::onBirthdateChange,
+                    onImageChange = viewModel::onImageChange,
+                    onSave = { viewModel.saveChanges(userId) },
+                    onBack = { finish() }
+                )
+            }
         }
     }
 }

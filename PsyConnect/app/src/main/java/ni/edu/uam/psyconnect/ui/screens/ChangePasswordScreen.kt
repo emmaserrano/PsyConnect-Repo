@@ -41,16 +41,28 @@ fun ChangePasswordScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Cambiar Contraseña", fontWeight = FontWeight.Bold, color = TurquesaOscuro) },
+                title = { 
+                    Text(
+                        "Cambiar Contraseña", 
+                        fontWeight = FontWeight.Bold, 
+                        color = MaterialTheme.colorScheme.primary 
+                    ) 
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = TurquesaOscuro)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack, 
+                            "Atrás", 
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
@@ -69,7 +81,7 @@ fun ChangePasswordScreen(
                 Text(
                     text = "Protege tu cuenta actualizando tu contraseña regularmente.",
                     fontSize = 14.sp,
-                    color = GrisTexto,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -80,16 +92,30 @@ fun ChangePasswordScreen(
                     value = state.currentPassword,
                     onValueChange = onCurrentPasswordChange,
                     label = { Text("Contraseña Actual") },
-                    leadingIcon = { Icon(Icons.Default.Lock, null, tint = TurquesaPrincipal) },
+                    leadingIcon = { 
+                        Icon(
+                            Icons.Default.Lock, 
+                            null, 
+                            tint = MaterialTheme.colorScheme.primary
+                        ) 
+                    },
                     trailingIcon = {
                         IconButton(onClick = { isCurrentVisible = !isCurrentVisible }) {
-                            Icon(if (isCurrentVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff, null)
+                            Icon(
+                                if (isCurrentVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff, 
+                                null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
                     },
                     visualTransformation = if (isCurrentVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = TurquesaPrincipal),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                        focusedLabelColor = MaterialTheme.colorScheme.primary
+                    ),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
 
@@ -101,18 +127,33 @@ fun ChangePasswordScreen(
                         value = state.newPassword,
                         onValueChange = onNewPasswordChange,
                         label = { Text("Nueva Contraseña") },
-                        leadingIcon = { Icon(Icons.Default.Lock, null, tint = TurquesaPrincipal) },
+                        leadingIcon = { 
+                            Icon(
+                                Icons.Default.Lock, 
+                                null, 
+                                tint = MaterialTheme.colorScheme.primary
+                            ) 
+                        },
                         trailingIcon = {
                             IconButton(onClick = { isNewVisible = !isNewVisible }) {
-                                Icon(if (isNewVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff, null)
+                                Icon(
+                                    if (isNewVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff, 
+                                    null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
                         },
                         visualTransformation = if (isNewVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
-                        colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = TurquesaPrincipal),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                            focusedLabelColor = MaterialTheme.colorScheme.primary
+                        ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                     )
+                    // Assuming PasswordStrengthIndicator is a composable that might need fix too
                     PasswordStrengthIndicator(state.newPassword)
                 }
 
@@ -123,16 +164,30 @@ fun ChangePasswordScreen(
                     value = state.confirmPassword,
                     onValueChange = onConfirmPasswordChange,
                     label = { Text("Confirmar Nueva Contraseña") },
-                    leadingIcon = { Icon(Icons.Default.Lock, null, tint = TurquesaPrincipal) },
+                    leadingIcon = { 
+                        Icon(
+                            Icons.Default.Lock, 
+                            null, 
+                            tint = MaterialTheme.colorScheme.primary
+                        ) 
+                    },
                     trailingIcon = {
                         IconButton(onClick = { isConfirmVisible = !isConfirmVisible }) {
-                            Icon(if (isConfirmVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff, null)
+                            Icon(
+                                if (isConfirmVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff, 
+                                null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
                     },
                     visualTransformation = if (isConfirmVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = TurquesaPrincipal),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                        focusedLabelColor = MaterialTheme.colorScheme.primary
+                    ),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
                 
@@ -146,7 +201,10 @@ fun ChangePasswordScreen(
                     .padding(vertical = 24.dp)
                     .height(56.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = TurquesaPrincipal),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 enabled = !state.isLoading && 
                          state.currentPassword.isNotBlank() && 
                          state.newPassword.isNotBlank() && 
@@ -154,7 +212,10 @@ fun ChangePasswordScreen(
                          calculatePasswordStrength(state.newPassword) >= 0.8f
             ) {
                 if (state.isLoading) {
-                    CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.onPrimary, 
+                        modifier = Modifier.size(24.dp)
+                    )
                 } else {
                     Text("Actualizar Contraseña", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }

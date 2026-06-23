@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.*
+import ni.edu.uam.psyconnect.ui.theme.PsyConnectTheme
 
 class AppearanceActivity : ComponentActivity() {
 
@@ -14,26 +15,29 @@ class AppearanceActivity : ComponentActivity() {
         val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
 
         setContent {
+            // Leemos el estado directamente de SharedPreferences para que sea reactivo tras la recreación
             var isDarkMode by remember { 
                 mutableStateOf(sharedPreferences.getBoolean("darkMode", false)) 
             }
 
-            AppearanceScreen(
-                isDarkMode = isDarkMode,
-                onDarkModeChange = { checked ->
-                    isDarkMode = checked
-                    sharedPreferences.edit().putBoolean("darkMode", checked).apply()
+            PsyConnectTheme(darkTheme = isDarkMode) {
+                AppearanceScreen(
+                    isDarkMode = isDarkMode,
+                    onDarkModeChange = { checked ->
+                        // 1. Guardar preferencia
+                        sharedPreferences.edit().putBoolean("darkMode", checked).apply()
+                        isDarkMode = checked
 
-                    if (checked) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    } else {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    }
-                    // Recreamos la actividad para aplicar el tema visualmente
-                    recreate()
-                },
-                onBack = { finish() }
-            )
+                        // 2. Aplicar a nivel sistema (esto recreará la actividad automáticamente)
+                        if (checked) {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                        } else {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                        }
+                    },
+                    onBack = { finish() }
+                )
+            }
         }
     }
 }

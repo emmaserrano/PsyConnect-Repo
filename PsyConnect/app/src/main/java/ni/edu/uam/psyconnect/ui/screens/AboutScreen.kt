@@ -12,7 +12,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -20,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ni.edu.uam.psyconnect.R
+import ni.edu.uam.psyconnect.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,19 +34,25 @@ fun AboutScreen(
                         "Acerca de",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
-                            color = TurquesaOscuro
+                            color = MaterialTheme.colorScheme.primary
                         )
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = TurquesaOscuro)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack, 
+                            "Atrás", 
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -59,11 +65,13 @@ fun AboutScreen(
             item { Spacer(Modifier.height(16.dp)) }
 
             item {
-                // CORRECCIÓN: Usamos Drawable Vector con fondo circular para evitar el crash
                 Box(
                     modifier = Modifier
                         .size(120.dp)
-                        .background(TurquesaPrincipal.copy(alpha = 0.1f), CircleShape)
+                        .background(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), 
+                            CircleShape
+                        )
                         .padding(16.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -80,39 +88,69 @@ fun AboutScreen(
                     text = "PsyConnect",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = TurquesaOscuro
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Text(
                     text = "Versión 1.0.0",
                     fontSize = 14.sp,
-                    color = GrisTexto
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )
             }
 
+            // Sección: Nuestra Misión
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
                     Column(
                         modifier = Modifier.padding(24.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Text(
                             text = "Nuestra Misión",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = TurquesaPrincipal
+                            color = MaterialTheme.colorScheme.primary
                         )
                         Text(
                             text = "PsyConnect nace con el objetivo de democratizar el acceso a herramientas de bienestar emocional y salud mental, proporcionando un espacio seguro para el seguimiento personal y la conexión con especialistas.",
                             fontSize = 15.sp,
-                            color = TurquesaOscuro,
+                            color = MaterialTheme.colorScheme.onSurface,
                             lineHeight = 22.sp,
                             textAlign = TextAlign.Justify
                         )
+                    }
+                }
+            }
+
+            // SECCIÓN NUEVA: Creadoras
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Text(
+                            text = "Desarrollado por",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        
+                        CreatorItem("Francella Pérez")
+                        CreatorItem("Allison Pavón")
                     }
                 }
             }
@@ -121,7 +159,7 @@ fun AboutScreen(
                 Text(
                     text = "© 2024 PsyConnect Team\nUniversidad Americana (UAM)",
                     fontSize = 12.sp,
-                    color = GrisSuave,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -129,5 +167,23 @@ fun AboutScreen(
 
             item { Spacer(Modifier.height(32.dp)) }
         }
+    }
+}
+
+@Composable
+fun CreatorItem(name: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(8.dp)
+                .background(MaterialTheme.colorScheme.primary, CircleShape)
+        )
+        Spacer(Modifier.width(12.dp))
+        Text(
+            text = name,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }

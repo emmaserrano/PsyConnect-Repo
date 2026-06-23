@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModelProvider
+import ni.edu.uam.psyconnect.ui.theme.PsyConnectTheme
 import ni.edu.uam.psyconnect.ui.viewmodel.ResetPasswordViewModel
 
 class ResetPassword : ComponentActivity() {
@@ -16,6 +17,8 @@ class ResetPassword : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val viewModel = ViewModelProvider(this)[ResetPasswordViewModel::class.java]
+        val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
+        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
         
         val email = intent.getStringExtra("email") ?: ""
 
@@ -26,31 +29,31 @@ class ResetPassword : ComponentActivity() {
         }
 
         setContent {
-            val state by viewModel.uiState.collectAsState()
+            PsyConnectTheme(darkTheme = isDarkMode) {
+                val state by viewModel.uiState.collectAsState()
 
-            // Manejo de éxito
-            LaunchedEffect(state.isSuccess) {
-                if (state.isSuccess) {
-                    Toast.makeText(this@ResetPassword, "Contraseña actualizada con éxito", Toast.LENGTH_LONG).show()
-                    finish() // Vuelve a la pantalla de Login
+                LaunchedEffect(state.isSuccess) {
+                    if (state.isSuccess) {
+                        Toast.makeText(this@ResetPassword, "Contraseña actualizada con éxito", Toast.LENGTH_LONG).show()
+                        finish()
+                    }
                 }
-            }
 
-            // Manejo de errores
-            LaunchedEffect(state.error) {
-                state.error?.let {
-                    Toast.makeText(this@ResetPassword, it, Toast.LENGTH_LONG).show()
-                    viewModel.clearError()
+                LaunchedEffect(state.error) {
+                    state.error?.let {
+                        Toast.makeText(this@ResetPassword, it, Toast.LENGTH_LONG).show()
+                        viewModel.clearError()
+                    }
                 }
-            }
 
-            ResetPasswordScreen(
-                state = state,
-                onPasswordChange = viewModel::onPasswordChange,
-                onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
-                onSave = { viewModel.resetPassword(email) },
-                onBack = { finish() }
-            )
+                ResetPasswordScreen(
+                    state = state,
+                    onPasswordChange = viewModel::onPasswordChange,
+                    onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
+                    onSave = { viewModel.resetPassword(email) },
+                    onBack = { finish() }
+                )
+            }
         }
     }
 }

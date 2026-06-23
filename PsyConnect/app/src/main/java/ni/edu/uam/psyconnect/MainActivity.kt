@@ -2,16 +2,26 @@ package ni.edu.uam.psyconnect
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import ni.edu.uam.psyconnect.ui.screens.Home
 import ni.edu.uam.psyconnect.ui.screens.Login
 import ni.edu.uam.psyconnect.ui.screens.OnboardingActivity
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val prefs = getSharedPreferences("psyconnect", MODE_PRIVATE)
+        
+        // Aplicar modo oscuro antes del super.onCreate
+        val darkMode = prefs.getBoolean("darkMode", false)
+        if (darkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
         super.onCreate(savedInstanceState)
 
-        val prefs = getSharedPreferences("psyconnect", MODE_PRIVATE)
         val onboardingCompleted = prefs.getBoolean("onboarding_completed", false)
         val isLogged = prefs.getBoolean("isLogged", false)
 

@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModelProvider
+import ni.edu.uam.psyconnect.ui.theme.PsyConnectTheme
 import ni.edu.uam.psyconnect.ui.viewmodel.ProfileViewModel
 
 class Profile : ComponentActivity() {
@@ -19,45 +20,47 @@ class Profile : ComponentActivity() {
         
         val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
         val userId = sharedPreferences.getLong("userId", -1L)
+        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
 
-        // Cargar datos del perfil
         viewModel.loadProfile(userId)
 
         setContent {
-            val user by viewModel.user.collectAsState()
-            val age by viewModel.age.collectAsState()
+            PsyConnectTheme(darkTheme = isDarkMode) {
+                val user by viewModel.user.collectAsState()
+                val age by viewModel.age.collectAsState()
 
-            ProfileScreen(
-                user = user,
-                age = age,
-                onEditProfile = {
-                    startActivity(Intent(this, EditProfile::class.java))
-                },
-                onMoodHistory = {
-                    startActivity(Intent(this, MoodHistoryActivity::class.java))
-                },
-                onAchievements = {
-                    startActivity(Intent(this, AchievementsActivity::class.java))
-                },
-                onSettings = {
-                    startActivity(Intent(this, SettingsActivity::class.java))
-                },
-                onLogout = {
-                    sharedPreferences.edit { remove("userId") }
-                    val intent = Intent(this, Login::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    finish()
-                },
-                onNavigateToHome = {
-                    startActivity(Intent(this, Home::class.java))
-                    finish()
-                },
-                onNavigateToHistory = {
-                    startActivity(Intent(this, History::class.java))
-                    finish()
-                }
-            )
+                ProfileScreen(
+                    user = user,
+                    age = age,
+                    onEditProfile = {
+                        startActivity(Intent(this, EditProfile::class.java))
+                    },
+                    onMoodHistory = {
+                        startActivity(Intent(this, MoodHistoryActivity::class.java))
+                    },
+                    onAchievements = {
+                        startActivity(Intent(this, AchievementsActivity::class.java))
+                    },
+                    onSettings = {
+                        startActivity(Intent(this, SettingsActivity::class.java))
+                    },
+                    onLogout = {
+                        sharedPreferences.edit { remove("userId") }
+                        val intent = Intent(this, Login::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    },
+                    onNavigateToHome = {
+                        startActivity(Intent(this, Home::class.java))
+                        finish()
+                    },
+                    onNavigateToHistory = {
+                        startActivity(Intent(this, History::class.java))
+                        finish()
+                    }
+                )
+            }
         }
     }
 }

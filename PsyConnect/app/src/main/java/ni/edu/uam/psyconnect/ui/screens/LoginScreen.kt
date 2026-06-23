@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ni.edu.uam.psyconnect.R
+import ni.edu.uam.psyconnect.ui.theme.*
 
 @Composable
 fun LoginScreen(
@@ -42,7 +43,7 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TurquesaFondo)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp)
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -53,7 +54,7 @@ fun LoginScreen(
         Box(
             modifier = Modifier
                 .size(120.dp)
-                .background(TurquesaPrincipal.copy(alpha = 0.1f), RoundedCornerShape(24.dp)),
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), RoundedCornerShape(24.dp)),
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -69,14 +70,14 @@ fun LoginScreen(
             text = "Bienvenido de nuevo",
             fontSize = 28.sp,
             fontWeight = FontWeight.ExtraBold,
-            color = TurquesaOscuro,
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
         
         Text(
             text = "Inicia sesión para continuar cuidando tu bienestar",
             fontSize = 14.sp,
-            color = GrisTexto,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 8.dp)
         )
@@ -87,12 +88,14 @@ fun LoginScreen(
             value = identifier,
             onValueChange = { identifier = it },
             label = { Text("Email o Usuario") },
-            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = TurquesaPrincipal) },
+            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = TurquesaPrincipal,
-                unfocusedBorderColor = GrisSuave.copy(alpha = 0.5f)
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.primary
             ),
             singleLine = true
         )
@@ -103,13 +106,13 @@ fun LoginScreen(
             value = password,
             onValueChange = { password = it },
             label = { Text("Contraseña") },
-            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = TurquesaPrincipal) },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
             trailingIcon = {
                 IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                     Icon(
                         imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                         contentDescription = null,
-                        tint = GrisSuave
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             },
@@ -118,21 +121,18 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = TurquesaPrincipal,
-                unfocusedBorderColor = GrisSuave.copy(alpha = 0.5f)
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.primary
             ),
             singleLine = true
         )
 
-        // REQUISITOS DE CONTRASEÑA (NUEVO)
-        if (password.isNotEmpty()) {
-            PasswordRequirementsView(password)
-        }
-
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
             Text(
                 text = "¿Olvidaste tu contraseña?",
-                color = TurquesaPrincipal,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
@@ -149,7 +149,10 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .height(56.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = TurquesaPrincipal),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ),
             enabled = identifier.isNotBlank() && password.isNotBlank()
         ) {
             Text("Iniciar Sesión", fontSize = 16.sp, fontWeight = FontWeight.Bold)
@@ -158,49 +161,15 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("¿No tienes una cuenta?", color = GrisTexto, fontSize = 14.sp)
+            Text("¿No tienes una cuenta?", color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f), fontSize = 14.sp)
             Text(
                 text = " Regístrate",
-                color = TurquesaPrincipal,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable { onRegisterClick() }
             )
         }
         Spacer(modifier = Modifier.height(32.dp))
-    }
-}
-
-@Composable
-fun PasswordRequirementsView(password: String) {
-    val requirements = listOf(
-        "Mínimo 8 caracteres" to (password.length >= 8),
-        "Una mayúscula" to password.any { it.isUpperCase() },
-        "Una minúscula" to password.any { it.isLowerCase() },
-        "Un número" to password.any { it.isDigit() },
-        "Un carácter especial" to password.any { !it.isLetterOrDigit() }
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 12.dp, start = 8.dp)
-    ) {
-        requirements.forEach { (text, met) ->
-            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 2.dp)) {
-                Text(
-                    text = if (met) "✔" else "✖",
-                    color = if (met) Color(0xFF2E7D32) else Color.Red,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    text = text,
-                    color = if (met) Color(0xFF2E7D32) else Color.Red,
-                    fontSize = 12.sp
-                )
-            }
-        }
     }
 }

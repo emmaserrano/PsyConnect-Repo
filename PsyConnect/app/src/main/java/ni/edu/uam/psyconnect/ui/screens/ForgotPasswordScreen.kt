@@ -11,6 +11,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.VpnKey
 import androidx.compose.material3.*
+import ni.edu.uam.psyconnect.ui.theme.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +45,7 @@ fun ForgotPasswordScreen(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
@@ -66,7 +67,7 @@ fun ForgotPasswordScreen(
                 text = "¿Olvidaste tu contraseña?",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.ExtraBold,
-                color = TurquesaOscuro,
+                color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center
             )
 
@@ -78,7 +79,7 @@ fun ForgotPasswordScreen(
                 else 
                     "Hemos enviado un código a ${state.email}. Por favor, ingrésalo a continuación.",
                 fontSize = 14.sp,
-                color = GrisTexto,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 lineHeight = 20.sp
             )
@@ -155,7 +156,7 @@ fun ForgotPasswordScreen(
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = TurquesaPrincipal),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 enabled = !state.isLoading && (
                     (!state.isCodeSent && state.email.isNotBlank()) || 
                     (state.isCodeSent && state.code.isNotBlank())

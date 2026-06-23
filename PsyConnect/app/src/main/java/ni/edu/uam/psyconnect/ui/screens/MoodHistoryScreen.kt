@@ -42,19 +42,19 @@ fun MoodHistoryScreen(
                 title = { 
                     Text(
                         "Historial de Ánimo", 
-                        fontWeight = FontWeight.Bold, 
-                        color = TurquesaOscuro 
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
                     ) 
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = TurquesaOscuro)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = MaterialTheme.colorScheme.primary)
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -92,14 +92,14 @@ fun MoodHistoryScreen(
                     "Registros Recientes",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = TurquesaOscuro
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
 
             if (entries.isEmpty()) {
                 item {
                     Box(Modifier.fillMaxWidth().padding(top = 32.dp), contentAlignment = Alignment.Center) {
-                        Text("No hay registros de ánimo aún.", color = GrisTexto)
+                        Text("No hay registros de ánimo aún.", color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
             }
@@ -115,6 +115,7 @@ fun MoodHistoryScreen(
 
 @Composable
 fun MoodChart(entries: List<MoodJournalEntry>) {
+    val primaryColor = MaterialTheme.colorScheme.primary
     AndroidView(
         modifier = Modifier
             .fillMaxSize()
@@ -160,14 +161,14 @@ fun MoodChart(entries: List<MoodJournalEntry>) {
             }
 
             val dataSet = LineDataSet(chartEntries, "Estado emocional").apply {
-                color = TurquesaPrincipal.toArgb()
-                setCircleColor(TurquesaOscuro.toArgb())
+                color = primaryColor.toArgb()
+                setCircleColor(primaryColor.toArgb())
                 lineWidth = 3f
                 circleRadius = 5f
                 setDrawCircleHole(false)
                 valueTextSize = 0f
                 setDrawFilled(true)
-                fillColor = TurquesaPrincipal.toArgb()
+                fillColor = primaryColor.toArgb()
                 fillAlpha = 50
                 mode = LineDataSet.Mode.CUBIC_BEZIER
             }
@@ -207,14 +208,14 @@ fun MoodHistoryItem(entry: MoodJournalEntry) {
                 Text(
                     text = entry.date,
                     fontSize = 12.sp,
-                    color = TurquesaPrincipal,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = entry.reflection.ifEmpty { "Sin reflexión guardada" },
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Medium,
-                    color = TurquesaOscuro,
+                    color = MaterialTheme.colorScheme.primary,
                     maxLines = 2
                 )
             }

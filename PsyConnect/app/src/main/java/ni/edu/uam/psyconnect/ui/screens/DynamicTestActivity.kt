@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import ni.edu.uam.psyconnect.data.moodjournal.MoodJournalDatabase
 import ni.edu.uam.psyconnect.data.moodjournal.TestResultRepository
+import ni.edu.uam.psyconnect.ui.theme.PsyConnectTheme
 import ni.edu.uam.psyconnect.ui.viewmodel.DynamicTestViewModel
 
 class DynamicTestActivity : ComponentActivity() {
@@ -19,7 +20,6 @@ class DynamicTestActivity : ComponentActivity() {
 
         val category = intent.getStringExtra("category") ?: "WELLNESS"
         
-        // Configuración de la base de datos y el ViewModel con Factoría
         val database = MoodJournalDatabase.getDatabase(this)
         val repository = TestResultRepository(database.testResultDao())
         
@@ -30,32 +30,33 @@ class DynamicTestActivity : ComponentActivity() {
             }
         })[DynamicTestViewModel::class.java]
 
-        // Inicializar el test
         viewModel.initTest(category)
 
         val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
         val userId = sharedPreferences.getLong("userId", 1L)
+        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
 
         setContent {
-            val state by viewModel.uiState.collectAsState()
+            PsyConnectTheme(darkTheme = isDarkMode) {
+                val state by viewModel.uiState.collectAsState()
 
-            DynamicTestScreen(
-                state = state,
-                onOptionSelected = { index ->
-                    viewModel.onOptionSelected(index)
-                },
-                onNextClick = {
-                    viewModel.nextQuestion(userId) { percentage ->
-                        // Navegar a la pantalla de resultados al terminar
-                        val intent = Intent(this@DynamicTestActivity, Results::class.java).apply {
-                            putExtra("category", category)
-                            putExtra("percentage", percentage)
+                DynamicTestScreen(
+                    state = state,
+                    onOptionSelected = { index ->
+                        viewModel.onOptionSelected(index)
+                    },
+                    onNextClick = {
+                        viewModel.nextQuestion(userId) { percentage ->
+                            val intent = Intent(this@DynamicTestActivity, Results::class.java).apply {
+                                putExtra("category", category)
+                                putExtra("percentage", percentage)
+                            }
+                            startActivity(intent)
+                            finish()
                         }
-                        startActivity(intent)
-                        finish()
                     }
-                }
-            )
+                )
+            }
         }
     }
 }

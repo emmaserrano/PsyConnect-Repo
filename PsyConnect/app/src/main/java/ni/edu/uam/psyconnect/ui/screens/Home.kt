@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModelProvider
+import ni.edu.uam.psyconnect.ui.theme.PsyConnectTheme
 import ni.edu.uam.psyconnect.ui.viewmodel.HomeViewModel
 
 class Home : ComponentActivity() {
@@ -26,47 +27,52 @@ class Home : ComponentActivity() {
         viewModel.loadPsychologists()
 
         setContent {
-            val userName by viewModel.userName.collectAsState()
-            val psychologists by viewModel.psychologists.collectAsState()
-            val showMoodDialog by viewModel.showMoodDialog.collectAsState()
+            // Escuchar modo oscuro
+            val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
 
-            HomeScreen(
-                userName = userName,
-                psychologists = psychologists,
-                showMoodDialog = showMoodDialog,
-                onMoodSelected = { moodName ->
-                    if (userId != -1L) {
-                        viewModel.saveMood(userId, moodName)
+            PsyConnectTheme(darkTheme = isDarkMode) {
+                val userName by viewModel.userName.collectAsState()
+                val psychologists by viewModel.psychologists.collectAsState()
+                val showMoodDialog by viewModel.showMoodDialog.collectAsState()
+
+                HomeScreen(
+                    userName = userName,
+                    psychologists = psychologists,
+                    showMoodDialog = showMoodDialog,
+                    onMoodSelected = { moodName ->
+                        if (userId != -1L) {
+                            viewModel.saveMood(userId, moodName)
+                        }
+                    },
+                    onDismissMoodDialog = { viewModel.dismissMoodDialog() },
+                    onTestClick = { category ->
+                        val intent = Intent(this, DynamicTestActivity::class.java)
+                        intent.putExtra("category", category)
+                        startActivity(intent)
+                    },
+                    onPsychologistClick = { psychologist ->
+                        val intent = Intent(this, DetailPsychologist::class.java).apply {
+                            putExtra("name", psychologist.name)
+                            putExtra("specialty", psychologist.specialty)
+                            putExtra("city", psychologist.city)
+                            putExtra("email", psychologist.email)
+                            putExtra("description", psychologist.description)
+                            putExtra("phone", psychologist.phone)
+                            putExtra("photo", psychologist.photo)
+                        }
+                        startActivity(intent)
+                    },
+                    onNavigateToHistory = {
+                        startActivity(Intent(this, History::class.java))
+                    },
+                    onNavigateToProfile = {
+                        startActivity(Intent(this, Profile::class.java))
+                    },
+                    onNavigateToMoodJournal = {
+                        startActivity(Intent(this, MoodJournalActivity::class.java))
                     }
-                },
-                onDismissMoodDialog = { viewModel.dismissMoodDialog() },
-                onTestClick = { category ->
-                    val intent = Intent(this, DynamicTestActivity::class.java)
-                    intent.putExtra("category", category)
-                    startActivity(intent)
-                },
-                onPsychologistClick = { psychologist ->
-                    val intent = Intent(this, DetailPsychologist::class.java).apply {
-                        putExtra("name", psychologist.name)
-                        putExtra("specialty", psychologist.specialty)
-                        putExtra("city", psychologist.city)
-                        putExtra("email", psychologist.email)
-                        putExtra("description", psychologist.description)
-                        putExtra("phone", psychologist.phone)
-                        putExtra("photo", psychologist.photo)
-                    }
-                    startActivity(intent)
-                },
-                onNavigateToHistory = {
-                    startActivity(Intent(this, History::class.java))
-                },
-                onNavigateToProfile = {
-                    startActivity(Intent(this, Profile::class.java))
-                },
-                onNavigateToMoodJournal = {
-                    startActivity(Intent(this, MoodJournalActivity::class.java))
-                }
-            )
+                )
+            }
         }
     }
 }

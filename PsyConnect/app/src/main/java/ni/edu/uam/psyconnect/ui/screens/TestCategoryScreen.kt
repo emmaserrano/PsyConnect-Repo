@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
+import ni.edu.uam.psyconnect.ui.theme.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,8 +41,8 @@ fun TestCategoryScreen(
                 title = { 
                     Text(
                         "Evaluaciones", 
-                        fontWeight = FontWeight.Bold, 
-                        color = TurquesaOscuro 
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
                     ) 
                 },
                 navigationIcon = {
@@ -52,7 +53,7 @@ fun TestCategoryScreen(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
@@ -71,7 +72,7 @@ fun TestCategoryScreen(
             Text(
                 text = "Selecciona una categoría para comenzar tu test personalizado.",
                 fontSize = 14.sp,
-                color = GrisTexto
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(Modifier.height(24.dp))
@@ -114,7 +115,7 @@ fun CategoryCard(category: CategoryItem, onClick: (String) -> Unit) {
                 text = category.title,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
-                color = TurquesaOscuro
+                color = MaterialTheme.colorScheme.primary
             )
             Spacer(Modifier.height(4.dp))
             Text(

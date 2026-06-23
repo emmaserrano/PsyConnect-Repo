@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import ni.edu.uam.psyconnect.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,18 +30,24 @@ fun SettingsScreen(
                     Text(
                         "Configuración", 
                         fontWeight = FontWeight.Bold, 
-                        color = TurquesaOscuro 
+                        color = MaterialTheme.colorScheme.primary 
                     ) 
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = TurquesaOscuro)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack, 
+                            "Atrás", 
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -54,7 +61,7 @@ fun SettingsScreen(
                 Text(
                     text = "Personalización y Cuenta",
                     style = MaterialTheme.typography.titleSmall,
-                    color = GrisTexto,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                     modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
                 )
             }
@@ -80,7 +87,7 @@ fun SettingsScreen(
                 Text(
                     text = "Más información",
                     style = MaterialTheme.typography.titleSmall,
-                    color = GrisTexto,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                     modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
                 )
             }

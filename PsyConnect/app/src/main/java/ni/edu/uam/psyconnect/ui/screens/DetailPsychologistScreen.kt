@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import ni.edu.uam.psyconnect.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,16 +41,28 @@ fun DetailPsychologistScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Perfil Profesional", fontWeight = FontWeight.Bold, color = TurquesaOscuro) },
+                title = { 
+                    Text(
+                        "Perfil Profesional", 
+                        fontWeight = FontWeight.Bold, 
+                        color = MaterialTheme.colorScheme.primary 
+                    ) 
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = TurquesaOscuro)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack, 
+                            "Atrás", 
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -61,7 +74,7 @@ fun DetailPsychologistScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.White)
+                        .background(MaterialTheme.colorScheme.surface)
                         .padding(24.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -72,7 +85,7 @@ fun DetailPsychologistScreen(
                             modifier = Modifier
                                 .size(120.dp)
                                 .clip(CircleShape)
-                                .background(TurquesaFondo, CircleShape),
+                                .background(MaterialTheme.colorScheme.background, CircleShape),
                             contentScale = ContentScale.Crop
                         )
                         Spacer(Modifier.height(16.dp))
@@ -80,13 +93,13 @@ fun DetailPsychologistScreen(
                             text = name,
                             fontSize = 24.sp,
                             fontWeight = FontWeight.ExtraBold,
-                            color = TurquesaOscuro,
+                            color = MaterialTheme.colorScheme.primary,
                             textAlign = TextAlign.Center
                         )
                         Text(
                             text = "🧠 $specialty",
                             fontSize = 16.sp,
-                            color = TurquesaPrincipal,
+                            color = MaterialTheme.colorScheme.secondary,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -104,7 +117,7 @@ fun DetailPsychologistScreen(
                     Text(
                         "Información de Contacto",
                         fontWeight = FontWeight.Bold,
-                        color = TurquesaOscuro,
+                        color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 18.sp
                     )
                     
@@ -121,20 +134,22 @@ fun DetailPsychologistScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
                     shape = RoundedCornerShape(24.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
                     elevation = CardDefaults.cardElevation(1.dp)
                 ) {
                     Column(Modifier.padding(20.dp)) {
                         Text(
                             "Sobre el especialista",
                             fontWeight = FontWeight.Bold,
-                            color = TurquesaPrincipal,
+                            color = MaterialTheme.colorScheme.primary,
                             fontSize = 14.sp
                         )
                         Spacer(Modifier.height(8.dp))
                         Text(
                             text = description,
-                            color = GrisTexto,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 15.sp,
                             lineHeight = 22.sp,
                             textAlign = TextAlign.Justify
@@ -153,7 +168,7 @@ fun DetailPsychologistScreen(
                         .padding(horizontal = 24.dp)
                         .height(56.dp),
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF25D366)) // Color oficial WhatsApp
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF25D366)) // Color oficial WhatsApp se mantiene
                 ) {
                     Text(
                         "Contactar por WhatsApp",
@@ -174,12 +189,21 @@ fun ContactInfoItem(icon: ImageVector, text: String) {
         Box(
             modifier = Modifier
                 .size(36.dp)
-                .background(TurquesaPrincipal.copy(alpha = 0.1f), CircleShape),
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            Icon(icon, null, tint = TurquesaPrincipal, modifier = Modifier.size(18.dp))
+            Icon(
+                icon, 
+                null, 
+                tint = MaterialTheme.colorScheme.primary, 
+                modifier = Modifier.size(18.dp)
+            )
         }
         Spacer(Modifier.width(16.dp))
-        Text(text = text, color = GrisTexto, fontSize = 15.sp)
+        Text(
+            text = text, 
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f), 
+            fontSize = 15.sp
+        )
     }
 }

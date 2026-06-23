@@ -29,6 +29,7 @@ import com.airbnb.lottie.compose.*
 import ni.edu.uam.psyconnect.data.model.WellnessItem
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.Psychologist
+import ni.edu.uam.psyconnect.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,33 +59,46 @@ fun HomeScreen(
 
     Scaffold(
         bottomBar = {
-            NavigationBar(containerColor = Color.White, tonalElevation = 8.dp) {
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 8.dp
+            ) {
                 NavigationBarItem(
                     selected = true,
                     onClick = { },
                     icon = { Icon(Icons.Default.Home, null) },
                     label = { Text("Inicio") },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = TurquesaPrincipal, 
-                        selectedTextColor = TurquesaPrincipal, 
-                        indicatorColor = TurquesaPrincipal.copy(alpha = 0.1f)
+                        selectedIconColor = MaterialTheme.colorScheme.primary, 
+                        selectedTextColor = MaterialTheme.colorScheme.primary, 
+                        indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
                 NavigationBarItem(
                     selected = false,
                     onClick = onNavigateToHistory,
                     icon = { Icon(Icons.Default.Favorite, null) },
-                    label = { Text("Historial") }
+                    label = { Text("Historial") },
+                    colors = NavigationBarItemDefaults.colors(
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 )
                 NavigationBarItem(
                     selected = false,
                     onClick = onNavigateToProfile,
                     icon = { Icon(Icons.Default.Person, null) },
-                    label = { Text("Perfil") }
+                    label = { Text("Perfil") },
+                    colors = NavigationBarItemDefaults.colors(
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 )
             }
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -101,13 +115,22 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {
-                        Text("Hola, $userName 👋", fontSize = 24.sp, fontWeight = FontWeight.ExtraBold, color = TurquesaOscuro)
-                        Text("¿Cómo te sientes hoy?", fontSize = 16.sp, color = GrisTexto)
+                        Text(
+                            "Hola, $userName 👋", 
+                            fontSize = 24.sp, 
+                            fontWeight = FontWeight.ExtraBold, 
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            "¿Cómo te sientes hoy?", 
+                            fontSize = 16.sp, 
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                        )
                     }
                     Box(
                         modifier = Modifier
                             .size(45.dp)
-                            .background(TurquesaPrincipal.copy(alpha = 0.1f), CircleShape)
+                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), CircleShape)
                             .clickable { onNavigateToMoodJournal() },
                         contentAlignment = Alignment.Center
                     ) {
@@ -119,7 +142,12 @@ fun HomeScreen(
 
             // EVALUACIONES (Arriba)
             item {
-                Text("Evaluaciones de bienestar", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = TurquesaOscuro)
+                Text(
+                    "Evaluaciones de bienestar", 
+                    fontSize = 18.sp, 
+                    fontWeight = FontWeight.Bold, 
+                    color = MaterialTheme.colorScheme.primary
+                )
                 Spacer(Modifier.height(12.dp))
             }
 
@@ -131,7 +159,12 @@ fun HomeScreen(
             // ESPECIALISTAS (Debajo)
             item {
                 Spacer(Modifier.height(24.dp))
-                Text("Especialistas para ti", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = TurquesaOscuro)
+                Text(
+                    "Especialistas para ti", 
+                    fontSize = 18.sp, 
+                    fontWeight = FontWeight.Bold, 
+                    color = MaterialTheme.colorScheme.primary
+                )
                 Spacer(Modifier.height(12.dp))
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     items(psychologists) { psych ->
@@ -154,7 +187,9 @@ fun WellnessCard(item: WellnessItem, onClick: (String) -> Unit) {
             .fillMaxWidth()
             .clickable { onClick(item.category) },
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(1.dp)
     ) {
         Row(
@@ -164,7 +199,7 @@ fun WellnessCard(item: WellnessItem, onClick: (String) -> Unit) {
             Box(
                 modifier = Modifier
                     .size(60.dp)
-                    .background(TurquesaPrincipal.copy(alpha = 0.05f), RoundedCornerShape(12.dp)),
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.05f), RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 LottieAnimation(
@@ -175,8 +210,17 @@ fun WellnessCard(item: WellnessItem, onClick: (String) -> Unit) {
             }
             Spacer(Modifier.width(16.dp))
             Column {
-                Text(item.title, fontWeight = FontWeight.Bold, color = TurquesaOscuro, fontSize = 16.sp)
-                Text(item.description, fontSize = 12.sp, color = GrisTexto)
+                Text(
+                    item.title, 
+                    fontWeight = FontWeight.Bold, 
+                    color = MaterialTheme.colorScheme.onSurface, 
+                    fontSize = 16.sp
+                )
+                Text(
+                    item.description, 
+                    fontSize = 12.sp, 
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
@@ -189,7 +233,9 @@ fun PsychologistCard(psych: Psychologist, onClick: (Psychologist) -> Unit) {
             .width(160.dp)
             .clickable { onClick(psych) },
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -199,12 +245,24 @@ fun PsychologistCard(psych: Psychologist, onClick: (Psychologist) -> Unit) {
                 modifier = Modifier
                     .size(80.dp)
                     .clip(CircleShape)
-                    .background(TurquesaFondo, CircleShape),
+                    .background(MaterialTheme.colorScheme.background, CircleShape),
                 contentScale = ContentScale.Crop
             )
             Spacer(Modifier.height(8.dp))
-            Text(psych.name, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = TurquesaOscuro, maxLines = 1, textAlign = TextAlign.Center)
-            Text(psych.specialty, fontSize = 11.sp, color = TurquesaPrincipal, maxLines = 1)
+            Text(
+                psych.name, 
+                fontSize = 14.sp, 
+                fontWeight = FontWeight.Bold, 
+                color = MaterialTheme.colorScheme.onSurface, 
+                maxLines = 1, 
+                textAlign = TextAlign.Center
+            )
+            Text(
+                psych.specialty, 
+                fontSize = 11.sp, 
+                color = MaterialTheme.colorScheme.primary, 
+                maxLines = 1
+            )
         }
     }
 }
@@ -214,7 +272,9 @@ fun MoodSelectionDialog(onMoodSelected: (String) -> Unit, onDismiss: () -> Unit)
     Dialog(onDismissRequest = onDismiss) {
         Card(
             shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
             modifier = Modifier.fillMaxWidth().padding(16.dp)
         ) {
             Column(
@@ -225,7 +285,7 @@ fun MoodSelectionDialog(onMoodSelected: (String) -> Unit, onDismiss: () -> Unit)
                     "¿Cómo te sientes hoy?",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TurquesaOscuro,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
                 Spacer(Modifier.height(24.dp))
@@ -253,7 +313,7 @@ fun MoodSelectionDialog(onMoodSelected: (String) -> Unit, onDismiss: () -> Unit)
                 }
                 Spacer(Modifier.height(24.dp))
                 TextButton(onClick = onDismiss) {
-                    Text("Más tarde", color = GrisTexto)
+                    Text("Más tarde", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }

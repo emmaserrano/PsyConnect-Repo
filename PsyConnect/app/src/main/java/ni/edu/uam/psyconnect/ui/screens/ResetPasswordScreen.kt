@@ -40,16 +40,16 @@ fun ResetPasswordScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Nueva Contraseña", fontWeight = FontWeight.Bold, color = TurquesaOscuro) },
+                title = { Text("Nueva Contraseña", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = TurquesaOscuro)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = MaterialTheme.colorScheme.primary)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
@@ -74,7 +74,7 @@ fun ResetPasswordScreen(
                     text = "Crea tu nueva contraseña",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = TurquesaOscuro,
+                    color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center
                 )
 
@@ -83,7 +83,7 @@ fun ResetPasswordScreen(
                 Text(
                     text = "Asegúrate de que sea segura y fácil de recordar para ti.",
                     fontSize = 14.sp,
-                    color = GrisTexto,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
 
@@ -95,7 +95,7 @@ fun ResetPasswordScreen(
                         value = state.password,
                         onValueChange = onPasswordChange,
                         label = { Text("Nueva Contraseña") },
-                        leadingIcon = { Icon(Icons.Default.Lock, null, tint = TurquesaPrincipal) },
+                        leadingIcon = { Icon(Icons.Default.Lock, null, tint = MaterialTheme.colorScheme.primary) },
                         trailingIcon = {
                             IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                                 Icon(if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff, null)
@@ -104,7 +104,7 @@ fun ResetPasswordScreen(
                         visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
-                        colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = TurquesaPrincipal),
+                        colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = MaterialTheme.colorScheme.primary),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                     )
                     PasswordStrengthIndicator(state.password)
@@ -117,7 +117,7 @@ fun ResetPasswordScreen(
                     value = state.confirmPassword,
                     onValueChange = onConfirmPasswordChange,
                     label = { Text("Confirmar Contraseña") },
-                    leadingIcon = { Icon(Icons.Default.Lock, null, tint = TurquesaPrincipal) },
+                    leadingIcon = { Icon(Icons.Default.Lock, null, tint = MaterialTheme.colorScheme.primary) },
                     trailingIcon = {
                         IconButton(onClick = { isConfirmPasswordVisible = !isConfirmPasswordVisible }) {
                             Icon(if (isConfirmPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff, null)
@@ -126,7 +126,7 @@ fun ResetPasswordScreen(
                     visualTransformation = if (isConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = TurquesaPrincipal),
+                    colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = MaterialTheme.colorScheme.primary),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
                 
@@ -141,7 +141,7 @@ fun ResetPasswordScreen(
                     .padding(vertical = 24.dp)
                     .height(56.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = TurquesaPrincipal),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 enabled = !state.isLoading && 
                          state.password.isNotBlank() && 
                          state.password == state.confirmPassword &&

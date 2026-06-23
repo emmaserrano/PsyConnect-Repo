@@ -15,7 +15,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,18 +34,24 @@ fun SecurityScreen(
                     Text(
                         "Seguridad", 
                         fontWeight = FontWeight.Bold, 
-                        color = TurquesaOscuro 
+                        color = MaterialTheme.colorScheme.primary 
                     ) 
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = TurquesaOscuro)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack, 
+                            "Atrás", 
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -60,7 +65,7 @@ fun SecurityScreen(
                 Text(
                     text = "Gestiona la seguridad de tu cuenta para mantener tus datos protegidos.",
                     fontSize = 14.sp,
-                    color = GrisTexto,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                     modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
                 )
             }
@@ -91,7 +96,9 @@ fun SecurityMenuItem(title: String, icon: ImageVector, onClick: () -> Unit) {
             .fillMaxWidth()
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(1.dp)
     ) {
         Row(
@@ -101,14 +108,31 @@ fun SecurityMenuItem(title: String, icon: ImageVector, onClick: () -> Unit) {
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .background(TurquesaPrincipal.copy(alpha = 0.1f), CircleShape),
+                    .background(
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), 
+                        CircleShape
+                    ),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(icon, null, tint = TurquesaPrincipal, modifier = Modifier.size(20.dp))
+                Icon(
+                    icon, 
+                    null, 
+                    tint = MaterialTheme.colorScheme.primary, 
+                    modifier = Modifier.size(20.dp)
+                )
             }
             Spacer(Modifier.width(16.dp))
-            Text(title, modifier = Modifier.weight(1f), fontWeight = FontWeight.Medium, color = TurquesaOscuro)
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null, tint = GrisSuave)
+            Text(
+                title, 
+                modifier = Modifier.weight(1f), 
+                fontWeight = FontWeight.Medium, 
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Icon(
+                Icons.AutoMirrored.Filled.KeyboardArrowRight, 
+                null, 
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }

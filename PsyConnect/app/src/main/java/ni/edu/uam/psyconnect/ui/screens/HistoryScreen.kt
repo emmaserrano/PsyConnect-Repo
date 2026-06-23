@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ni.edu.uam.psyconnect.data.model.TestResultEntity
 import ni.edu.uam.psyconnect.ui.viewmodel.TestResultViewModel
+import ni.edu.uam.psyconnect.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,16 +46,28 @@ fun HistoryScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Mi Historial", fontWeight = FontWeight.Bold, color = TurquesaOscuro) },
+                title = { 
+                    Text(
+                        "Mi Historial", 
+                        fontWeight = FontWeight.Bold, 
+                        color = MaterialTheme.colorScheme.primary 
+                    ) 
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Atrás", tint = TurquesaOscuro)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack, 
+                            "Atrás", 
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -68,20 +81,26 @@ fun HistoryScreen(
                     "Resumen de Progreso",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(top = 16.dp)
                 )
             }
 
-            // SECCIÓN: GRÁFICOS DE PROGRESO POR CATEGORÍA
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
-                        Text("Promedio por área", fontWeight = FontWeight.Bold, color = TurquesaOscuro)
+                        Text(
+                            "Promedio por área", 
+                            fontWeight = FontWeight.Bold, 
+                            color = MaterialTheme.colorScheme.primary
+                        )
                         Spacer(Modifier.height(16.dp))
                         
                         categories.forEach { (code, label) ->
@@ -98,11 +117,10 @@ fun HistoryScreen(
                     "Resultados Recientes",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
 
-            // Filtros
             item {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -112,14 +130,22 @@ fun HistoryScreen(
                         FilterChip(
                             selected = selectedCategory == null,
                             onClick = { selectedCategory = null },
-                            label = { Text("Todos") }
+                            label = { Text("Todos") },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                            )
                         )
                     }
                     items(categories) { (code, label) ->
                         FilterChip(
                             selected = selectedCategory == code,
                             onClick = { selectedCategory = code },
-                            label = { Text(label) }
+                            label = { Text(label) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                            )
                         )
                     }
                 }
@@ -128,7 +154,10 @@ fun HistoryScreen(
             if (filteredResults.isEmpty()) {
                 item {
                     Box(Modifier.fillMaxWidth().padding(top = 64.dp), contentAlignment = Alignment.Center) {
-                        Text("No hay resultados en esta categoría", color = Color.Gray)
+                        Text(
+                            "No hay resultados en esta categoría", 
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                        )
                     }
                 }
             }
@@ -143,11 +172,41 @@ fun HistoryScreen(
 }
 
 @Composable
+fun CategoryProgressRow(label: String, progress: Int) {
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(label, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                "$progress%", 
+                fontSize = 13.sp, 
+                fontWeight = FontWeight.Bold, 
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+        Spacer(Modifier.height(4.dp))
+        LinearProgressIndicator(
+            progress = { progress / 100f },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(6.dp),
+            color = if (progress >= 70) TurquesaPrincipal else if (progress >= 40) Color(0xFFFACC15) else Color.Red,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
+        )
+    }
+}
+
+@Composable
 fun ResultCard(result: TestResultEntity) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
@@ -155,58 +214,49 @@ fun ResultCard(result: TestResultEntity) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
+                val categoryName = when(result.category) {
+                    "WELLNESS" -> "Bienestar"
+                    "STRESS" -> "Estrés"
+                    "SLEEP" -> "Sueño"
+                    "MOOD" -> "Ánimo"
+                    "RELATIONSHIPS" -> "Social"
+                    else -> result.category
+                }
                 Text(
-                    text = result.category,
+                    text = categoryName,
                     fontSize = 12.sp,
-                    color = TurquesaPrincipal,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = result.level,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TurquesaOscuro
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = result.createdAt,
                     fontSize = 12.sp,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             
             Box(
                 modifier = Modifier
                     .size(50.dp)
-                    .background(TurquesaPrincipal.copy(alpha = 0.1f), RoundedCornerShape(12.dp)),
+                    .background(
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), 
+                        RoundedCornerShape(12.dp)
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     "${result.percentage}%",
                     fontWeight = FontWeight.ExtraBold,
-                    color = TurquesaPrincipal
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
-    }
-}
-
-@Composable
-fun CategoryProgressRow(label: String, progress: Int) {
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(label, fontSize = 13.sp, color = GrisTexto)
-            Text("$progress%", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = TurquesaPrincipal)
-        }
-        Spacer(Modifier.height(4.dp))
-        LinearProgressIndicator(
-            progress = { progress / 100f },
-            modifier = Modifier.fillMaxWidth().height(6.dp).background(TurquesaFondo, RoundedCornerShape(3.dp)),
-            color = if (progress >= 70) TurquesaPrincipal else if (progress >= 40) Color(0xFFFACC15) else Color.Red,
-            trackColor = TurquesaFondo
-        )
     }
 }
 

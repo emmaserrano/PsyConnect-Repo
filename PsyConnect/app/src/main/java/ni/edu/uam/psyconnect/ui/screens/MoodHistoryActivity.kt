@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import ni.edu.uam.psyconnect.data.moodjournal.MoodJournalDatabase
 import ni.edu.uam.psyconnect.data.moodjournal.MoodJournalRepository
+import ni.edu.uam.psyconnect.ui.theme.PsyConnectTheme
 import ni.edu.uam.psyconnect.ui.viewmodel.MoodHistoryViewModel
 
 class MoodHistoryActivity : ComponentActivity() {
@@ -14,11 +15,9 @@ class MoodHistoryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Inicializar Base de Datos y Repositorio
         val database = MoodJournalDatabase.getDatabase(this)
         val repository = MoodJournalRepository(database.moodJournalDao())
 
-        // Crear el ViewModel con Factoría
         val viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -26,11 +25,16 @@ class MoodHistoryActivity : ComponentActivity() {
             }
         })[MoodHistoryViewModel::class.java]
 
+        val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
+        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
+
         setContent {
-            MoodHistoryScreen(
-                viewModel = viewModel,
-                onBack = { finish() }
-            )
+            PsyConnectTheme(darkTheme = isDarkMode) {
+                MoodHistoryScreen(
+                    viewModel = viewModel,
+                    onBack = { finish() }
+                )
+            }
         }
     }
 }
