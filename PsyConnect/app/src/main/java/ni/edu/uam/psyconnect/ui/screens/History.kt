@@ -42,6 +42,7 @@ class History : AppCompatActivity() {
         val repository = TestResultRepository(database.testResultDao())
         
         viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return TestResultViewModel(repository) as T
             }
@@ -70,7 +71,6 @@ class History : AppCompatActivity() {
         val tvInsight = findViewById<TextView>(R.id.tvInsight)
         val recycler = findViewById<RecyclerView>(R.id.recyclerResults)
 
-        // Configurar Recycler
         recycler.layoutManager = LinearLayoutManager(this)
         filtrarResultados(null)
 
@@ -101,16 +101,15 @@ class History : AppCompatActivity() {
             allResults.filter { it.category == category }
         }
         
-        // Convertimos Entity a el modelo que espera el adaptador si es necesario
-        // O mejor, adaptamos el adaptador para recibir TestResultEntity
+        // Mapeo corregido de TestResultEntity a TestResult
         val adapterList = filtered.map { entity ->
             TestResult(
                 id = entity.id.toLong(),
+                userId = entity.userId,
                 category = entity.category,
                 percentage = entity.percentage,
-                date = entity.date,
-                insight = entity.insight,
-                userId = entity.userId
+                level = entity.level,
+                createdAt = entity.createdAt
             )
         }
         recycler.adapter = RecentResultAdapter(adapterList)
