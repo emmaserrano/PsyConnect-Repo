@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -70,6 +71,9 @@ fun MoodJournalScreen(
     var selectedMood by remember { mutableStateOf<MoodType?>(null) }
     val selectedActivities = remember { mutableStateListOf<String>() }
     
+    // Estado para rastrear si estamos editando
+    var editingEntry by remember { mutableStateOf<MoodJournalEntry?>(null) }
+    
     var entries by remember { mutableStateOf(emptyList<MoodJournalEntry>()) }
     var isSheetOpen by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
@@ -105,6 +109,7 @@ fun MoodJournalScreen(
                         reflection = ""
                         selectedMood = null
                         selectedActivities.clear()
+                        editingEntry = null // Resetear estado de edición
                         isSheetOpen = true 
                     },
                     containerColor = TurquesaPrincipal,
@@ -132,7 +137,7 @@ fun MoodJournalScreen(
                         .padding(bottom = 48.dp)
                 ) {
                     Text(
-                        text = "¿Cómo va tu día?",
+                        text = if (editingEntry == null) "¿Cómo va tu día?" else "Editar momento",
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold, color = TurquesaOscuro
                         )
@@ -212,14 +217,25 @@ fun MoodJournalScreen(
                         onClick = {
                             if (selectedMood == null) return@Button
                             scope.launch {
-                                val entry = MoodJournalEntry(
-                                    mood = selectedMood?.name ?: "NORMAL",
-                                    reflection = reflection,
-                                    activities = selectedActivities.joinToString(","),
-                                    date = SimpleDateFormat("EEEE, d MMMM", Locale("es")).format(Date()).replaceFirstChar { it.uppercase() },
-                                    timestamp = System.currentTimeMillis()
-                                )
-                                repository.insert(entry)
+                                if (editingEntry == null) {
+                                    // Crear nueva entrada
+                                    val entry = MoodJournalEntry(
+                                        mood = selectedMood?.name ?: "NORMAL",
+                                        reflection = reflection,
+                                        activities = selectedActivities.joinToString(","),
+                                        date = SimpleDateFormat("EEEE, d MMMM", Locale("es")).format(Date()).replaceFirstChar { it.uppercase() },
+                                        timestamp = System.currentTimeMillis()
+                                    )
+                                    repository.insert(entry)
+                                } else {
+                                    // Actualizar entrada existente
+                                    val updatedEntry = editingEntry!!.copy(
+                                        mood = selectedMood?.name ?: "NORMAL",
+                                        reflection = reflection,
+                                        activities = selectedActivities.joinToString(",")
+                                    )
+                                    repository.update(updatedEntry)
+                                }
                                 entries = repository.getAll()
                                 isSheetOpen = false
                             }
@@ -229,7 +245,11 @@ fun MoodJournalScreen(
                         shape = RoundedCornerShape(16.dp),
                         enabled = selectedMood != null
                     ) {
-                        Text("Guardar Momento", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                        Text(
+                            if (editingEntry == null) "Guardar Momento" else "Actualizar Momento",
+                            fontWeight = FontWeight.Bold, 
+                            fontSize = 16.sp
+                        )
                     }
                 }
             }
@@ -323,6 +343,29 @@ fun MoodJournalScreen(
                             }
                         }
                         
+                        // Botón Editar
+                        IconButton(
+                            onClick = { 
+                                editingEntry = entry
+                                reflection = entry.reflection
+                                selectedMood = try { MoodType.valueOf(entry.mood) } catch (e: Exception) { null }
+                                selectedActivities.clear()
+                                if (entry.activities.isNotEmpty()) {
+                                    selectedActivities.addAll(entry.activities.split(","))
+                                }
+                                isSheetOpen = true
+                            },
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Edit, 
+                                null, 
+                                tint = TurquesaPrincipal.copy(0.6f), 
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+
+                        // Botón Eliminar
                         IconButton(
                             onClick = { 
                                 scope.launch { repository.delete(entry); entries = repository.getAll() } 
