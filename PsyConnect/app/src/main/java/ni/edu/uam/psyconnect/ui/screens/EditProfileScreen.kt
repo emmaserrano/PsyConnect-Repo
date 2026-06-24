@@ -102,18 +102,45 @@ fun EditProfileScreen(
             // Foto de Perfil
             item {
                 Box(contentAlignment = Alignment.BottomEnd) {
-                    AsyncImage(
-                        model = state.profileImage,
-                        contentDescription = "Foto de perfil",
-                        modifier = Modifier
-                            .size(120.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surface, CircleShape)
-                            .padding(4.dp)
-                            .clip(CircleShape)
-                            .clickable { imageLauncher.launch("image/*") },
-                        contentScale = ContentScale.Crop
-                    )
+                    val photoUrl = if (state.profileImage?.startsWith("http") == true || state.profileImage?.startsWith("content") == true) {
+                        state.profileImage
+                    } else if (!state.profileImage.isNullOrEmpty()) {
+                        "https://psyconnect-repo-production.up.railway.app/uploads/${state.profileImage}"
+                    } else {
+                        null
+                    }
+
+                    if (photoUrl != null) {
+                        AsyncImage(
+                            model = photoUrl,
+                            contentDescription = "Foto de perfil",
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.surface, CircleShape)
+                                .padding(4.dp)
+                                .clip(CircleShape)
+                                .clickable { imageLauncher.launch("image/*") },
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
+                                .clickable { imageLauncher.launch("image/*") },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Default.Person,
+                                contentDescription = null,
+                                modifier = Modifier.size(70.dp),
+                                tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+                            )
+                        }
+                    }
+
                     Box(
                         modifier = Modifier
                             .size(36.dp)

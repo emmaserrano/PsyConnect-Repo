@@ -22,10 +22,7 @@ class Login : ComponentActivity() {
         val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
 
         setContent {
-            // Punto 6: Escuchar modo oscuro
-            val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
-            
-            PsyConnectTheme(darkTheme = isDarkMode) {
+            PsyConnectTheme {
                 val loginState by viewModel.loginState.collectAsState()
 
                 LaunchedEffect(loginState) {
@@ -39,7 +36,15 @@ class Login : ComponentActivity() {
                                 .apply()
 
                             Toast.makeText(this@Login, state.message, Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this@Login, Home::class.java))
+                            
+                            // Verificar si es la primera vez que inicia sesión para completar perfil
+                            val hasCompletedProfile = sharedPreferences.getBoolean("profile_setup_${state.userId}", false)
+                            
+                            if (!hasCompletedProfile) {
+                                startActivity(Intent(this@Login, CompleteProfileActivity::class.java))
+                            } else {
+                                startActivity(Intent(this@Login, Home::class.java))
+                            }
                             finish()
                         }
                         is LoginState.Error -> {

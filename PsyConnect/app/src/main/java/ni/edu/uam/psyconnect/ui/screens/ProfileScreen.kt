@@ -102,21 +102,41 @@ fun ProfileScreen(
                     ) {
                         val photoUrl = if (user?.profileImage?.startsWith("http") == true) {
                             user.profileImage
-                        } else {
+                        } else if (!user?.profileImage.isNullOrEmpty()) {
                             "https://psyconnect-repo-production.up.railway.app/uploads/${user?.profileImage}"
+                        } else {
+                            null
                         }
 
-                        AsyncImage(
-                            model = photoUrl,
-                            contentDescription = "Foto de perfil",
-                            modifier = Modifier
-                                .size(100.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.surface, CircleShape)
-                                .padding(4.dp)
-                                .clip(CircleShape),
-                            contentScale = ContentScale.Crop
-                        )
+                        if (photoUrl != null) {
+                            AsyncImage(
+                                model = photoUrl,
+                                contentDescription = "Foto de perfil",
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.surface, CircleShape)
+                                    .padding(4.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.surface),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    Icons.Default.Person,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(60.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+
                         Spacer(Modifier.height(12.dp))
                         Text(
                             text = user?.name ?: "Cargando...",
