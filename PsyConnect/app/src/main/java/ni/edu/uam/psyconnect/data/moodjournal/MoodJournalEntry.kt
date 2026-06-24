@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class MoodJournalEntry(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val userId: Long, // Asociado al usuario actual
     val mood: String,
     val reflection: String,
     val date: String,
