@@ -103,7 +103,7 @@ fun ProfileScreen(
                         val photoUrl = if (user?.profileImage?.startsWith("http") == true) {
                             user.profileImage
                         } else {
-                            "http://10.0.2.2:8080/uploads/${user?.profileImage}"
+                            "https://psyconnect-repo-production.up.railway.app/uploads/${user?.profileImage}"
                         }
 
                         AsyncImage(

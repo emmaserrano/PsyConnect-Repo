@@ -240,7 +240,7 @@ fun PsychologistCard(psych: Psychologist, onClick: (Psychologist) -> Unit) {
     ) {
         Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             AsyncImage(
-                model = "http://10.0.2.2:8080/uploads/${psych.photo}",
+                model = "https://psyconnect-repo-production.up.railway.app/uploads/${psych.photo}",
                 contentDescription = null,
                 modifier = Modifier
                     .size(80.dp)

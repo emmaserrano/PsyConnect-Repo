@@ -80,7 +80,7 @@ fun DetailPsychologistScreen(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         AsyncImage(
-                            model = "http://10.0.2.2:8080/uploads/$photo",
+                            model = "https://psyconnect-repo-production.up.railway.app/uploads/$photo",
                             contentDescription = "Foto de $name",
                             modifier = Modifier
                                 .size(120.dp)
