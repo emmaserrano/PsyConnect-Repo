@@ -20,12 +20,11 @@ class Profile : ComponentActivity() {
         
         val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
         val userId = sharedPreferences.getLong("userId", -1L)
-        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
 
         viewModel.loadProfile(userId)
 
         setContent {
-            PsyConnectTheme(darkTheme = isDarkMode) {
+            PsyConnectTheme {
                 val user by viewModel.user.collectAsState()
                 val age by viewModel.age.collectAsState()
 

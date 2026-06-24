@@ -25,11 +25,8 @@ class MoodHistoryActivity : ComponentActivity() {
             }
         })[MoodHistoryViewModel::class.java]
 
-        val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
-        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
-
         setContent {
-            PsyConnectTheme(darkTheme = isDarkMode) {
+            PsyConnectTheme {
                 MoodHistoryScreen(
                     viewModel = viewModel,
                     onBack = { finish() }

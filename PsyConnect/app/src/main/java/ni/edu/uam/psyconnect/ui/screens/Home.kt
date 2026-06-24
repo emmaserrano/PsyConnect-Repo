@@ -27,10 +27,8 @@ class Home : ComponentActivity() {
         viewModel.loadPsychologists()
 
         setContent {
-            // Escuchar modo oscuro
-            val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
-
-            PsyConnectTheme(darkTheme = isDarkMode) {
+            // Ahora PsyConnectTheme usa ThemeSettings.isDarkMode por defecto, que es reactivo
+            PsyConnectTheme {
                 val userName by viewModel.userName.collectAsState()
                 val psychologists by viewModel.psychologists.collectAsState()
                 val showMoodDialog by viewModel.showMoodDialog.collectAsState()
