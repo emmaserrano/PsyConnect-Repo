@@ -1,5 +1,6 @@
 package ni.edu.uam.psyconnect.ui.screens
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -32,7 +33,23 @@ class MoodJournalActivity : ComponentActivity() {
             PsyConnectTheme(darkTheme = isDarkMode) {
                 MoodJournalScreen(
                     viewModel = viewModel,
-                    onBack = { finish() }
+                    onBack = { finish() },
+                    onNavigateToHome = {
+                        val intent = Intent(this, Home::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                        startActivity(intent)
+                        finish()
+                    },
+                    onNavigateToHistory = {
+                        val intent = Intent(this, History::class.java)
+                        startActivity(intent)
+                        finish()
+                    },
+                    onNavigateToProfile = {
+                        val intent = Intent(this, Profile::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
                 )
             }
         }
