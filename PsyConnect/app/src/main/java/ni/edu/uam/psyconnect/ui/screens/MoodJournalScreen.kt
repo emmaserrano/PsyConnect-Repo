@@ -17,6 +17,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -66,11 +68,63 @@ fun MoodJournalScreen(
     val selectedActivities = remember { mutableStateListOf<String>() }
     
     var editingEntry by remember { mutableStateOf<MoodJournalEntry?>(null) }
+    var viewingEntry by remember { mutableStateOf<MoodJournalEntry?>(null) }
     
     val entries by viewModel.entries.collectAsState()
     
+    var searchQuery by remember { mutableStateOf("") }
+    var filterMood by remember { mutableStateOf<MoodType?>(null) }
+
+    val filteredEntries = remember(entries, searchQuery, filterMood) {
+        entries.filter { entry ->
+            val matchesSearch = entry.date.contains(searchQuery, ignoreCase = true) || 
+                                entry.reflection.contains(searchQuery, ignoreCase = true) ||
+                                entry.activities.contains(searchQuery, ignoreCase = true)
+            val matchesMood = filterMood == null || entry.mood == filterMood?.name
+            matchesSearch && matchesMood
+        }
+    }
+    
     var isSheetOpen by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
+
+    if (viewingEntry != null) {
+        AlertDialog(
+            onDismissRequest = { viewingEntry = null },
+            confirmButton = {
+                TextButton(onClick = { viewingEntry = null }) {
+                    Text("Cerrar")
+                }
+            },
+            title = {
+                val mood = try { MoodType.valueOf(viewingEntry!!.mood) } catch (e: Exception) { MoodType.NORMAL }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(mood.emoji, fontSize = 28.sp)
+                    Spacer(Modifier.width(8.dp))
+                    Text(viewingEntry!!.date, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                }
+            },
+            text = {
+                Column {
+                    if (viewingEntry!!.activities.isNotEmpty()) {
+                        Text(
+                            text = viewingEntry!!.activities.split(",").joinToString(" • "),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(Modifier.height(12.dp))
+                    }
+                    Text(
+                        text = viewingEntry!!.reflection.ifEmpty { "Sin reflexión guardada." },
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            },
+            shape = RoundedCornerShape(28.dp),
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -278,14 +332,73 @@ fun MoodJournalScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                Text(
-                    text = "Tu Trayectoria", 
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.ExtraBold, 
-                        color = MaterialTheme.colorScheme.onBackground
-                    ),
-                    modifier = Modifier.padding(top = 12.dp)
-                )
+                Column {
+                    Text(
+                        text = "Tu Trayectoria", 
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.ExtraBold, 
+                            color = MaterialTheme.colorScheme.onBackground
+                        ),
+                        modifier = Modifier.padding(top = 12.dp)
+                    )
+                    
+                    Spacer(Modifier.height(16.dp))
+                    
+                    OutlinedTextField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text("Buscar...", fontSize = 14.sp) },
+                        leadingIcon = { Icon(Icons.Default.Search, null, modifier = Modifier.size(20.dp)) },
+                        trailingIcon = {
+                            if (searchQuery.isNotEmpty()) {
+                                IconButton(onClick = { searchQuery = "" }) {
+                                    Icon(Icons.Default.Close, null, modifier = Modifier.size(20.dp))
+                                }
+                            }
+                        },
+                        shape = RoundedCornerShape(16.dp),
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+                        )
+                    )
+                    
+                    Spacer(Modifier.height(12.dp))
+                    
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(bottom = 8.dp)
+                    ) {
+                        item {
+                            FilterChip(
+                                selected = filterMood == null,
+                                onClick = { filterMood = null },
+                                label = { Text("Todos") },
+                                shape = RoundedCornerShape(12.dp),
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                                )
+                            )
+                        }
+                        items(MoodType.entries) { mood ->
+                            FilterChip(
+                                selected = filterMood == mood,
+                                onClick = { filterMood = if (filterMood == mood) null else mood },
+                                label = { Text("${mood.emoji} ${mood.label}") },
+                                shape = RoundedCornerShape(12.dp),
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                                )
+                            )
+                        }
+                    }
+                }
             }
 
             if (entries.isEmpty()) {
@@ -309,13 +422,24 @@ fun MoodJournalScreen(
                         )
                     }
                 }
+            } else if (filteredEntries.isEmpty()) {
+                item {
+                    Text(
+                        "No se encontraron resultados",
+                        modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
 
-            itemsIndexed(entries) { _, entry ->
+            itemsIndexed(filteredEntries) { _, entry ->
                 val mood = try { MoodType.valueOf(entry.mood) } catch (e: Exception) { MoodType.NORMAL }
                 
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { viewingEntry = entry },
                     shape = RoundedCornerShape(24.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surface
