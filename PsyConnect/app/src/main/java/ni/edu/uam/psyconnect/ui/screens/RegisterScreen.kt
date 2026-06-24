@@ -25,8 +25,10 @@ import androidx.compose.ui.unit.sp
 import ni.edu.uam.psyconnect.ui.viewmodel.RegisterUiState
 import ni.edu.uam.psyconnect.ui.theme.*
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,13 +50,25 @@ fun RegisterScreen(
     val showDatePicker = remember { mutableStateOf(false) }
 
     if (showDatePicker.value) {
-        val datePickerState = rememberDatePickerState()
+        val datePickerState = rememberDatePickerState(
+            selectableDates = object : SelectableDates {
+                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                    // Restricción: No fechas futuras y mínimo 10 años de edad
+                    val calendar = Calendar.getInstance()
+                    calendar.add(Calendar.YEAR, -10)
+                    return utcTimeMillis <= calendar.timeInMillis
+                }
+            }
+        )
         DatePickerDialog(
             onDismissRequest = { showDatePicker.value = false },
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let {
-                        val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(it))
+                        // Se usa UTC para evitar el desfase de 1 día por zona horaria local
+                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                        sdf.timeZone = TimeZone.getTimeZone("UTC")
+                        val date = sdf.format(Date(it))
                         onBirthdateChange(date)
                     }
                     showDatePicker.value = false
