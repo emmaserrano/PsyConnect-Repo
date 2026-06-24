@@ -28,12 +28,11 @@ class History : ComponentActivity() {
 
         val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
         val userId = sharedPreferences.getLong("userId", 1L)
-        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
         
         viewModel.setUserId(userId)
 
         setContent {
-            PsyConnectTheme(darkTheme = isDarkMode) {
+            PsyConnectTheme {
                 HistoryScreen(
                     viewModel = viewModel,
                     onBack = { finish() },

@@ -26,11 +26,8 @@ class MoodJournalActivity : ComponentActivity() {
             }
         })[MoodJournalViewModel::class.java]
 
-        val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
-        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
-
         setContent {
-            PsyConnectTheme(darkTheme = isDarkMode) {
+            PsyConnectTheme {
                 MoodJournalScreen(
                     viewModel = viewModel,
                     onBack = { finish() },

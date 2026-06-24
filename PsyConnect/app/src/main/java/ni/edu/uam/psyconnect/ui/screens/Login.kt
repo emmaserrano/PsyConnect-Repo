@@ -22,10 +22,7 @@ class Login : ComponentActivity() {
         val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
 
         setContent {
-            // Punto 6: Escuchar modo oscuro
-            val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
-            
-            PsyConnectTheme(darkTheme = isDarkMode) {
+            PsyConnectTheme {
                 val loginState by viewModel.loginState.collectAsState()
 
                 LaunchedEffect(loginState) {
