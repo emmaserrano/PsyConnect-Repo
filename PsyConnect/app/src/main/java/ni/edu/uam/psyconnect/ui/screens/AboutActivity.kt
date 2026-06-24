@@ -1,27 +1,24 @@
 package ni.edu.uam.psyconnect.ui.screens
 
 import android.os.Bundle
-import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
-import ni.edu.uam.psyconnect.R
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import ni.edu.uam.psyconnect.ui.theme.PsyConnectTheme
 
-class AboutActivity : AppCompatActivity() {
+class AboutActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_about)
+        val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
+        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
 
-        val btnBack =
-            findViewById<Button>(R.id.btnBack)
-
-        btnBack.setOnClickListener {
-
-            finish()
-
+        setContent {
+            PsyConnectTheme(darkTheme = isDarkMode) {
+                AboutScreen(
+                    onBack = { finish() }
+                )
+            }
         }
-
     }
-
 }

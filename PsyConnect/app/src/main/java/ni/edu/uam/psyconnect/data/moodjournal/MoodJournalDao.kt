@@ -1,11 +1,12 @@
 package ni.edu.uam.psyconnect.data.moodjournal
 
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MoodJournalDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entry: MoodJournalEntry)
 
     @Update
@@ -15,5 +16,5 @@ interface MoodJournalDao {
     suspend fun delete(entry: MoodJournalEntry)
 
     @Query("SELECT * FROM mood_journal ORDER BY timestamp DESC")
-    suspend fun getAll(): List<MoodJournalEntry>
+    fun getAllEntries(): Flow<List<MoodJournalEntry>>
 }

@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -29,17 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.data.moodjournal.MoodJournalEntry
-import ni.edu.uam.psyconnect.data.moodjournal.MoodJournalRepository
+import ni.edu.uam.psyconnect.ui.viewmodel.MoodJournalViewModel
+import ni.edu.uam.psyconnect.ui.theme.*
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
-// Paleta de colores oficial de PsyConnect
-val TurquesaPrincipal = Color(0xFF14B8A6)
-val TurquesaOscuro = Color(0xFF0F766E)
-val TurquesaFondo = Color(0xFFF8FAFC)
-val GrisTexto = Color(0xFF6B7280)
-val GrisSuave = Color(0xFF9CA3AF)
 
 enum class MoodType(val emoji: String, val label: String, val color: Color) {
     EXCELLENT("🤩", "Increíble", Color(0xFFFACC15)),
@@ -62,7 +57,7 @@ val activitiesList = listOf(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoodJournalScreen(
-    repository: MoodJournalRepository,
+    viewModel: MoodJournalViewModel,
     onBack: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -70,13 +65,12 @@ fun MoodJournalScreen(
     var selectedMood by remember { mutableStateOf<MoodType?>(null) }
     val selectedActivities = remember { mutableStateListOf<String>() }
     
-    var entries by remember { mutableStateOf(emptyList<MoodJournalEntry>()) }
+    var editingEntry by remember { mutableStateOf<MoodJournalEntry?>(null) }
+    
+    val entries by viewModel.entries.collectAsState()
+    
     var isSheetOpen by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
-
-    LaunchedEffect(Unit) {
-        entries = repository.getAll()
-    }
 
     Scaffold(
         topBar = {
@@ -86,16 +80,22 @@ fun MoodJournalScreen(
                         "Mi Diario Emocional", 
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.ExtraBold,
-                            color = TurquesaOscuro
+                            color = MaterialTheme.colorScheme.primary
                         )
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Regresar", tint = TurquesaOscuro)
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack, 
+                            "Regresar", 
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         },
         floatingActionButton = {
@@ -105,25 +105,30 @@ fun MoodJournalScreen(
                         reflection = ""
                         selectedMood = null
                         selectedActivities.clear()
+                        editingEntry = null
                         isSheetOpen = true 
                     },
-                    containerColor = TurquesaPrincipal,
-                    contentColor = Color.White,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                     shape = RoundedCornerShape(20.dp)
                 ) {
                     Icon(Icons.Default.Add, "Nueva entrada", modifier = Modifier.size(30.dp))
                 }
             }
         },
-        containerColor = TurquesaFondo
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         
         if (isSheetOpen) {
             ModalBottomSheet(
                 onDismissRequest = { isSheetOpen = false },
                 sheetState = sheetState,
-                containerColor = Color.White,
-                dragHandle = { BottomSheetDefaults.DragHandle(color = TurquesaPrincipal.copy(alpha = 0.3f)) }
+                containerColor = MaterialTheme.colorScheme.surface,
+                dragHandle = { 
+                    BottomSheetDefaults.DragHandle(
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                    ) 
+                }
             ) {
                 Column(
                     modifier = Modifier
@@ -132,15 +137,15 @@ fun MoodJournalScreen(
                         .padding(bottom = 48.dp)
                 ) {
                     Text(
-                        text = "¿Cómo va tu día?",
+                        text = if (editingEntry == null) "¿Cómo va tu día?" else "Editar momento",
                         style = MaterialTheme.typography.headlineSmall.copy(
-                            fontWeight = FontWeight.Bold, color = TurquesaOscuro
+                            fontWeight = FontWeight.Bold, 
+                            color = MaterialTheme.colorScheme.primary
                         )
                     )
                     
                     Spacer(Modifier.height(24.dp))
 
-                    // Selector de Ánimo Estilo Premium
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -148,7 +153,10 @@ fun MoodJournalScreen(
                         MoodType.entries.forEach { mood ->
                             val isSelected = selectedMood == mood
                             val scale by animateFloatAsState(if (isSelected) 1.2f else 1f, label = "")
-                            val bgCircle by animateColorAsState(if (isSelected) mood.color.copy(alpha = 0.2f) else Color.Transparent, label = "")
+                            val bgCircle by animateColorAsState(
+                                if (isSelected) mood.color.copy(alpha = 0.2f) else Color.Transparent, 
+                                label = ""
+                            )
                             
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -163,7 +171,10 @@ fun MoodJournalScreen(
                                 Text(
                                     text = mood.label, 
                                     fontSize = 10.sp, 
-                                    color = if (isSelected) TurquesaOscuro else GrisTexto,
+                                    color = if (isSelected) 
+                                        MaterialTheme.colorScheme.primary 
+                                    else 
+                                        MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                 )
                             }
@@ -171,20 +182,27 @@ fun MoodJournalScreen(
                     }
 
                     Spacer(Modifier.height(32.dp))
-                    Text("¿Qué has estado haciendo?", fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = TurquesaOscuro)
+                    Text(
+                        "¿Qué has estado haciendo?", 
+                        fontSize = 14.sp, 
+                        fontWeight = FontWeight.SemiBold, 
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
                     Spacer(Modifier.height(12.dp))
 
-                    // Selector de Actividades (Chips)
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         items(activitiesList) { act ->
                             val isSelected = selectedActivities.contains(act.label)
                             FilterChip(
                                 selected = isSelected,
-                                onClick = { if (isSelected) selectedActivities.remove(act.label) else selectedActivities.add(act.label) },
+                                onClick = { 
+                                    if (isSelected) selectedActivities.remove(act.label) 
+                                    else selectedActivities.add(act.label) 
+                                },
                                 label = { Text("${act.emoji} ${act.label}") },
                                 colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = TurquesaPrincipal,
-                                    selectedLabelColor = Color.White
+                                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary
                                 )
                             )
                         }
@@ -195,14 +213,19 @@ fun MoodJournalScreen(
                     OutlinedTextField(
                         value = reflection,
                         onValueChange = { reflection = it },
-                        placeholder = { Text("Escribe una breve reflexión...", color = GrisSuave) },
+                        placeholder = { 
+                            Text(
+                                "Escribe una breve reflexión...", 
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                            ) 
+                        },
                         modifier = Modifier.fillMaxWidth().height(120.dp),
                         shape = RoundedCornerShape(20.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = TurquesaPrincipal,
-                            unfocusedBorderColor = Color.LightGray.copy(alpha = 0.5f),
-                            focusedContainerColor = TurquesaFondo,
-                            unfocusedContainerColor = TurquesaFondo
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
                         )
                     )
 
@@ -211,7 +234,7 @@ fun MoodJournalScreen(
                     Button(
                         onClick = {
                             if (selectedMood == null) return@Button
-                            scope.launch {
+                            if (editingEntry == null) {
                                 val entry = MoodJournalEntry(
                                     mood = selectedMood?.name ?: "NORMAL",
                                     reflection = reflection,
@@ -219,17 +242,29 @@ fun MoodJournalScreen(
                                     date = SimpleDateFormat("EEEE, d MMMM", Locale("es")).format(Date()).replaceFirstChar { it.uppercase() },
                                     timestamp = System.currentTimeMillis()
                                 )
-                                repository.insert(entry)
-                                entries = repository.getAll()
-                                isSheetOpen = false
+                                viewModel.insertEntry(entry)
+                            } else {
+                                val updatedEntry = editingEntry!!.copy(
+                                    mood = selectedMood?.name ?: "NORMAL",
+                                    reflection = reflection,
+                                    activities = selectedActivities.joinToString(",")
+                                )
+                                viewModel.updateEntry(updatedEntry)
                             }
+                            isSheetOpen = false
                         },
                         modifier = Modifier.fillMaxWidth().height(56.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = TurquesaPrincipal),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ),
                         shape = RoundedCornerShape(16.dp),
                         enabled = selectedMood != null
                     ) {
-                        Text("Guardar Momento", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                        Text(
+                            if (editingEntry == null) "Guardar Momento" else "Actualizar Momento",
+                            fontWeight = FontWeight.Bold, 
+                            fontSize = 16.sp
+                        )
                     }
                 }
             }
@@ -246,7 +281,8 @@ fun MoodJournalScreen(
                 Text(
                     text = "Tu Trayectoria", 
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.ExtraBold, color = Color.Black
+                        fontWeight = FontWeight.ExtraBold, 
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                     modifier = Modifier.padding(top = 12.dp)
                 )
@@ -261,13 +297,13 @@ fun MoodJournalScreen(
                         Icon(
                             Icons.Default.Face, 
                             null, 
-                            tint = GrisSuave.copy(alpha = 0.5f), 
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f), 
                             modifier = Modifier.size(64.dp)
                         )
                         Spacer(Modifier.height(16.dp))
                         Text(
                             "Tu diario está vacío.\n¡Cuéntame cómo va tu camino!", 
-                            color = GrisSuave, 
+                            color = MaterialTheme.colorScheme.onSurfaceVariant, 
                             textAlign = TextAlign.Center,
                             lineHeight = 20.sp
                         )
@@ -281,7 +317,9 @@ fun MoodJournalScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                 ) {
                     Row(
@@ -303,14 +341,14 @@ fun MoodJournalScreen(
                             Text(
                                 entry.date, 
                                 fontSize = 11.sp, 
-                                color = TurquesaPrincipal, 
+                                color = MaterialTheme.colorScheme.primary, 
                                 fontWeight = FontWeight.ExtraBold
                             )
                             Spacer(Modifier.height(2.dp))
                             Text(
                                 text = entry.reflection.ifEmpty { "Pura calma y reflexión..." },
                                 fontSize = 15.sp, 
-                                color = TurquesaOscuro, 
+                                color = MaterialTheme.colorScheme.onSurface, 
                                 fontWeight = FontWeight.Medium,
                                 maxLines = 1
                             )
@@ -318,21 +356,40 @@ fun MoodJournalScreen(
                                 Text(
                                     text = entry.activities.split(",").joinToString(" • "),
                                     fontSize = 11.sp,
-                                    color = GrisSuave
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
                         
                         IconButton(
                             onClick = { 
-                                scope.launch { repository.delete(entry); entries = repository.getAll() } 
+                                editingEntry = entry
+                                reflection = entry.reflection
+                                selectedMood = try { MoodType.valueOf(entry.mood) } catch (e: Exception) { null }
+                                selectedActivities.clear()
+                                if (entry.activities.isNotEmpty()) {
+                                    selectedActivities.addAll(entry.activities.split(","))
+                                }
+                                isSheetOpen = true
                             },
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Edit, 
+                                null, 
+                                tint = MaterialTheme.colorScheme.primary.copy(0.6f), 
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+
+                        IconButton(
+                            onClick = { viewModel.deleteEntry(entry) },
                             modifier = Modifier.size(32.dp)
                         ) {
                             Icon(
                                 Icons.Default.Delete, 
                                 null, 
-                                tint = Color.Red.copy(0.3f), 
+                                tint = Color.Red.copy(0.6f),
                                 modifier = Modifier.size(20.dp)
                             )
                         }

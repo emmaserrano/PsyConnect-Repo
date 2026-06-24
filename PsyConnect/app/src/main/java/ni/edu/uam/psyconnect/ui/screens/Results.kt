@@ -1,142 +1,45 @@
 package ni.edu.uam.psyconnect.ui.screens
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.airbnb.lottie.LottieAnimationView
-import kotlinx.coroutines.launch
-import ni.edu.uam.psyconnect.R
-import ni.edu.uam.psyconnect.data.model.TestResult
-import ni.edu.uam.psyconnect.network.RetrofitClient
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.lifecycle.ViewModelProvider
 import ni.edu.uam.psyconnect.ui.helper.TestInterpreter
+import ni.edu.uam.psyconnect.ui.theme.PsyConnectTheme
+import ni.edu.uam.psyconnect.ui.viewmodel.ResultsViewModel
 
-class Results : AppCompatActivity() {
+class Results : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_results)
 
-        val tvScore = findViewById<TextView>(R.id.tvScore)
-        val tvTitle = findViewById<TextView>(R.id.tvTitle)
-        val tvDescription = findViewById<TextView>(R.id.tvDescription)
-        val tvRecommendations = findViewById<TextView>(R.id.tvRecommendations)
-        val animation = findViewById<LottieAnimationView>(R.id.lottieResult)
-
-        val btnHistory = findViewById<Button>(R.id.btnHistory)
-        val btnHome = findViewById<Button>(R.id.btnHome)
+        val viewModel = ViewModelProvider(this)[ResultsViewModel::class.java]
 
         val percentage = intent.getIntExtra("percentage", 0)
         val category = intent.getStringExtra("category") ?: "WELLNESS"
-
+        
+        val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
+        val userId = sharedPreferences.getLong("userId", 1L)
+        val isDarkMode = sharedPreferences.getBoolean("darkMode", false)
         val feedback = TestInterpreter.generate(category, percentage)
 
-        // =========================
-        // UI BASE
-        // =========================
-        tvScore.text = when(category){
+        viewModel.syncResultWithServer(userId, category, percentage, feedback.title)
 
-            "STRESS" ->
-                "Manejo del estrés: $percentage%"
-
-            "SLEEP" ->
-                "Calidad del sueño: $percentage%"
-
-            "SELF_ESTEEM" ->
-                "Nivel de autoestima: $percentage%"
-
-            "RELATIONSHIPS" ->
-                "Calidad de relaciones: $percentage%"
-
-            "MOOD" ->
-                "Estado de ánimo positivo: $percentage%"
-
-            else ->
-                "Salud emocional: $percentage%"
-        }
-
-        tvTitle.text = feedback.title
-        tvDescription.text = feedback.description
-        tvRecommendations.text =
-            feedback.recommendations.joinToString("\n\n") { "✔ $it" }
-
-        animation.setAnimation(feedback.animation)
-        animation.playAnimation()
-
-        // =========================
-        // COLOR SEGÚN RESULTADO
-        // =========================
-        val color = when {
-
-            percentage >= 75 ->
-                "#2E7D32"
-
-            percentage >= 50 ->
-                "#F9A825"
-
-            percentage >= 30 ->
-                "#EF6C00"
-
-            else ->
-                "#C62828"
-        }
-
-        tvScore.setTextColor(Color.parseColor(color))
-        tvTitle.setTextColor(Color.parseColor(color))
-
-        // =========================
-        // GUARDAR RESULTADO
-        // =========================
-        guardarResultado(category, percentage, feedback.title)
-
-        btnHistory.setOnClickListener {
-            startActivity(Intent(this, History::class.java))
-        }
-
-        btnHome.setOnClickListener {
-            startActivity(Intent(this, Home::class.java))
-            finish()
-        }
-    }
-
-    private fun guardarResultado(
-        category: String,
-        percentage: Int,
-        level: String
-    ) {
-
-        val sharedPreferences =
-            getSharedPreferences("psyconnect", MODE_PRIVATE)
-
-        val userId =
-            sharedPreferences.getLong("userId", 1L)
-
-        val result = TestResult(
-            userId = userId,
-            category = category,
-            percentage = percentage,
-            level = level
-        )
-
-        lifecycleScope.launch {
-
-            try {
-
-                val response =
-                    RetrofitClient.apiService.saveResult(result)
-
-                if (response.isSuccessful) {
-                    println("Resultado guardado correctamente")
-                } else {
-                    println("Error al guardar resultado")
-                }
-
-            } catch (e: Exception) {
-                e.printStackTrace()
+        setContent {
+            PsyConnectTheme(darkTheme = isDarkMode) {
+                ResultsScreen(
+                    category = category,
+                    percentage = percentage,
+                    onNavigateToHistory = {
+                        startActivity(Intent(this, History::class.java))
+                        finish()
+                    },
+                    onNavigateToHome = {
+                        startActivity(Intent(this, Home::class.java))
+                        finish()
+                    }
+                )
             }
         }
     }

@@ -2,28 +2,18 @@ package ni.edu.uam.psyconnect
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import ni.edu.uam.psyconnect.ui.screens.Home
 import ni.edu.uam.psyconnect.ui.screens.Login
 import ni.edu.uam.psyconnect.ui.screens.OnboardingActivity
 
-class MainActivity : ComponentActivity() {
-
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
-
-        // Aplicar el tema
-        val darkMode = sharedPreferences.getBoolean("darkMode", false)
+        val prefs = getSharedPreferences("psyconnect", MODE_PRIVATE)
+        
+        // Aplicar modo oscuro antes del super.onCreate
+        val darkMode = prefs.getBoolean("darkMode", false)
         if (darkMode) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         } else {
@@ -32,31 +22,16 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        setContent {
-            MaterialTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
+        val onboardingCompleted = prefs.getBoolean("onboarding_completed", false)
+        val isLogged = prefs.getBoolean("isLogged", false)
 
-                    LaunchedEffect(Unit) {
-                        val onboardingCompleted = sharedPreferences.getBoolean("onboarding_completed", false)
-                        val userId = sharedPreferences.getLong("userId", -1)
-
-                        val intent = when {
-                            !onboardingCompleted -> Intent(this@MainActivity, OnboardingActivity::class.java)
-                            userId != -1L -> Intent(this@MainActivity, Home::class.java)
-                            else -> Intent(this@MainActivity, Login::class.java)
-                        }
-
-                        startActivity(intent)
-                        finish()
-                    }
-                }
-            }
+        val intent = when {
+            !onboardingCompleted -> Intent(this, OnboardingActivity::class.java)
+            isLogged -> Intent(this, Home::class.java)
+            else -> Intent(this, Login::class.java)
         }
+
+        startActivity(intent)
+        finish()
     }
 }
