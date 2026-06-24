@@ -58,16 +58,16 @@ fun LoginScreen(
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                painter = painterResource(R.drawable.psyconnect_logo),
                 contentDescription = "Logo",
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.size(100.dp)
             )
         }
         
         Spacer(modifier = Modifier.height(32.dp))
         
         Text(
-            text = "Bienvenido de nuevo",
+            text = "Bienvenid@",
             fontSize = 28.sp,
             fontWeight = FontWeight.ExtraBold,
             color = MaterialTheme.colorScheme.primary,
