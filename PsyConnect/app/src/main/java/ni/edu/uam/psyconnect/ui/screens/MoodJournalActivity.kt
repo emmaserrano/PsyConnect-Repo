@@ -1,5 +1,6 @@
 package ni.edu.uam.psyconnect.ui.screens
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -26,10 +27,19 @@ class MoodJournalActivity : ComponentActivity() {
             }
         })[MoodJournalViewModel::class.java]
 
+        // Obtener el ID del usuario actual de SharedPreferences
+        val sharedPreferences = getSharedPreferences("psyconnect", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getLong("userId", -1L)
+        
+        if (userId != -1L) {
+            viewModel.setUserId(userId)
+        }
+
         setContent {
             PsyConnectTheme {
                 MoodJournalScreen(
                     viewModel = viewModel,
+                    userId = userId,
                     onBack = { finish() },
                     onNavigateToHome = {
                         val intent = Intent(this, Home::class.java)

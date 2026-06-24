@@ -63,6 +63,7 @@ val activitiesList = listOf(
 @Composable
 fun MoodJournalScreen(
     viewModel: MoodJournalViewModel,
+    userId: Long,
     onBack: () -> Unit,
     onNavigateToHome: () -> Unit = {},
     onNavigateToHistory: () -> Unit = {},
@@ -334,6 +335,7 @@ fun MoodJournalScreen(
                             if (selectedMood == null) return@Button
                             if (editingEntry == null) {
                                 val entry = MoodJournalEntry(
+                                    userId = userId, // Pass the userId here
                                     mood = selectedMood?.name ?: "NORMAL",
                                     reflection = reflection,
                                     activities = selectedActivities.joinToString(","),
