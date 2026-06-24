@@ -252,7 +252,7 @@ fun RegisterScreen(
                         colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.primary)
                     )
                     Text(
-                        "Acepto los términos y condiciones", 
+                        "Acepto los Términos y Condiciones. Entiendo que PsyConnect es una herramienta de apoyo al bienestar emocional y no reemplaza la atención, diagnóstico o tratamiento brindado por profesionales de la salud mental.",
                         fontSize = 14.sp, 
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                     )
