@@ -78,6 +78,9 @@ interface ApiService {
     @GET("api/moods/user/{userId}")
     suspend fun getMoodHistory(@Path("userId") userId: Long): Response<List<ni.edu.uam.psyconnect.data.moodjournal.MoodJournalEntry>>
 
+    @DELETE("api/moods/{id}")
+    suspend fun deleteMood(@Path("id") id: Long): Response<ResponseBody>
+
     @GET("api/achievements/{userId}")
     suspend fun getAchievements(@Path("userId") userId: Long): Response<List<Achievement>>
 

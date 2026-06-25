@@ -56,7 +56,15 @@ class MoodJournalViewModel(
     }
 
     fun deleteEntry(entry: MoodJournalEntry) {
-        // Falta un endpoint DELETE en el backend para Moods
-        // Queda preparado el esqueleto
+        viewModelScope.launch {
+            try {
+                val response = ni.edu.uam.psyconnect.network.RetrofitClient.apiService.deleteMood(entry.id.toLong())
+                if (response.isSuccessful) {
+                    loadEntries()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }
