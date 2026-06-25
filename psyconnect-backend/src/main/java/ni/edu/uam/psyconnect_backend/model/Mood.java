@@ -75,6 +75,10 @@ public class Mood {
         return activities;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setUserId(Long userId) {
         this.userId = userId;
     }
