@@ -49,13 +49,11 @@ public class MoodService {
         );
     }
 
-    public List<Mood> getMoodHistory(
-            Long userId
-    ) {
-        return moodRepository
-                .findAllByUserIdOrderByDateAsc(
-                        userId
-                );
+    public List<Mood> getMoodHistory(Long userId) {
+        return moodRepository.findAllByUserIdOrderByDateAsc(userId);
     }
 
+    public void deleteMood(Long id) {
+        moodRepository.deleteById(id);
+    }
 }
