@@ -70,13 +70,13 @@ interface ApiService {
     suspend fun changeEmail(@Body request: ChangeEmailRequest): Response<ResponseBody>
 
     @POST("api/moods")
-    suspend fun saveMood(@Body mood: Mood): Response<Mood>
+    suspend fun saveMood(@Body mood: ni.edu.uam.psyconnect.data.moodjournal.MoodJournalEntry): Response<ni.edu.uam.psyconnect.data.moodjournal.MoodJournalEntry>
 
     @GET("api/moods/today/{userId}")
     suspend fun hasMoodToday(@Path("userId") userId: Long): Response<Boolean>
 
     @GET("api/moods/user/{userId}")
-    suspend fun getMoodHistory(@Path("userId") userId: Long): Response<List<Mood>>
+    suspend fun getMoodHistory(@Path("userId") userId: Long): Response<List<ni.edu.uam.psyconnect.data.moodjournal.MoodJournalEntry>>
 
     @GET("api/achievements/{userId}")
     suspend fun getAchievements(@Path("userId") userId: Long): Response<List<Achievement>>
