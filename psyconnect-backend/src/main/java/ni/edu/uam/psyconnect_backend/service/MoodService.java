@@ -22,6 +22,10 @@ public class MoodService {
             Mood mood
     ) {
 
+        if (mood.getId() != null && mood.getId() == 0L) {
+            mood.setId(null);
+        }
+
         if (
                 mood.getDate() == null
         ) {
