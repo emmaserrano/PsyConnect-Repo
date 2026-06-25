@@ -27,7 +27,7 @@ public class MoodService {
         ) {
 
             mood.setDate(
-                    LocalDate.now()
+                    LocalDate.now().toString()
             );
         }
 
@@ -41,7 +41,7 @@ public class MoodService {
     ) {
         return moodRepository.findByUserIdAndDate(
                 userId,
-                LocalDate.now()
+                LocalDate.now().toString()
         );
     }
 
