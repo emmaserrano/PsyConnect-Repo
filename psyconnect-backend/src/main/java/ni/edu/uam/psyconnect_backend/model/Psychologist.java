@@ -23,6 +23,7 @@ public class Psychologist {
     @Column(length = 2000)
     private String description;
 
+    @Column(columnDefinition = "TEXT")
     private String photo;
 
     public Psychologist() {
