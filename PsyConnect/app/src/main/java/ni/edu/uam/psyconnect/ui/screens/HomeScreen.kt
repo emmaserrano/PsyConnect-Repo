@@ -29,6 +29,7 @@ import com.airbnb.lottie.compose.*
 import ni.edu.uam.psyconnect.data.model.WellnessItem
 import ni.edu.uam.psyconnect.R
 import ni.edu.uam.psyconnect.data.model.Psychologist
+import ni.edu.uam.psyconnect.ui.components.Base64Image
 import ni.edu.uam.psyconnect.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -239,8 +240,8 @@ fun PsychologistCard(psych: Psychologist, onClick: (Psychologist) -> Unit) {
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            AsyncImage(
-                model = "https://psyconnect-repo-production.up.railway.app/uploads/${psych.photo}",
+            Base64Image(
+                base64String = psych.photo,
                 contentDescription = null,
                 modifier = Modifier
                     .size(80.dp)

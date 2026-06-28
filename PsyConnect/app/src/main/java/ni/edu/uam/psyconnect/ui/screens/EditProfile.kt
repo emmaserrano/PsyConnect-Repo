@@ -50,7 +50,7 @@ class EditProfile : ComponentActivity() {
                     onUsernameChange = viewModel::onUsernameChange,
                     onDescriptionChange = viewModel::onDescriptionChange,
                     onBirthdateChange = viewModel::onBirthdateChange,
-                    onImageChange = viewModel::onImageChange,
+                    onImageSelected = viewModel::onImageSelected,
                     onSave = { viewModel.saveChanges(userId) },
                     onBack = { finish() }
                 )
