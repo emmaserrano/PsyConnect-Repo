@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import ni.edu.uam.psyconnect.data.model.User
 import ni.edu.uam.psyconnect.ui.theme.*
+import ni.edu.uam.psyconnect.ui.components.Base64Image
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -100,17 +101,9 @@ fun ProfileScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        val photoUrl = if (user?.profileImage?.startsWith("http") == true) {
-                            user.profileImage
-                        } else if (!user?.profileImage.isNullOrEmpty()) {
-                            "https://psyconnect-repo-production.up.railway.app/uploads/${user?.profileImage}"
-                        } else {
-                            null
-                        }
-
-                        if (photoUrl != null) {
-                            AsyncImage(
-                                model = photoUrl,
+                        if (!user?.profileImage.isNullOrEmpty()) {
+                            Base64Image(
+                                base64String = user?.profileImage,
                                 contentDescription = "Foto de perfil",
                                 modifier = Modifier
                                     .size(100.dp)

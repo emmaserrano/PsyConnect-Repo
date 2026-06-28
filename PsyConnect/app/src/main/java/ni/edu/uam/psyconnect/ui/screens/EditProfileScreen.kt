@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import ni.edu.uam.psyconnect.ui.viewmodel.EditProfileUiState
+import ni.edu.uam.psyconnect.ui.components.Base64Image
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,15 +35,16 @@ fun EditProfileScreen(
     onUsernameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onBirthdateChange: (String) -> Unit,
-    onImageChange: (String) -> Unit,
+    onImageSelected: (Uri, android.content.Context) -> Unit,
     onSave: () -> Unit,
     onBack: () -> Unit
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val showDatePicker = remember { mutableStateOf(false) }
     val imageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let { onImageChange(it.toString()) }
+        uri?.let { onImageSelected(it, context) }
     }
 
     if (showDatePicker.value) {
@@ -102,17 +104,22 @@ fun EditProfileScreen(
             // Foto de Perfil
             item {
                 Box(contentAlignment = Alignment.BottomEnd) {
-                    val photoUrl = if (state.profileImage?.startsWith("http") == true || state.profileImage?.startsWith("content") == true) {
-                        state.profileImage
-                    } else if (!state.profileImage.isNullOrEmpty()) {
-                        "https://psyconnect-repo-production.up.railway.app/uploads/${state.profileImage}"
-                    } else {
-                        null
-                    }
-
-                    if (photoUrl != null) {
+                    if (state.profileImage?.startsWith("content://") == true) {
                         AsyncImage(
-                            model = photoUrl,
+                            model = state.profileImage,
+                            contentDescription = "Foto de perfil",
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.surface, CircleShape)
+                                .padding(4.dp)
+                                .clip(CircleShape)
+                                .clickable { imageLauncher.launch("image/*") },
+                            contentScale = ContentScale.Crop
+                        )
+                    } else if (!state.profileImage.isNullOrEmpty()) {
+                        Base64Image(
+                            base64String = state.profileImage,
                             contentDescription = "Foto de perfil",
                             modifier = Modifier
                                 .size(120.dp)
