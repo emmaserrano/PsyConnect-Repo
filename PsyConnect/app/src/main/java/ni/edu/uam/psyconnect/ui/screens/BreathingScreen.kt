@@ -1,5 +1,6 @@
 package ni.edu.uam.psyconnect.ui.screens
 
+import android.media.MediaPlayer
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,6 +28,33 @@ import ni.edu.uam.psyconnect.R
 @Composable
 fun BreathingScreen(onBack: () -> Unit) {
     var isRunning by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    // Inicializar MediaPlayer para la música de meditación
+    val mediaPlayer = remember {
+        MediaPlayer.create(context, R.raw.meditation_music).apply {
+            isLooping = true
+        }
+    }
+
+    // Controlar la reproducción según el estado isRunning
+    LaunchedEffect(isRunning) {
+        if (isRunning) {
+            mediaPlayer.start()
+        } else {
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.pause()
+            }
+        }
+    }
+
+    // Liberar recursos cuando el Composable se destruye
+    DisposableEffect(Unit) {
+        onDispose {
+            mediaPlayer.stop()
+            mediaPlayer.release()
+        }
+    }
     
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.breathinganimation))
     val progress by animateLottieCompositionAsState(
