@@ -26,6 +26,11 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import ni.edu.uam.psyconnect.ui.viewmodel.EditProfileUiState
 import ni.edu.uam.psyconnect.ui.components.Base64Image
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,17 +53,30 @@ fun EditProfileScreen(
     }
 
     if (showDatePicker.value) {
-        val datePickerState = rememberDatePickerState()
+        val datePickerState = rememberDatePickerState(
+            selectableDates = object : SelectableDates {
+                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                    val calendar = Calendar.getInstance()
+                    calendar.add(Calendar.YEAR, -10)
+                    return utcTimeMillis <= calendar.timeInMillis
+                }
+            }
+        )
+
         DatePickerDialog(
             onDismissRequest = { showDatePicker.value = false },
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let {
-                        val date = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date(it))
+                        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                        sdf.timeZone = TimeZone.getTimeZone("UTC")
+                        val date = sdf.format(Date(it))
                         onBirthdateChange(date)
                     }
                     showDatePicker.value = false
-                }) { Text("Confirmar") }
+                }) {
+                    Text("Confirmar")
+                }
             }
         ) {
             DatePicker(state = datePickerState)
