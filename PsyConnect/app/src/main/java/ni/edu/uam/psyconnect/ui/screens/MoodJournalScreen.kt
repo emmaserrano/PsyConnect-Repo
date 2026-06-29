@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -129,7 +130,7 @@ fun MoodJournalScreen(
                         Spacer(Modifier.height(12.dp))
                     }
                     Text(
-                        text = (viewingEntry!!.reflection ?: "").ifEmpty { "Sin reflexión guardada." },
+                        text = (viewingEntry!!.reflection ?: "").ifEmpty { "Registro rápido de ánimo" },
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -552,7 +553,7 @@ fun MoodJournalScreen(
                             )
                             Spacer(Modifier.height(2.dp))
                             Text(
-                                text = (entry.reflection ?: "").ifEmpty { "Pura calma y reflexión..." },
+                                text = (entry.reflection ?: "").ifEmpty { "Registro rápido de ánimo" },
                                 fontSize = 15.sp, 
                                 color = MaterialTheme.colorScheme.onSurface, 
                                 fontWeight = FontWeight.Medium,
