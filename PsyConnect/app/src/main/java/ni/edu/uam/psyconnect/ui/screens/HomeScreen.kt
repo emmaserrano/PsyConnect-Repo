@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -44,7 +45,8 @@ fun HomeScreen(
     onPsychologistClick: (Psychologist) -> Unit,
     onNavigateToHistory: () -> Unit,
     onNavigateToProfile: () -> Unit,
-    onNavigateToMoodJournal: () -> Unit
+    onNavigateToMoodJournal: () -> Unit,
+    onNavigateToBreathing: () -> Unit
 ) {
     val wellnessItems = listOf(
         WellnessItem("Bienestar emocional", "Evalúa tu equilibrio emocional general.", R.raw.wellbeing, "WELLNESS"),
@@ -138,10 +140,53 @@ fun HomeScreen(
                         Text("📔", fontSize = 20.sp)
                     }
                 }
-                Spacer(Modifier.height(32.dp))
+                Spacer(Modifier.height(24.dp))
             }
 
-            // EVALUACIONES (Arriba)
+            // SECCIÓN MINDFULNESS (NUEVO)
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onNavigateToBreathing() },
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
+                    ),
+                    elevation = CardDefaults.cardElevation(0.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(20.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(50.dp)
+                                .background(MaterialTheme.colorScheme.primary, CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(Icons.Default.Spa, null, tint = Color.White)
+                        }
+                        Spacer(Modifier.width(16.dp))
+                        Column {
+                            Text(
+                                "Respiración Guiada", 
+                                fontWeight = FontWeight.Bold, 
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                fontSize = 16.sp
+                            )
+                            Text(
+                                "Tómate un momento para calmarte.", 
+                                fontSize = 12.sp, 
+                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                            )
+                        }
+                    }
+                }
+                Spacer(Modifier.height(24.dp))
+            }
+
+            // EVALUACIONES
             item {
                 Text(
                     "Evaluaciones de bienestar", 
@@ -157,7 +202,7 @@ fun HomeScreen(
                 Spacer(Modifier.height(12.dp))
             }
 
-            // ESPECIALISTAS (Debajo)
+            // ESPECIALISTAS
             item {
                 Spacer(Modifier.height(24.dp))
                 Text(

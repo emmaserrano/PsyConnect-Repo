@@ -27,7 +27,6 @@ class Home : ComponentActivity() {
         viewModel.loadPsychologists()
 
         setContent {
-            // Ahora PsyConnectTheme usa ThemeSettings.isDarkMode por defecto, que es reactivo
             PsyConnectTheme {
                 val userName by viewModel.userName.collectAsState()
                 val psychologists by viewModel.psychologists.collectAsState()
@@ -68,6 +67,9 @@ class Home : ComponentActivity() {
                     },
                     onNavigateToMoodJournal = {
                         startActivity(Intent(this, MoodJournalActivity::class.java))
+                    },
+                    onNavigateToBreathing = {
+                        startActivity(Intent(this, BreathingActivity::class.java))
                     }
                 )
             }

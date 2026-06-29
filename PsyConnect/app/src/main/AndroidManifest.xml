@@ -52,6 +52,7 @@
         <activity android:name=".ui.screens.ResultDetailActivity"/>
         <activity android:name=".ui.screens.MoodJournalActivity" />
         <activity android:name=".ui.screens.CompleteProfileActivity" />
+        <activity android:name=".ui.screens.BreathingActivity" />
     </application>
 
 </manifest>
