@@ -22,6 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.imePadding
 import ni.edu.uam.psyconnect.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +44,8 @@ fun CompleteProfileScreen(
         uri?.let { onImageSelected(it) }
     }
 
+    val scrollState = rememberScrollState()
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
@@ -48,9 +53,10 @@ fun CompleteProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .imePadding()
+                .verticalScroll(scrollState)
                 .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "¡Casi listo!",

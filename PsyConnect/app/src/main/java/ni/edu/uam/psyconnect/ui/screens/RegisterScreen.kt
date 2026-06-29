@@ -65,6 +65,7 @@ fun RegisterScreen(
                 }
             }
         )
+
         DatePickerDialog(
             onDismissRequest = { showDatePicker.value = false },
             confirmButton = {
@@ -76,7 +77,9 @@ fun RegisterScreen(
                         onBirthdateChange(date)
                     }
                     showDatePicker.value = false
-                }) { Text("Confirmar") }
+                }) {
+                    Text("Confirmar")
+                }
             }
         ) {
             DatePicker(state = datePickerState)
