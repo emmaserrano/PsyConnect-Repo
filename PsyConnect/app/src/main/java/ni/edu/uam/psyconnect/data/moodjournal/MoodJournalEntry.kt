@@ -6,11 +6,12 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "mood_journal")
 data class MoodJournalEntry(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    val userId: Long, // Asociado al usuario actual
+    val id: Long = 0, // Cambiado a Long para consistencia con la API
+    val userId: Long,
     val mood: String,
     val reflection: String? = "",
     val date: String,
     val timestamp: Long,
-    val activities: String? = ""
+    val activities: String? = "",
+    val isFavorite: Boolean = false
 )
