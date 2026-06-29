@@ -19,8 +19,12 @@ class ForgotPassword : ComponentActivity() {
 
         val viewModel = ViewModelProvider(this)[ForgotPasswordViewModel::class.java]
         
+        val userId = intent.getLongExtra("userId", -1L)
         val emailRecibido = intent.getStringExtra("email")
-        if (!emailRecibido.isNullOrBlank()) {
+
+        if (userId != -1L) {
+            viewModel.loadUserEmail(userId)
+        } else if (!emailRecibido.isNullOrBlank()) {
             viewModel.onEmailChange(emailRecibido)
         }
 

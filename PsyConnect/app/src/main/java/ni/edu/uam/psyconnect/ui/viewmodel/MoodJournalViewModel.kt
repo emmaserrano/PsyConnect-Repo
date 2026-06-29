@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.launch
 import ni.edu.uam.psyconnect.data.moodjournal.MoodJournalEntry
 import ni.edu.uam.psyconnect.data.moodjournal.MoodJournalRepository
 
@@ -41,7 +40,7 @@ class MoodJournalViewModel(
             try {
                 val response = ni.edu.uam.psyconnect.network.RetrofitClient.apiService.saveMood(entry)
                 if (response.isSuccessful) {
-                    loadEntries() // Recargar historial después de guardar
+                    loadEntries()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -50,9 +49,26 @@ class MoodJournalViewModel(
     }
 
     fun updateEntry(entry: MoodJournalEntry) {
-        // En una implementación real en la nube necesitaríamos un endpoint PUT
-        // Por simplicidad si no existe, lo insertamos/sobrescribimos
-        insertEntry(entry)
+        // Actualización optimista: Actualizamos la lista local antes de la llamada de red
+        val currentList = _entries.value.toMutableList()
+        val index = currentList.indexOfFirst { it.id == entry.id }
+        if (index != -1) {
+            currentList[index] = entry
+            _entries.value = currentList
+        }
+
+        viewModelScope.launch {
+            try {
+                // Si el backend soporta el campo isFavorite, se guardará. 
+                // Usamos saveMood (POST) que suele manejar updates si el ID existe en Spring Boot/JPA
+                ni.edu.uam.psyconnect.network.RetrofitClient.apiService.saveMood(entry)
+                // No llamamos a loadEntries inmediatamente para evitar parpadeos si la red es lenta
+            } catch (e: Exception) {
+                // Si falla, revertimos (opcional, por ahora reintentamos cargar)
+                loadEntries()
+                e.printStackTrace()
+            }
+        }
     }
 
     fun deleteEntry(entry: MoodJournalEntry) {

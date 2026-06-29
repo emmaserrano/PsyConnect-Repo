@@ -20,8 +20,10 @@ import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -81,14 +83,16 @@ fun MoodJournalScreen(
     
     var searchQuery by remember { mutableStateOf("") }
     var filterMood by remember { mutableStateOf<MoodType?>(null) }
+    var showOnlyFavorites by remember { mutableStateOf(false) }
 
-    val filteredEntries = remember(entries, searchQuery, filterMood) {
+    val filteredEntries = remember(entries, searchQuery, filterMood, showOnlyFavorites) {
         entries.filter { entry ->
             val matchesSearch = entry.date.contains(searchQuery, ignoreCase = true) || 
                                 (entry.reflection?.contains(searchQuery, ignoreCase = true) == true) ||
                                 (entry.activities?.contains(searchQuery, ignoreCase = true) == true)
             val matchesMood = filterMood == null || entry.mood == filterMood?.name
-            matchesSearch && matchesMood
+            val matchesFavorite = !showOnlyFavorites || entry.isFavorite
+            matchesSearch && matchesMood && matchesFavorite
         }
     }
     
@@ -109,6 +113,10 @@ fun MoodJournalScreen(
                     Text(mood.emoji, fontSize = 28.sp)
                     Spacer(Modifier.width(8.dp))
                     Text(viewingEntry!!.date, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    if (viewingEntry!!.isFavorite) {
+                        Spacer(Modifier.weight(1f))
+                        Icon(Icons.Default.Favorite, null, tint = Color(0xFFE91E63), modifier = Modifier.size(20.dp))
+                    }
                 }
             },
             text = {
@@ -122,7 +130,7 @@ fun MoodJournalScreen(
                         Spacer(Modifier.height(12.dp))
                     }
                     Text(
-                        text = (viewingEntry!!.reflection ?: "").ifEmpty { "Sin reflexión guardada." },
+                        text = (viewingEntry!!.reflection ?: "").ifEmpty { "Registro rápido de ánimo" },
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -209,7 +217,7 @@ fun MoodJournalScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary,
                     shape = RoundedCornerShape(20.dp),
-                    modifier = Modifier.padding(bottom = 80.dp) // Subir FAB para no tapar menu
+                    modifier = Modifier.padding(bottom = 80.dp)
                 ) {
                     Icon(Icons.Default.Add, "Nueva entrada", modifier = Modifier.size(30.dp))
                 }
@@ -335,7 +343,7 @@ fun MoodJournalScreen(
                             if (selectedMood == null) return@Button
                             if (editingEntry == null) {
                                 val entry = MoodJournalEntry(
-                                    userId = userId, // Pass the userId here
+                                    userId = userId,
                                     mood = selectedMood?.name ?: "NORMAL",
                                     reflection = reflection,
                                     activities = selectedActivities.joinToString(","),
@@ -421,8 +429,11 @@ fun MoodJournalScreen(
                     ) {
                         item {
                             FilterChip(
-                                selected = filterMood == null,
-                                onClick = { filterMood = null },
+                                selected = filterMood == null && !showOnlyFavorites,
+                                onClick = { 
+                                    filterMood = null
+                                    showOnlyFavorites = false
+                                },
                                 label = { Text("Todos") },
                                 shape = RoundedCornerShape(12.dp),
                                 colors = FilterChipDefaults.filterChipColors(
@@ -431,10 +442,36 @@ fun MoodJournalScreen(
                                 )
                             )
                         }
+                        item {
+                            FilterChip(
+                                selected = showOnlyFavorites,
+                                onClick = { showOnlyFavorites = !showOnlyFavorites },
+                                label = { 
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Icon(
+                                            Icons.Default.Favorite, 
+                                            contentDescription = null, 
+                                            modifier = Modifier.size(16.dp),
+                                            tint = if (showOnlyFavorites) Color.White else Color(0xFFE91E63)
+                                        )
+                                        Spacer(Modifier.width(4.dp))
+                                        Text("Favoritos") 
+                                    }
+                                },
+                                shape = RoundedCornerShape(12.dp),
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = Color(0xFFE91E63),
+                                    selectedLabelColor = Color.White
+                                )
+                            )
+                        }
                         items(MoodType.entries) { mood ->
                             FilterChip(
                                 selected = filterMood == mood,
-                                onClick = { filterMood = if (filterMood == mood) null else mood },
+                                onClick = { 
+                                    filterMood = if (filterMood == mood) null else mood
+                                    showOnlyFavorites = false
+                                },
                                 label = { Text("${mood.emoji} ${mood.label}") },
                                 shape = RoundedCornerShape(12.dp),
                                 colors = FilterChipDefaults.filterChipColors(
@@ -516,7 +553,7 @@ fun MoodJournalScreen(
                             )
                             Spacer(Modifier.height(2.dp))
                             Text(
-                                text = (entry.reflection ?: "").ifEmpty { "Pura calma y reflexión..." },
+                                text = (entry.reflection ?: "").ifEmpty { "Registro rápido de ánimo" },
                                 fontSize = 15.sp, 
                                 color = MaterialTheme.colorScheme.onSurface, 
                                 fontWeight = FontWeight.Medium,
@@ -529,6 +566,20 @@ fun MoodJournalScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
+                        }
+
+                        IconButton(
+                            onClick = { 
+                                viewModel.updateEntry(entry.copy(isFavorite = !entry.isFavorite))
+                            },
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                if (entry.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                contentDescription = "Favorito",
+                                tint = if (entry.isFavorite) Color(0xFFE91E63) else MaterialTheme.colorScheme.primary.copy(0.4f),
+                                modifier = Modifier.size(22.dp)
+                            )
                         }
                         
                         IconButton(

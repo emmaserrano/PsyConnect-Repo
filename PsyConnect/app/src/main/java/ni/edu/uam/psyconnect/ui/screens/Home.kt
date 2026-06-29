@@ -12,22 +12,18 @@ import ni.edu.uam.psyconnect.ui.viewmodel.HomeViewModel
 
 class Home : ComponentActivity() {
 
+    private lateinit var viewModel: HomeViewModel
+    private var userId: Long = -1L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         val sharedPreferences = getSharedPreferences("psyconnect", MODE_PRIVATE)
-        val userId = sharedPreferences.getLong("userId", -1L)
-
-        // Cargar datos iniciales
-        if (userId != -1L) {
-            viewModel.loadUserData(userId)
-        }
-        viewModel.loadPsychologists()
+        userId = sharedPreferences.getLong("userId", -1L)
 
         setContent {
-            // Ahora PsyConnectTheme usa ThemeSettings.isDarkMode por defecto, que es reactivo
             PsyConnectTheme {
                 val userName by viewModel.userName.collectAsState()
                 val psychologists by viewModel.psychologists.collectAsState()
@@ -68,9 +64,21 @@ class Home : ComponentActivity() {
                     },
                     onNavigateToMoodJournal = {
                         startActivity(Intent(this, MoodJournalActivity::class.java))
+                    },
+                    onNavigateToBreathing = {
+                        startActivity(Intent(this, BreathingActivity::class.java))
                     }
                 )
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refrescar datos del usuario cada vez que la pantalla se vuelve visible
+        if (userId != -1L) {
+            viewModel.loadUserData(userId)
+            viewModel.loadPsychologists() // Opcional, pero asegura consistencia
         }
     }
 }

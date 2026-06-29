@@ -31,11 +31,13 @@ class HomeViewModel : ViewModel() {
                     _userName.value = response.body()?.name ?: "Usuario"
                 }
                 
-                // Verificar si ya puso su mood hoy
+                // Desactivado el diálogo automático para no molestar al usuario
+                /*
                 val moodResponse = RetrofitClient.apiService.hasMoodToday(userId)
                 if (moodResponse.isSuccessful && moodResponse.body() == false) {
                     _showMoodDialog.value = true
                 }
+                */
             } catch (e: Exception) {
                 e.printStackTrace()
             }
