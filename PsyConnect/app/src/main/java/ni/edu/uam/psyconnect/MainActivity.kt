@@ -12,7 +12,7 @@ import ni.edu.uam.psyconnect.ui.theme.ThemeSettings
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val prefs = getSharedPreferences("psyconnect", MODE_PRIVATE)
-        
+
         // Cargar y aplicar modo oscuro globalmente
         val darkMode = prefs.getBoolean("darkMode", false)
         ThemeSettings.isDarkMode = darkMode
