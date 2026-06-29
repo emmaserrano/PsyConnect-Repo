@@ -20,15 +20,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
-import kotlinx.coroutines.delay
 import ni.edu.uam.psyconnect.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BreathingScreen(onBack: () -> Unit) {
     var isRunning by remember { mutableStateOf(false) }
-    var phase by remember { mutableStateOf("Prepárate") }
-    var secondsLeft by remember { mutableStateOf(0) }
     
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.breathinganimation))
     val progress by animateLottieCompositionAsState(
@@ -37,32 +34,6 @@ fun BreathingScreen(onBack: () -> Unit) {
         isPlaying = isRunning,
         speed = 0.8f
     )
-
-    // Lógica del ciclo de respiración (Caja: 4s inhala, 4s mantiene, 4s exhala)
-    LaunchedEffect(isRunning) {
-        if (isRunning) {
-            while (true) {
-                phase = "Inhala"
-                secondsLeft = 4
-                while (secondsLeft > 0) { delay(1000); secondsLeft-- }
-                
-                phase = "Mantén"
-                secondsLeft = 4
-                while (secondsLeft > 0) { delay(1000); secondsLeft-- }
-                
-                phase = "Exhala"
-                secondsLeft = 4
-                while (secondsLeft > 0) { delay(1000); secondsLeft-- }
-
-                phase = "Mantén"
-                secondsLeft = 4
-                while (secondsLeft > 0) { delay(1000); secondsLeft-- }
-            }
-        } else {
-            phase = "Toca iniciar para comenzar"
-            secondsLeft = 0
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -85,18 +56,18 @@ fun BreathingScreen(onBack: () -> Unit) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Técnica de Respiración Cuadrada",
-                fontSize = 14.sp,
+                text = "Encuentra tu centro",
+                fontSize = 18.sp,
                 color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Medium
             )
             
-            Spacer(Modifier.height(40.dp))
+            Spacer(Modifier.height(48.dp))
 
-            // Animación Lottie
+            // Animación Lottie limpia sin textos ni contadores
             Box(
                 modifier = Modifier
-                    .size(300.dp)
+                    .size(320.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.05f)),
                 contentAlignment = Alignment.Center
@@ -104,45 +75,27 @@ fun BreathingScreen(onBack: () -> Unit) {
                 LottieAnimation(
                     composition = composition,
                     progress = { progress },
-                    modifier = Modifier.size(250.dp)
+                    modifier = Modifier.size(280.dp)
                 )
-                
-                // Texto de fase en el centro
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = phase,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    if (isRunning) {
-                        Text(
-                            text = secondsLeft.toString(),
-                            fontSize = 48.sp,
-                            fontWeight = FontWeight.Light,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
             }
 
-            Spacer(Modifier.height(60.dp))
+            Spacer(Modifier.height(48.dp))
 
             Text(
-                text = "Encuentra una posición cómoda y sigue el ritmo de la animación para reducir el estrés.",
+                text = "Sigue el ritmo de la animación para relajar tu mente.",
                 modifier = Modifier.padding(horizontal = 40.dp),
                 textAlign = TextAlign.Center,
                 fontSize = 15.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(Modifier.height(48.dp))
+            Spacer(Modifier.height(64.dp))
 
             Button(
                 onClick = { isRunning = !isRunning },
                 modifier = Modifier
                     .height(56.dp)
-                    .width(200.dp),
+                    .width(220.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (isRunning) MaterialTheme.colorScheme.error.copy(alpha = 0.8f) else MaterialTheme.colorScheme.primary
@@ -150,7 +103,11 @@ fun BreathingScreen(onBack: () -> Unit) {
             ) {
                 Icon(if (isRunning) Icons.Default.Refresh else Icons.Default.PlayArrow, null)
                 Spacer(Modifier.width(8.dp))
-                Text(if (isRunning) "Detener" else "Comenzar", fontWeight = FontWeight.Bold)
+                Text(
+                    text = if (isRunning) "DETENER" else "COMENZAR", 
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp
+                )
             }
         }
     }
