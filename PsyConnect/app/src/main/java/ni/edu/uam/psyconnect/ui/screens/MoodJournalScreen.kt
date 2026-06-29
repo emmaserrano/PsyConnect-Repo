@@ -63,6 +63,7 @@ val activitiesList = listOf(
 @Composable
 fun MoodJournalScreen(
     viewModel: MoodJournalViewModel,
+    userId: Long,
     onBack: () -> Unit,
     onNavigateToHome: () -> Unit = {},
     onNavigateToHistory: () -> Unit = {},
@@ -84,8 +85,8 @@ fun MoodJournalScreen(
     val filteredEntries = remember(entries, searchQuery, filterMood) {
         entries.filter { entry ->
             val matchesSearch = entry.date.contains(searchQuery, ignoreCase = true) || 
-                                entry.reflection.contains(searchQuery, ignoreCase = true) ||
-                                entry.activities.contains(searchQuery, ignoreCase = true)
+                                (entry.reflection?.contains(searchQuery, ignoreCase = true) == true) ||
+                                (entry.activities?.contains(searchQuery, ignoreCase = true) == true)
             val matchesMood = filterMood == null || entry.mood == filterMood?.name
             matchesSearch && matchesMood
         }
@@ -112,16 +113,16 @@ fun MoodJournalScreen(
             },
             text = {
                 Column {
-                    if (viewingEntry!!.activities.isNotEmpty()) {
+                    if (!viewingEntry!!.activities.isNullOrEmpty()) {
                         Text(
-                            text = viewingEntry!!.activities.split(",").joinToString(" • "),
+                            text = viewingEntry!!.activities!!.split(",").joinToString(" • "),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(Modifier.height(12.dp))
                     }
                     Text(
-                        text = viewingEntry!!.reflection.ifEmpty { "Sin reflexión guardada." },
+                        text = (viewingEntry!!.reflection ?: "").ifEmpty { "Sin reflexión guardada." },
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -334,6 +335,7 @@ fun MoodJournalScreen(
                             if (selectedMood == null) return@Button
                             if (editingEntry == null) {
                                 val entry = MoodJournalEntry(
+                                    userId = userId, // Pass the userId here
                                     mood = selectedMood?.name ?: "NORMAL",
                                     reflection = reflection,
                                     activities = selectedActivities.joinToString(","),
@@ -514,15 +516,15 @@ fun MoodJournalScreen(
                             )
                             Spacer(Modifier.height(2.dp))
                             Text(
-                                text = entry.reflection.ifEmpty { "Pura calma y reflexión..." },
+                                text = (entry.reflection ?: "").ifEmpty { "Pura calma y reflexión..." },
                                 fontSize = 15.sp, 
                                 color = MaterialTheme.colorScheme.onSurface, 
                                 fontWeight = FontWeight.Medium,
                                 maxLines = 1
                             )
-                            if (entry.activities.isNotEmpty()) {
+                            if (!entry.activities.isNullOrEmpty()) {
                                 Text(
-                                    text = entry.activities.split(",").joinToString(" • "),
+                                    text = entry.activities?.split(",")?.joinToString(" • ") ?: "",
                                     fontSize = 11.sp,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -532,11 +534,11 @@ fun MoodJournalScreen(
                         IconButton(
                             onClick = { 
                                 editingEntry = entry
-                                reflection = entry.reflection
+                                reflection = entry.reflection ?: ""
                                 selectedMood = try { MoodType.valueOf(entry.mood) } catch (e: Exception) { null }
                                 selectedActivities.clear()
-                                if (entry.activities.isNotEmpty()) {
-                                    selectedActivities.addAll(entry.activities.split(","))
+                                if (!entry.activities.isNullOrEmpty()) {
+                                    selectedActivities.addAll(entry.activities?.split(",") ?: emptyList())
                                 }
                                 isSheetOpen = true
                             },
