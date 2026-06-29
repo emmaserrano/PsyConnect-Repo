@@ -1,5 +1,6 @@
 package ni.edu.uam.psyconnect.ui.screens
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -47,6 +48,12 @@ class ChangePassword : ComponentActivity() {
                     onNewPasswordChange = viewModel::onNewPasswordChange,
                     onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
                     onSave = { viewModel.changePassword(userId) },
+                    onForgotPassword = {
+                        val intent = Intent(this@ChangePassword, ForgotPassword::class.java).apply {
+                            putExtra("userId", userId) // Pasamos el ID para recuperación directa
+                        }
+                        startActivity(intent)
+                    },
                     onBack = { finish() }
                 )
             }
